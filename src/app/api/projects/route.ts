@@ -7,7 +7,7 @@ import { AI_SETUP_HINT, aiReadsImages, isAiConfigured, NO_IMAGES_HINT } from "@/
 import { CloneError, cloneSite, normalizeOptions } from "@/lib/cloner/clone-site";
 import { isTrustedOrigin, jsonError } from "@/lib/cloner/http";
 import { assertPublicUrl, FetchError } from "@/lib/cloner/safe-fetch";
-import { deleteProject, touchProject } from "@/lib/cloner/storage";
+import { deleteProject, listProjects, touchProject } from "@/lib/cloner/storage";
 import { normalizeInputUrl } from "@/lib/cloner/urls";
 import {
   createFromTemplate,
@@ -15,7 +15,7 @@ import {
   nameFromPrompt,
 } from "@/lib/projects/create";
 import { findPreset, MAX_DESIGN_SYSTEM_CHARS } from "@/lib/projects/design-systems";
-import type { CloneEvent, Framework, StartMode, Styling } from "@/types/project";
+import type { CloneEvent, Framework, ProjectSummary, StartMode, Styling } from "@/types/project";
 
 export const maxDuration = 300;
 
@@ -137,6 +137,17 @@ function cloneResponse(request: NextRequest, fields: Fields): Response {
  * starting answers with `{ project }` once the project exists, and the AI's
  * first build then runs from the workspace.
  */
+/** Every project, newest first, in brief: enough to list and open them. */
+export async function GET() {
+  const projects: ProjectSummary[] = (await listProjects()).map((project) => ({
+    id: project.id,
+    name: project.name,
+    host: project.host,
+    updatedAt: project.updatedAt,
+  }));
+  return Response.json({ projects });
+}
+
 export async function POST(request: NextRequest) {
   if (!isTrustedOrigin(request)) {
     return jsonError("Cross-site requests are not allowed.", 403);

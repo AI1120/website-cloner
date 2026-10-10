@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { isTextFile } from "@/lib/cloner/mime";
 import {
   checkpointsDir,
   pathExists,
@@ -9,10 +10,13 @@ import {
   siteDir,
   touchProject,
 } from "@/lib/cloner/storage";
-import type { Project, ProjectCheckpoint } from "@/types/project";
+import { diffLines } from "@/lib/diff";
+import type { FileChange, Project, ProjectCheckpoint } from "@/types/project";
 
 const MAX_CHECKPOINTS = 30;
 export const MAX_TEXT_FILE_BYTES = 5 * 1024 * 1024;
+/** Larger files are listed as changed without a line-by-line comparison. */
+const MAX_DIFF_BYTES = 1024 * 1024;
 
 /**
  * Records the state of files just before a change touches them, so the whole
@@ -138,4 +142,84 @@ export async function revertToCheckpoint(
   }
 
   return touchProject({ ...project, checkpoints: project.checkpoints.slice(0, index) });
+}
+
+/** A file's state at some point: missing, present, and its text when it can be compared. */
+interface FileState {
+  exists: boolean;
+  text: string | null;
+}
+
+async function readState(file: string | null, relativePath: string): Promise<FileState> {
+  if (!file) return { exists: false, text: null };
+  try {
+    const stats = await fs.stat(file);
+    if (!stats.isFile()) return { exists: false, text: null };
+    const comparable = isTextFile(relativePath) && stats.size <= MAX_DIFF_BYTES;
+    return { exists: true, text: comparable ? await fs.readFile(file, "utf8") : null };
+  } catch {
+    return { exists: false, text: null };
+  }
+}
+
+function backupFile(projectId: string, checkpointId: string, relativePath: string): string | null {
+  return resolveInside(path.join(checkpointsDir(projectId), checkpointId), relativePath);
+}
+
+/**
+ * What one checkpoint changed, file by file. The state before the change is the
+ * checkpoint's own backup. The state after it is the backup taken by the next
+ * change that touched the file, or the working copy if nothing has since.
+ * Returns null when the checkpoint has been undone or dropped.
+ */
+export async function checkpointChanges(
+  project: Project,
+  checkpointId: string,
+): Promise<FileChange[] | null> {
+  const index = project.checkpoints.findIndex((checkpoint) => checkpoint.id === checkpointId);
+  if (index === -1) return null;
+  const checkpoint = project.checkpoints[index];
+  const later = project.checkpoints.slice(index + 1);
+  const modified = new Set(checkpoint.modified);
+
+  const stateAfter = (relativePath: string): Promise<FileState> => {
+    for (const next of later) {
+      if (next.modified.includes(relativePath)) {
+        return readState(backupFile(project.id, next.id, relativePath), relativePath);
+      }
+      // Created by a later change, so it didn't exist after this one.
+      if (next.created.includes(relativePath)) return Promise.resolve({ exists: false, text: null });
+    }
+    return readState(resolveInside(siteDir(project.id), relativePath), relativePath);
+  };
+
+  const files = [...checkpoint.modified, ...checkpoint.created].sort();
+  return Promise.all(
+    files.map(async (relativePath): Promise<FileChange> => {
+      const before: FileState = modified.has(relativePath)
+        ? await readState(backupFile(project.id, checkpoint.id, relativePath), relativePath)
+        : { exists: false, text: null };
+      const after = await stateAfter(relativePath);
+      const status = !before.exists ? "added" : after.exists ? "modified" : "removed";
+      const change = { path: relativePath, status, added: 0, removed: 0 } as const;
+
+      if (!isTextFile(relativePath)) {
+        return { ...change, hunks: null, note: "This file isn't text, so it can't be compared line by line." };
+      }
+      if ((before.exists && before.text === null) || (after.exists && after.text === null)) {
+        return { ...change, hunks: null, note: "This file is too large to compare." };
+      }
+      if (status === "added" && !after.exists) {
+        return { ...change, hunks: null, note: "This file was removed again by a later change." };
+      }
+      const { hunks, added, removed, truncated } = diffLines(before.text ?? "", after.text ?? "");
+      return {
+        ...change,
+        hunks,
+        added,
+        removed,
+        ...(truncated ? { note: "Only the first part of this change is shown." } : {}),
+      };
+    }),
+  );
 }

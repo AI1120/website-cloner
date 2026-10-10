@@ -269,6 +269,12 @@
   document.addEventListener(
     "keydown",
     (event) => {
+      // The editor's command palette, so the shortcut works after clicking into the page.
+      if ((event.metaKey || event.ctrlKey) && !event.altKey && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        post({ type: "sc:palette" });
+        return;
+      }
       if (mode === "none") return;
       if (event.key === "Escape") {
         if (document.activeElement instanceof HTMLElement) document.activeElement.blur();

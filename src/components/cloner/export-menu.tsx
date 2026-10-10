@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { ExportFormat, Project } from "@/types/project";
 
-interface FormatChoice {
+export interface FormatChoice {
   format: ExportFormat;
   label: string;
   hint: string;
 }
 
 /** A React project is its own source; a static site can also be converted. */
-function formatsFor(project: Project): FormatChoice[] {
+export function formatsFor(project: Project): FormatChoice[] {
   if (project.framework === "react") {
     return [
       { format: "source", label: "React project", hint: "The Vite project, ready for npm install" },
@@ -30,6 +30,10 @@ function formatsFor(project: Project): FormatChoice[] {
     { format: "react", label: "React", hint: "Vite project with JSX pages" },
     { format: "vue", label: "Vue", hint: "Vite project with Vue pages" },
   ];
+}
+
+export function exportUrl(project: Project, format: ExportFormat): string {
+  return `/api/projects/${project.id}/export?format=${format}`;
 }
 
 export function ExportMenu({ project }: { project: Project }) {
@@ -44,7 +48,7 @@ export function ExportMenu({ project }: { project: Project }) {
         {formatsFor(project).map(({ format, label, hint }) => (
           <DropdownMenuItem
             key={format}
-            render={<a href={`/api/projects/${project.id}/export?format=${format}`} download />}
+            render={<a href={exportUrl(project, format)} download />}
             className="flex-col items-start gap-0.5"
           >
             <span className="font-medium">{label} (.zip)</span>

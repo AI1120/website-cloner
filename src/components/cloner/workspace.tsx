@@ -3,28 +3,50 @@
 import {
   ArrowLeft,
   Code,
+  Copy,
   Database,
+  Download,
   ExternalLink,
   Eye,
+  FileDiff,
+  House,
   MessageSquareText,
+  PencilLine,
+  Rocket,
   TriangleAlert,
+  Undo2,
   Workflow,
   Wrench,
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 
+import {
+  useOpenProjectCommands,
+  useProjectList,
+  useThemeCommands,
+} from "@/components/cloner/app-commands";
+import { ChangesDialog, type ChangesTarget } from "@/components/cloner/changes-dialog";
 import { ChatPanel, type ChatRequest } from "@/components/cloner/chat-panel";
 import { CodePane } from "@/components/cloner/code-pane";
+import {
+  CommandPalette,
+  PaletteButton,
+  usePaletteShortcut,
+  type Command,
+} from "@/components/cloner/command-palette";
 import { DataPane } from "@/components/cloner/data-pane";
-import { ExportMenu } from "@/components/cloner/export-menu";
+import { ExportMenu, exportUrl, formatsFor } from "@/components/cloner/export-menu";
 import { FlowPane } from "@/components/cloner/flow-pane";
 import { HistoryMenu } from "@/components/cloner/history-menu";
 import { PreviewPane } from "@/components/cloner/preview-pane";
-import { PublishControl } from "@/components/cloner/publish-control";
+import { livePath, PublishControl, requestPublish } from "@/components/cloner/publish-control";
 import { Segmented, type SegmentedOption } from "@/components/cloner/segmented";
+import { ThemeToggle } from "@/components/cloner/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 import { errorMessage } from "@/lib/ndjson";
 import { projectKind } from "@/lib/projects/labels";
 import { cn } from "@/lib/utils";
@@ -41,9 +63,21 @@ const PANELS: SegmentedOption<Panel>[] = [
   { value: "flow", label: "Flow", icon: Workflow },
 ];
 
-interface Notice {
-  text: string;
-  error?: boolean;
+const UNREACHABLE = "Couldn't reach the app. Is it still running?";
+
+function showNotice({ text, error }: { text: string; error?: boolean }) {
+  if (error) toast.error(text);
+  else toast.info(text);
+}
+
+/** Starts a download without leaving the page. */
+function download(url: string) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "";
+  document.body.append(link);
+  link.click();
+  link.remove();
 }
 
 /** Something wrong with the project that the AI can be asked to fix. */
@@ -77,11 +111,13 @@ export function Workspace({
   initiallyRunning,
   aiConfigured,
 }: WorkspaceProps) {
+  const router = useRouter();
   const [project, setProject] = useState(initialProject);
   const [panel, setPanel] = useState<Panel>("preview");
   const [currentPage, setCurrentPage] = useState(initialProject.entry);
   const [version, setVersion] = useState(0);
-  const [notice, setNotice] = useState<Notice | null>(null);
+  const [changesTarget, setChangesTarget] = useState<ChangesTarget | null>(null);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const [warningsOpen, setWarningsOpen] = useState(initialProject.warnings.length > 0);
   const [selection, setSelection] = useState<SelectedElement[]>([]);
   const [running, setRunning] = useState(initiallyRunning || initialProject.pending);
@@ -90,12 +126,6 @@ export function Workspace({
   const [renaming, setRenaming] = useState(false);
   const [nameDraft, setNameDraft] = useState(initialProject.name);
   const requestIdRef = useRef(0);
-
-  useEffect(() => {
-    if (!notice || notice.error) return;
-    const timer = setTimeout(() => setNotice(null), 5000);
-    return () => clearTimeout(timer);
-  }, [notice]);
 
   /** Takes a project whose files changed and reloads everything showing them. */
   const applyChangedProject = useCallback((next: Project) => {
@@ -121,18 +151,15 @@ export function Workspace({
           body: JSON.stringify({ checkpointId }),
         });
         if (!response.ok) {
-          setNotice({
-            text: await errorMessage(response, "That change could not be undone."),
-            error: true,
-          });
+          toast.error(await errorMessage(response, "That change could not be undone."));
           return false;
         }
         const body = (await response.json()) as { project: Project };
         applyChangedProject(body.project);
-        setNotice({ text: "Change undone." });
+        toast.success("Change undone");
         return true;
       } catch {
-        setNotice({ text: "Couldn't reach the app. Is it still running?", error: true });
+        toast.error(UNREACHABLE);
         return false;
       }
     },
@@ -154,7 +181,7 @@ export function Workspace({
         body: JSON.stringify({ name }),
       });
       if (!response.ok) {
-        setNotice({ text: await errorMessage(response, "The name could not be changed."), error: true });
+        toast.error(await errorMessage(response, "The name could not be changed."));
         setNameDraft(project.name);
         return;
       }
@@ -162,7 +189,7 @@ export function Workspace({
       setProject(body.project);
       setNameDraft(body.project.name);
     } catch {
-      setNotice({ text: "Couldn't reach the app. Is it still running?", error: true });
+      toast.error(UNREACHABLE);
       setNameDraft(project.name);
     }
   };
@@ -216,10 +243,144 @@ export function Workspace({
     setPanel("preview");
   }, []);
 
+  const openPalette = useCallback(() => setPaletteOpen(true), []);
+  usePaletteShortcut(openPalette);
+  const themeCommands = useThemeCommands();
+  const projectCommands = useOpenProjectCommands(useProjectList(paletteOpen), project.id);
+  const latestChange = project.checkpoints.at(-1) ?? null;
+
+  const publish = useCallback(async () => {
+    const result = await requestPublish(project.id, "POST");
+    if ("error" in result) {
+      toast.error(result.error);
+      return;
+    }
+    setProject(result.project);
+    toast.success(project.published ? "Published site updated" : "Published", {
+      description: "Anyone with the link can open it.",
+      action: {
+        label: "Open",
+        onClick: () => window.open(livePath(result.project), "_blank", "noreferrer"),
+      },
+    });
+  }, [project.id, project.published]);
+
+  const commands = useMemo((): Command[] => {
+    const list: Command[] = PANELS.map((option) => ({
+      id: `view-${option.value}`,
+      group: "Views",
+      label: option.value === "chat" ? "Chat with the AI" : `Show ${option.label.toLowerCase()}`,
+      icon: option.icon,
+      keywords: "view switch tab",
+      run: () => {
+        if (option.value !== "chat") {
+          setPanel(option.value);
+          return;
+        }
+        // Wide screens always show the chat; narrow ones switch to it.
+        if (!window.matchMedia("(min-width: 64rem)").matches) setPanel("chat");
+        requestAnimationFrame(() => document.getElementById("chat-prompt")?.focus());
+      },
+    }));
+
+    if (latestChange) {
+      list.push({
+        id: "change-view",
+        group: "Project",
+        label: "View the latest change",
+        icon: FileDiff,
+        keywords: "diff history compare what changed",
+        hint: latestChange.label,
+        run: () => setChangesTarget({ checkpointId: latestChange.id }),
+      });
+      if (!running) {
+        list.push({
+          id: "change-undo",
+          group: "Project",
+          label: "Undo the latest change",
+          icon: Undo2,
+          keywords: "revert history",
+          hint: latestChange.label,
+          run: () => void undo(latestChange.id),
+        });
+      }
+    }
+    list.push({
+      id: "rename",
+      group: "Project",
+      label: "Rename project",
+      icon: PencilLine,
+      run: () => setRenaming(true),
+    });
+    list.push({
+      id: "publish",
+      group: "Project",
+      label: project.published ? "Update the published site" : "Publish",
+      icon: Rocket,
+      keywords: "share link deploy live",
+      run: () => void publish(),
+    });
+    if (project.published) {
+      const path = livePath(project);
+      list.push(
+        {
+          id: "live-open",
+          group: "Project",
+          label: "Open the published site",
+          icon: ExternalLink,
+          keywords: "live link",
+          run: () => window.open(path, "_blank", "noreferrer"),
+        },
+        {
+          id: "live-copy",
+          group: "Project",
+          label: "Copy the published link",
+          icon: Copy,
+          keywords: "share live url",
+          run: () => {
+            navigator.clipboard
+              .writeText(`${window.location.origin}${path}`)
+              .then(() => toast.success("Link copied"))
+              .catch(() => toast.error("The link couldn't be copied."));
+          },
+        },
+      );
+    }
+    for (const { format, label, hint } of formatsFor(project)) {
+      list.push({
+        id: `export-${format}`,
+        group: "Export",
+        label: `Export: ${label} (.zip)`,
+        icon: Download,
+        keywords: "download zip code",
+        hint,
+        run: () => {
+          download(exportUrl(project, format));
+          toast.info("Preparing the download…");
+        },
+      });
+    }
+    list.push({
+      id: "home",
+      group: "Projects",
+      label: "All projects",
+      icon: House,
+      keywords: "home back start new",
+      run: () => router.push("/"),
+    });
+    return [...list, ...projectCommands, ...themeCommands];
+  }, [latestChange, project, projectCommands, publish, router, running, themeCommands, undo]);
+
   const mainView: Exclude<Panel, "chat"> = panel === "chat" ? "preview" : panel;
   const actions = (
     <>
-      <HistoryMenu project={project} disabled={running} onRestore={(id) => void undo(id)} />
+      <HistoryMenu
+        project={project}
+        disabled={running}
+        onRestore={(id) => void undo(id)}
+        onView={(checkpointId) => setChangesTarget({ checkpointId })}
+      />
+      <ThemeToggle />
       <ExportMenu project={project} />
       <PublishControl project={project} onProjectChange={setProject} />
     </>
@@ -292,28 +453,15 @@ export function Workspace({
 
         <Segmented label="View" value={panel} options={PANELS} onChange={setPanel} collapseLabels />
 
+        <PaletteButton onClick={openPalette} className="hidden md:inline-flex" />
         <div className="hidden items-center gap-2 md:flex">{actions}</div>
       </header>
 
       {/* Narrow screens get the actions on their own row so the title keeps its space. */}
       <div className="flex shrink-0 items-center justify-end gap-2 border-b px-3 py-2 md:hidden">
+        <PaletteButton onClick={openPalette} className="mr-auto" />
         {actions}
       </div>
-
-      {notice && (
-        <div
-          role={notice.error ? "alert" : "status"}
-          className={cn(
-            "flex shrink-0 items-center gap-2 border-b px-4 py-2 text-sm",
-            notice.error ? "bg-destructive/5 text-destructive" : "bg-muted/60",
-          )}
-        >
-          <span className="min-w-0 flex-1 break-words">{notice.text}</span>
-          <Button variant="ghost" size="icon-xs" aria-label="Dismiss" onClick={() => setNotice(null)}>
-            <X />
-          </Button>
-        </div>
-      )}
 
       {problem && !running && (
         <div
@@ -378,6 +526,7 @@ export function Workspace({
           onProjectChange={applyChangedProject}
           onRunningChange={setRunning}
           onUndo={undo}
+          onViewChanges={setChangesTarget}
           className={cn(
             "w-full lg:flex lg:w-[380px] lg:shrink-0 lg:border-r",
             panel === "chat" ? "flex" : "hidden",
@@ -395,7 +544,7 @@ export function Workspace({
               selectionCount={selection.length}
               onSelect={setSelection}
               onProjectChange={applyChangedProject}
-              onNotice={setNotice}
+              onNotice={showNotice}
               onRuntimeError={handleRuntimeError}
               onBuildErrors={handleBuildErrors}
               onUnsavedEdits={handleUnsavedEdits}
@@ -408,6 +557,15 @@ export function Workspace({
           {mainView === "flow" && <FlowPane project={project} version={version} onOpen={openScreen} />}
         </main>
       </div>
+
+      <ChangesDialog
+        project={project}
+        target={changesTarget}
+        onClose={() => setChangesTarget(null)}
+        onUndo={(checkpointId) => void undo(checkpointId)}
+        undoDisabled={running}
+      />
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} commands={commands} />
     </div>
   );
 }

@@ -51,12 +51,13 @@ templates/          # Built-in templates and the shadcn/ui kit for projects
 
 ## SiteCloner App
 The app in `src/app/` is a studio for building sites with AI. Projects start from a prompt, a cloned site, a brand, an image, a Figma frame or a template.
-- `src/lib/cloner/` — cloning engine: guarded fetching (`safe-fetch.ts`), HTML/CSS rewriting, storage, checkpoints (undo), ZIP.
+- `src/lib/cloner/` — cloning engine: guarded fetching (`safe-fetch.ts`), HTML/CSS rewriting, storage, checkpoints (undo, and `checkpointChanges` for before/after diffs via `lib/diff.ts`), ZIP.
 - `src/lib/ai/` — the AI agent: `provider.ts` picks Gemini or the Claude API (`providers/`), `agent.ts` runs the tool loop, `prompts.ts` and `tools.ts` define what it knows and can do, `jobs.ts` keeps requests running in the background, plus attachments, brand extraction and Figma import.
 - `src/lib/build/` — turns project sources into a previewable site: `react.ts` bundles React projects with esbuild, `tailwind.ts` compiles Tailwind, `serve.ts` serves previews, `jsx.ts` and `text-edits.ts` map preview elements back to source, `flow.ts` finds screens and links.
 - `src/lib/projects/` — project creation (starter files, templates, duplication) and design-system presets. `src/lib/data/` — the per-project database. `src/lib/export/` — React and Vue exporters for static sites.
 - `src/app/api/projects/` — REST and streaming (NDJSON) endpoints; `src/app/api/data/` is the public data API generated apps call; `src/app/preview/`, `src/app/p/` and `src/app/template-preview/` serve project files.
-- `src/components/cloner/` — start screen and workspace UI. `public/sc-bridge.js` runs inside the preview frame and talks to the workspace by `postMessage`.
+- `src/components/cloner/` — start screen and workspace UI. `public/sc-bridge.js` runs inside the preview frame and talks to the workspace by `postMessage`. Show feedback with `toast` from `components/ui/toast.tsx`; add actions to the Ctrl+K palette (`command-palette.tsx`) when you add one to a screen. Chat replies go through the small Markdown renderer in `markdown.tsx` (React elements only, never raw HTML).
+- Theme: `.dark` on `<html>`, set before paint by `THEME_SCRIPT` (`lib/theme.ts`) and kept in step by `useTheme`. Use the colour tokens in `globals.css` so new UI works in both themes.
 - `templates/<slug>/` — built-in templates (`template.json` + `site/`). `templates/_ui/shadcn/` holds the shadcn/ui components copied into React + Tailwind projects that ask for them (generated with the shadcn CLI as JSX; regenerate rather than hand-edit).
 - Projects are stored in `.clones/<id>/` (git-ignored): `meta.json`, `site/` (working copy), `build/`, `published/`, `checkpoints/`, `uploads/`, `data/`, `chat.json`, `design.md`.
 - A project is either a static site (`framework: "html"`: cloned, or generated with Tailwind or inline styles) or a Vite-style React project (`framework: "react"`). Anything that changes files should go through `ChangeRecorder` so it can be undone, and `ensureBuilt` rebuilds what is derived.

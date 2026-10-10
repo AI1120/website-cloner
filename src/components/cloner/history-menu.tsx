@@ -1,6 +1,7 @@
 "use client";
 
-import { History, Undo2 } from "lucide-react";
+import { FileDiff, History, Undo2 } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -12,15 +13,17 @@ interface HistoryMenuProps {
   project: Project;
   disabled: boolean;
   onRestore: (checkpointId: string) => void;
+  onView: (checkpointId: string) => void;
 }
 
-/** Every change made to the project, newest first, each of which can be undone. */
-export function HistoryMenu({ project, disabled, onRestore }: HistoryMenuProps) {
+/** Every change made to the project, newest first, each of which can be viewed or undone. */
+export function HistoryMenu({ project, disabled, onRestore, onView }: HistoryMenuProps) {
+  const [open, setOpen] = useState(false);
   const now = useNow(30_000);
   const changes = [...project.checkpoints].reverse();
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         render={<Button variant="ghost" size="icon" aria-label="History" title="History" />}
       >
@@ -48,6 +51,18 @@ export function HistoryMenu({ project, disabled, onRestore }: HistoryMenuProps) 
                       {now !== null && ` · ${timeAgo(change.createdAt, now)}`}
                     </p>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    aria-label="View this change"
+                    title="View this change"
+                    onClick={() => {
+                      setOpen(false);
+                      onView(change.id);
+                    }}
+                  >
+                    <FileDiff />
+                  </Button>
                   <Button
                     variant="outline"
                     size="xs"

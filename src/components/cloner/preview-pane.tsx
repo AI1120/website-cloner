@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { OPEN_PALETTE_EVENT } from "@/components/cloner/command-palette";
 import { PREVIEW_SANDBOX } from "@/components/cloner/project-thumbnail";
 import { Segmented, type SegmentedOption } from "@/components/cloner/segmented";
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,8 @@ type BridgeMessage =
   | { type: "sc:text-edits"; requestId: number; edits: TextEdit[] }
   | { type: "sc:error"; message: string }
   | { type: "sc:build-error"; errors: BuildMessage[] }
-  | { type: "sc:escape" };
+  | { type: "sc:escape" }
+  | { type: "sc:palette" };
 
 interface PreviewPaneProps {
   project: Project;
@@ -174,6 +176,9 @@ export function PreviewPane({
           break;
         case "sc:escape":
           if (toolRef.current === "select") changeTool("none");
+          break;
+        case "sc:palette":
+          window.dispatchEvent(new Event(OPEN_PALETTE_EVENT));
           break;
       }
     };

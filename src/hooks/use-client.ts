@@ -47,17 +47,17 @@ function readStorage(key: string): string | null {
   }
 }
 
-/** An on/off preference remembered in this browser. */
-export function useStoredFlag(key: string, fallback: boolean): [boolean, (value: boolean) => void] {
+/** A text preference remembered in this browser; null until one is stored. */
+export function useStoredString(key: string): [string | null, (value: string) => void] {
   const stored = useSyncExternalStore(
     subscribeToStorage,
     () => readStorage(key),
     () => null,
   );
   const set = useCallback(
-    (value: boolean) => {
+    (value: string) => {
       try {
-        window.localStorage.setItem(key, value ? "1" : "0");
+        window.localStorage.setItem(key, value);
       } catch {
         // The preference just won't be remembered.
       }
@@ -65,5 +65,12 @@ export function useStoredFlag(key: string, fallback: boolean): [boolean, (value:
     },
     [key],
   );
+  return [stored, set];
+}
+
+/** An on/off preference remembered in this browser. */
+export function useStoredFlag(key: string, fallback: boolean): [boolean, (value: boolean) => void] {
+  const [stored, setStored] = useStoredString(key);
+  const set = useCallback((value: boolean) => setStored(value ? "1" : "0"), [setStored]);
   return [stored === null ? fallback : stored === "1", set];
 }

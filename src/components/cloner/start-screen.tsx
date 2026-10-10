@@ -1,17 +1,26 @@
 "use client";
 
-import { PanelLeft } from "lucide-react";
+import { LayoutTemplate, PanelLeft, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
+import { useOpenProjectCommands, useThemeCommands } from "@/components/cloner/app-commands";
+import {
+  CommandPalette,
+  PaletteButton,
+  usePaletteShortcut,
+  type Command,
+} from "@/components/cloner/command-palette";
 import { HeroBackdrop } from "@/components/cloner/hero-backdrop";
 import { ProjectGrid } from "@/components/cloner/project-grid";
 import { ProjectSidebar } from "@/components/cloner/project-sidebar";
 import { Wordmark } from "@/components/cloner/site-header";
 import { StartComposer } from "@/components/cloner/start-composer";
 import { TemplateGrid } from "@/components/cloner/template-grid";
+import { ThemeToggle } from "@/components/cloner/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 import { useStoredFlag } from "@/hooks/use-client";
 import { errorMessage } from "@/lib/ndjson";
 import type { Project, TemplateInfo } from "@/types/project";
@@ -36,7 +45,7 @@ export function StartScreen({
   const router = useRouter();
   const [projects, setProjects] = useState(initialProjects);
   const [sidebarOpen, setSidebarOpen] = useStoredFlag(SIDEBAR_KEY, true);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [paletteOpen, setPaletteOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
@@ -48,42 +57,77 @@ export function StartScreen({
     if (!window.confirm(`Delete “${project.name}”? This removes the project and its published link.`)) {
       return;
     }
-    setNotice(null);
     try {
       const response = await fetch(`/api/projects/${project.id}`, { method: "DELETE" });
       if (!response.ok && response.status !== 404) {
-        setNotice(await errorMessage(response, "The project could not be deleted."));
+        toast.error(await errorMessage(response, "The project could not be deleted."));
         return;
       }
       setProjects((current) => current.filter((item) => item.id !== project.id));
+      toast.success(`Deleted “${project.name}”`);
     } catch {
-      setNotice("Couldn't reach the app. Is it still running?");
+      toast.error("Couldn't reach the app. Is it still running?");
     }
   }, []);
 
   const handleDuplicate = useCallback(
     async (project: Project) => {
-      setNotice(null);
       try {
         const response = await fetch(`/api/projects/${project.id}/duplicate`, { method: "POST" });
         if (!response.ok) {
-          setNotice(await errorMessage(response, "The project could not be duplicated."));
+          toast.error(await errorMessage(response, "The project could not be duplicated."));
           return;
         }
         const body = (await response.json()) as { project: Project };
         handleCreated(body.project);
         router.push(`/projects/${body.project.id}`);
       } catch {
-        setNotice("Couldn't reach the app. Is it still running?");
+        toast.error("Couldn't reach the app. Is it still running?");
       }
     },
     [handleCreated, router],
   );
 
-  const focusPrompt = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const focusPrompt = useCallback(() => {
+    document.getElementById("start-main")?.scrollTo({ top: 0, behavior: "smooth" });
     document.getElementById("start-prompt")?.focus({ preventScroll: true });
-  };
+  }, []);
+
+  const openPalette = useCallback(() => setPaletteOpen(true), []);
+  usePaletteShortcut(openPalette);
+  const themeCommands = useThemeCommands();
+  const projectCommands = useOpenProjectCommands(projects);
+
+  const commands = useMemo((): Command[] => {
+    const list: Command[] = [
+      {
+        id: "new",
+        group: "Start",
+        label: "New project",
+        icon: Plus,
+        keywords: "create build clone prompt",
+        run: focusPrompt,
+      },
+    ];
+    if (templates.length > 0) {
+      list.push({
+        id: "templates",
+        group: "Start",
+        label: "Browse templates",
+        icon: LayoutTemplate,
+        run: () => document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" }),
+      });
+    }
+    list.push({
+      id: "sidebar",
+      group: "Start",
+      label: sidebarOpen ? "Hide the project list" : "Show the project list",
+      icon: PanelLeft,
+      keywords: "sidebar",
+      run: () => setSidebarOpen(!sidebarOpen),
+    });
+    return [...list, ...projectCommands, ...themeCommands];
+  }, [focusPrompt, projectCommands, setSidebarOpen, sidebarOpen, templates.length, themeCommands]);
 
   return (
     <div className="flex h-dvh flex-col">
@@ -103,6 +147,7 @@ export function StartScreen({
           <Wordmark />
         </Link>
         <nav className="ml-auto flex items-center gap-4 text-sm text-muted-foreground">
+          <PaletteButton onClick={openPalette} />
           {templates.length > 0 && (
             <a href="#templates" className="transition-colors hover:text-foreground">
               Templates
@@ -111,6 +156,7 @@ export function StartScreen({
           <a href="#projects" className="transition-colors hover:text-foreground">
             Projects
           </a>
+          <ThemeToggle />
         </nav>
       </header>
 
@@ -123,7 +169,7 @@ export function StartScreen({
           onNew={focusPrompt}
         />
 
-        <main className="relative min-w-0 flex-1 overflow-y-auto">
+        <main id="start-main" className="relative min-w-0 flex-1 overflow-y-auto">
           <HeroBackdrop />
 
           <section className="relative mx-auto w-full max-w-3xl px-4 pt-14 text-center sm:px-6 sm:pt-20">
@@ -145,12 +191,6 @@ export function StartScreen({
           </section>
 
           <div className="relative mx-auto mt-14 w-full max-w-6xl space-y-12 px-4 pb-20 sm:px-6">
-            {notice && (
-              <p role="alert" className="text-sm text-destructive">
-                {notice}
-              </p>
-            )}
-
             <div id="templates" className="scroll-mt-6">
               <TemplateGrid templates={templates} onCreated={handleCreated} />
             </div>
@@ -172,6 +212,8 @@ export function StartScreen({
           </div>
         </main>
       </div>
+
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} commands={commands} />
     </div>
   );
 }

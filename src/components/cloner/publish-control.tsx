@@ -6,10 +6,30 @@ import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { toast } from "@/components/ui/toast";
 import { useNow } from "@/hooks/use-client";
 import { timeAgo } from "@/lib/format";
 import { errorMessage } from "@/lib/ndjson";
 import type { Project } from "@/types/project";
+
+/** Publishes (POST) or unpublishes (DELETE) a project. */
+export async function requestPublish(
+  projectId: string,
+  method: "POST" | "DELETE",
+): Promise<{ project: Project } | { error: string }> {
+  try {
+    const response = await fetch(`/api/projects/${projectId}/publish`, { method });
+    if (!response.ok) return { error: await errorMessage(response, "That didn't work. Try again.") };
+    return (await response.json()) as { project: Project };
+  } catch {
+    return { error: "Couldn't reach the app. Is it still running?" };
+  }
+}
+
+/** Where a project's published copy can be opened. */
+export function livePath(project: Project): string {
+  return `/p/${project.id}/${project.entry}`;
+}
 
 interface PublishControlProps {
   project: Project;
@@ -44,8 +64,8 @@ export function PublishControl({ project, onProjectChange }: PublishControlProps
   const [origin, setOrigin] = useState("");
   const now = useNow(30_000);
 
-  const livePath = `/p/${project.id}/${project.entry}`;
-  const liveUrl = origin ? `${origin}${livePath}` : livePath;
+  const path = livePath(project);
+  const liveUrl = origin ? `${origin}${path}` : path;
   const published = project.published;
   const qr = useQrCode(open && published && origin ? liveUrl : null);
 
@@ -62,19 +82,14 @@ export function PublishControl({ project, onProjectChange }: PublishControlProps
     async (method: "POST" | "DELETE") => {
       setBusy(method === "POST" ? "publish" : "unpublish");
       setError(null);
-      try {
-        const response = await fetch(`/api/projects/${project.id}/publish`, { method });
-        if (!response.ok) {
-          setError(await errorMessage(response, "That didn't work. Try again."));
-          return;
-        }
-        const body = (await response.json()) as { project: Project };
-        onProjectChange(body.project);
-      } catch {
-        setError("Couldn't reach the app. Is it still running?");
-      } finally {
-        setBusy(null);
+      const result = await requestPublish(project.id, method);
+      setBusy(null);
+      if ("error" in result) {
+        setError(result.error);
+        return;
       }
+      onProjectChange(result.project);
+      if (method === "DELETE") toast.info("Unpublished. The link no longer works.");
     },
     [onProjectChange, project.id],
   );
@@ -83,6 +98,7 @@ export function PublishControl({ project, onProjectChange }: PublishControlProps
     try {
       await navigator.clipboard.writeText(liveUrl);
       setCopied(true);
+      toast.success("Link copied");
       setTimeout(() => setCopied(false), 2000);
     } catch {
       setError("The link couldn't be copied. Select it and copy it by hand.");
@@ -127,7 +143,7 @@ export function PublishControl({ project, onProjectChange }: PublishControlProps
                 size="icon"
                 aria-label="Open live site"
                 nativeButton={false}
-                render={<a href={livePath} target="_blank" rel="noreferrer" />}
+                render={<a href={path} target="_blank" rel="noreferrer" />}
               >
                 <ExternalLink />
               </Button>

@@ -2,6 +2,8 @@
 
 import {
   ArrowUp,
+  ChevronRight,
+  FileDiff,
   FileText,
   Image as ImageIcon,
   LoaderCircle,
@@ -15,6 +17,8 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 
+import type { ChangesTarget } from "@/components/cloner/changes-dialog";
+import { Markdown } from "@/components/cloner/markdown";
 import {
   AttachmentChips,
   IMAGE_ACCEPT,
@@ -78,6 +82,80 @@ function elementLabel(element: SelectedElement): string {
   return element.text ? `${name} · ${element.text.slice(0, 28)}` : name;
 }
 
+interface ChangeSummaryProps {
+  files: string[];
+  checkpointId: string | undefined;
+  /** False once the change has been undone or is too old to keep. */
+  active: boolean;
+  running: boolean;
+  onView: (target: ChangesTarget) => void;
+  onUndo: (checkpointId: string) => void;
+}
+
+/** The files an AI turn changed, with ways to look at the change and undo it. */
+function ChangeSummary({ files, checkpointId, active, running, onView, onUndo }: ChangeSummaryProps) {
+  const [open, setOpen] = useState(false);
+  const viewable = active && checkpointId !== undefined;
+
+  return (
+    <div className="mt-2 text-xs text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+        <button
+          type="button"
+          aria-expanded={open}
+          onClick={() => setOpen((value) => !value)}
+          className="inline-flex items-center gap-1 rounded outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+        >
+          <ChevronRight
+            className={cn("size-3 transition-transform", open && "rotate-90")}
+            aria-hidden="true"
+          />
+          {plural(files.length, "file")} changed
+        </button>
+        {viewable ? (
+          <>
+            <Button variant="outline" size="xs" onClick={() => onView({ checkpointId })}>
+              <FileDiff data-icon="inline-start" />
+              View changes
+            </Button>
+            <Button
+              variant="outline"
+              size="xs"
+              disabled={running}
+              onClick={() => onUndo(checkpointId)}
+            >
+              <Undo2 data-icon="inline-start" />
+              Undo
+            </Button>
+          </>
+        ) : (
+          checkpointId && <span>· undone</span>
+        )}
+      </div>
+      {open && (
+        <ul className="mt-1.5 ml-1.5 space-y-0.5 border-l pl-3">
+          {files.map((file) => (
+            <li key={file} className="truncate font-mono text-[11px]">
+              {viewable ? (
+                <button
+                  type="button"
+                  title={`Show the change to ${file}`}
+                  onClick={() => onView({ checkpointId, file })}
+                  className="max-w-full truncate rounded outline-none hover:text-foreground hover:underline focus-visible:ring-3 focus-visible:ring-ring/50"
+                >
+                  {file}
+                </button>
+              ) : (
+                file
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 interface Activity {
   steps: string[];
   text: string;
@@ -105,6 +183,7 @@ interface ChatPanelProps {
   onProjectChange: (project: Project) => void;
   onRunningChange: (running: boolean) => void;
   onUndo: (checkpointId: string) => Promise<boolean>;
+  onViewChanges: (target: ChangesTarget) => void;
   className?: string;
 }
 
@@ -121,6 +200,7 @@ export function ChatPanel({
   onProjectChange,
   onRunningChange,
   onUndo,
+  onViewChanges,
   className,
 }: ChatPanelProps) {
   const [messages, setMessages] = useState(initialMessages);
@@ -443,36 +523,22 @@ export function ChatPanel({
             </div>
           ) : (
             <div key={message.id} className="max-w-[92%]">
-              <p
-                className={cn(
-                  "text-sm leading-relaxed break-words whitespace-pre-wrap",
-                  message.error && "text-destructive",
-                )}
-              >
-                {message.text}
-              </p>
+              {message.error ? (
+                <p className="text-sm leading-relaxed break-words whitespace-pre-wrap text-destructive">
+                  {message.text}
+                </p>
+              ) : (
+                <Markdown text={message.text} className="text-sm leading-relaxed" />
+              )}
               {message.changed && message.changed.length > 0 && (
-                <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-                  <span title={message.changed.join("\n")}>
-                    {plural(message.changed.length, "file")} changed
-                  </span>
-                  {message.checkpointId &&
-                    (activeCheckpoints.has(message.checkpointId) ? (
-                      <Button
-                        variant="outline"
-                        size="xs"
-                        disabled={running}
-                        onClick={() => {
-                          if (message.checkpointId) void onUndo(message.checkpointId);
-                        }}
-                      >
-                        <Undo2 data-icon="inline-start" />
-                        Undo
-                      </Button>
-                    ) : (
-                      <span>· undone</span>
-                    ))}
-                </div>
+                <ChangeSummary
+                  files={message.changed}
+                  checkpointId={message.checkpointId}
+                  active={message.checkpointId !== undefined && activeCheckpoints.has(message.checkpointId)}
+                  running={running}
+                  onView={onViewChanges}
+                  onUndo={(checkpointId) => void onUndo(checkpointId)}
+                />
               )}
             </div>
           ),
@@ -492,12 +558,14 @@ export function ChatPanel({
                 {step}
               </p>
             ))}
-            <p className="flex items-start gap-2 text-foreground">
+            <div className="flex items-start gap-2 text-foreground">
               <LoaderCircle className="mt-0.5 size-4 shrink-0 animate-spin text-brand" />
-              <span className="break-words whitespace-pre-wrap">
-                {activity.text || "Working on it…"}
-              </span>
-            </p>
+              {activity.text ? (
+                <Markdown text={activity.text} className="min-w-0" />
+              ) : (
+                <span>Working on it…</span>
+              )}
+            </div>
           </div>
         )}
       </div>

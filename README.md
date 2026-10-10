@@ -70,7 +70,11 @@ Options beside the prompt box:
 | **Data** | A small database per project: tables, rows, CSV import and export. Ask the AI for "a form that saves submissions" and it creates the table and wires up the page. |
 | **Flow** | A map of the project's screens and the links between them. |
 
-Also in the header: **History** (undo any change), **Export** (a ZIP of the code), and **Publish** (a snapshot at `/p/<project>/` with a link and QR code; the link works wherever this app is reachable).
+Also in the header: **History** (view or undo any change), **Export** (a ZIP of the code), and **Publish** (a snapshot at `/p/<project>/` with a link and QR code; the link works wherever this app is reachable).
+
+- **What changed**: every AI reply that edited files lists them, and **View changes** shows each file before and after, line by line.
+- **Search and commands**: press <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>⌘</kbd>+<kbd>K</kbd> on a Mac), even inside the preview, to switch views, open another project, export, publish, undo or change the theme.
+- **Theme**: light, dark, or matching the device, from the sun/moon button.
 
 ### Turning on the AI
 

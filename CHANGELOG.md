@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- AI replies render formatting (lists, bold, code, links), and the prompts let the AI use a little of it.
+- A "What changed" view: each AI turn lists the files it changed, and **View changes** (also in History) compares every file before and after the change, line by line.
+- Dark mode, with a light / dark / match-the-device toggle remembered per browser and applied before the page paints.
+- A command palette on <kbd>Ctrl</kbd>+<kbd>K</kbd> / <kbd>⌘</kbd>+<kbd>K</kbd>, including from inside the preview: switch views, open projects, export, publish, undo, rename, change the theme.
+- Toast notifications for undo, publish, copying links, deleting and errors, in place of the workspace's notice bar.
+- Branded not-found, error and loading screens, including one for a project link that no longer exists.
+
 ### Fixed
 - Count the README token badge in CI so it reflects the current default branch instead of a stale hosted count.
 

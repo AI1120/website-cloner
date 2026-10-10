@@ -73,6 +73,9 @@ export interface Project {
   checkpoints: ProjectCheckpoint[];
 }
 
+/** A project as the command palette lists it. */
+export type ProjectSummary = Pick<Project, "id" | "name" | "host" | "updatedAt">;
+
 export type CloneEvent =
   | { type: "start"; id: string }
   | { type: "status"; message: string }
@@ -143,6 +146,31 @@ export interface ChatMessage {
   /** Checkpoint that undoes this assistant turn. */
   checkpointId?: string;
   error?: boolean;
+}
+
+export interface DiffLine {
+  kind: "context" | "added" | "removed";
+  text: string;
+  /** Line number before the change; null for an added line. */
+  oldLine: number | null;
+  /** Line number after the change; null for a removed line. */
+  newLine: number | null;
+}
+
+/** A run of changed lines with a little unchanged text around it. */
+export interface DiffHunk {
+  lines: DiffLine[];
+}
+
+/** One file touched by a checkpoint, compared before and after it. */
+export interface FileChange {
+  path: string;
+  status: "added" | "modified" | "removed";
+  added: number;
+  removed: number;
+  /** Null when there is no line-by-line comparison; `note` says why. */
+  hunks: DiffHunk[] | null;
+  note?: string;
 }
 
 export type ChatEvent =
