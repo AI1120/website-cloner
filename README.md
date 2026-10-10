@@ -115,6 +115,7 @@ Free Gemini keys work, with limits: only the Flash models, about five requests a
 - **shadcn/ui** — Base UI primitives + Tailwind CSS v4
 - **Tailwind CSS v4** — oklch design tokens
 - **Lucide React** — icons
+- **three.js** — the start screen's animated 3D backdrop (loaded on demand)
 
 ## Use Cases
 

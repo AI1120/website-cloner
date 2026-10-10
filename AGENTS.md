@@ -17,6 +17,7 @@ A Next.js app for cloning websites by URL and building or changing sites with AI
 - **Framework:** Next.js 16 (App Router, React 19, TypeScript strict)
 - **UI:** shadcn/ui (Base UI primitives, Tailwind CSS v4, `cn()` utility)
 - **Icons:** Lucide React
+- **3D:** three.js, for the start screen backdrop only (`hero-scene.ts`, loaded on demand by `hero-backdrop.tsx`)
 - **Styling:** Tailwind CSS v4 with oklch design tokens
 - **Deployment:** Vercel
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
+import { HeroBackdrop } from "@/components/cloner/hero-backdrop";
 import { ProjectGrid } from "@/components/cloner/project-grid";
 import { ProjectSidebar } from "@/components/cloner/project-sidebar";
 import { Wordmark } from "@/components/cloner/site-header";
@@ -123,10 +124,7 @@ export function StartScreen({
         />
 
         <main className="relative min-w-0 flex-1 overflow-y-auto">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(60%_70%_at_50%_0%,color-mix(in_oklch,var(--brand)_20%,transparent),transparent_70%)]"
-          />
+          <HeroBackdrop />
 
           <section className="relative mx-auto w-full max-w-3xl px-4 pt-14 text-center sm:px-6 sm:pt-20">
             <h1 className="text-4xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-5xl">
