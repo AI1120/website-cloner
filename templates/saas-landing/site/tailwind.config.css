@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Brindle: clean white surfaces, one ultramarine brand colour, soft layered shadows. */
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-brand-50: #eff2ff;
+  --color-brand-100: #e0e6ff;
+  --color-brand-200: #c5cfff;
+  --color-brand-300: #a0adff;
+  --color-brand-400: #7a84fb;
+  --color-brand-500: #5b5ff3;
+  --color-brand-600: #4541e6;
+  --color-brand-700: #3a33c9;
+  --color-brand-800: #302ca2;
+  --color-brand-900: #262664;
+  --color-brand-950: #131336;
+
+  --shadow-float: 0 1px 2px rgb(19 19 54 / 0.06), 0 14px 36px -10px rgb(19 19 54 / 0.2);
+  --shadow-window: 0 2px 6px rgb(19 19 54 / 0.05), 0 50px 90px -30px rgb(38 38 100 / 0.4);
+}
+
+@layer base {
+  :root {
+    /* Lets the FAQ panels animate to their natural height where supported. */
+    interpolate-size: allow-keywords;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 3px;
+  }
+
+  /* On dark sections the focus ring switches to white. */
+  .focus-light :focus-visible {
+    outline-color: #fff;
+  }
+
+  ::selection {
+    background: var(--color-brand-200);
+    color: var(--color-brand-950);
+  }
+}
+
+/* Faint blueprint grid behind the hero, fading out towards the edges. */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(69 65 230 / 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(69 65 230 / 0.08) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, #000 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, #000 25%, transparent 78%);
+}
+
+/* FAQ: slide the answer open. Browsers without ::details-content simply snap. */
+.faq-item::details-content {
+  block-size: 0;
+  overflow-y: clip;
+  transition:
+    block-size 0.28s ease,
+    content-visibility 0.28s allow-discrete;
+}
+
+.faq-item[open]::details-content {
+  block-size: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content {
+    transition: none;
+  }
+}

@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en" class="motion-safe:scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Duskline — The on-call agent for the hours nobody wants</title>
+  <meta name="description" content="Duskline is an AI on-call agent. It picks up the 3 a.m. page, investigates, fixes what your policy allows, and leaves a clear handoff for the morning.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/tailwind.css">
+  <script defer src="assets/js/menu.js"></script>
+</head>
+<body id="top" class="bg-night-950 font-sans text-mist-300 antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-ember-400 focus:px-4 focus:py-2 focus:font-medium focus:text-night-950">Skip to content</a>
+
+  <!-- ============ Header ============ -->
+  <header class="sticky top-0 z-50 border-b border-white/5 bg-night-950/75 backdrop-blur-xl max-md:noscript:static">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
+      <a href="#top" class="flex items-center gap-2.5 text-mist-100">
+        <svg viewBox="0 0 24 24" class="size-6 text-ember-400" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M12 2.75a9.25 9.25 0 0 1 0 18.5c2.6-2.5 3.9-5.6 3.9-9.25S14.6 5.25 12 2.75Z" fill="currentColor"/>
+        </svg>
+        <span class="font-display text-[1.65rem] leading-none">Duskline</span>
+      </a>
+
+      <nav aria-label="Primary" class="hidden md:block">
+        <ul class="flex items-center gap-8 text-sm text-mist-300">
+          <li><a href="#how" class="transition-colors hover:text-white">How it works</a></li>
+          <li><a href="#capabilities" class="transition-colors hover:text-white">Capabilities</a></li>
+          <li><a href="#guardrails" class="transition-colors hover:text-white">Guardrails</a></li>
+          <li><a href="#stories" class="transition-colors hover:text-white">Stories</a></li>
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a href="#start" class="hidden h-10 items-center rounded-full bg-white/10 px-4 text-sm font-medium text-mist-100 ring-1 ring-inset ring-white/10 transition hover:bg-white/15 sm:inline-flex">Start a night shift</a>
+        <button type="button" class="group inline-flex size-10 cursor-pointer items-center justify-center rounded-full text-mist-100 ring-1 ring-inset ring-white/10 transition hover:bg-white/10 md:hidden noscript:hidden" aria-controls="mobile-menu" aria-expanded="false" data-menu-toggle>
+          <span class="sr-only" data-menu-label>Open menu</span>
+          <svg viewBox="0 0 24 24" class="size-5 group-aria-expanded:hidden" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg>
+          <svg viewBox="0 0 24 24" class="hidden size-5 group-aria-expanded:block" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <nav id="mobile-menu" aria-label="Mobile" class="hidden border-t border-white/5 md:hidden max-md:noscript:block" data-menu>
+      <ul class="mx-auto max-w-6xl space-y-1 px-5 py-4 text-lg text-mist-100 sm:px-8">
+        <li><a href="#how" class="block rounded-lg px-3 py-2.5 hover:bg-white/5">How it works</a></li>
+        <li><a href="#capabilities" class="block rounded-lg px-3 py-2.5 hover:bg-white/5">Capabilities</a></li>
+        <li><a href="#guardrails" class="block rounded-lg px-3 py-2.5 hover:bg-white/5">Guardrails</a></li>
+        <li><a href="#stories" class="block rounded-lg px-3 py-2.5 hover:bg-white/5">Stories</a></li>
+        <li class="pt-3"><a href="#start" class="flex h-12 items-center justify-center rounded-full bg-ember-400 font-medium text-night-950">Start a night shift</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- ============ Hero ============ -->
+    <section class="relative isolate overflow-hidden" aria-labelledby="hero-heading">
+      <div class="starfield pointer-events-none absolute inset-x-0 top-0 -z-10 h-[44rem] mask-b-from-40% motion-safe:animate-twinkle" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute left-1/2 top-[-20rem] -z-10 h-[36rem] w-[64rem] -translate-x-1/2 rounded-full bg-moon-400/10 blur-3xl" aria-hidden="true"></div>
+
+      <div class="mx-auto max-w-6xl px-5 pt-16 text-center sm:px-8 sm:pt-24">
+        <a href="#capabilities" class="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 py-1 pl-1 pr-3 text-xs text-mist-300 transition hover:border-ember-400/40 hover:text-mist-100 sm:text-sm">
+          <span class="rounded-full bg-ember-400 px-2 py-0.5 font-medium text-night-950">New</span>
+          It now drafts the postmortem too
+          <svg viewBox="0 0 16 16" class="size-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+
+        <h1 id="hero-heading" class="mx-auto mt-8 max-w-5xl font-display text-[clamp(3.5rem,10vw,8rem)] leading-[0.9] tracking-tight text-balance text-mist-100">
+          Sleep through the <em class="text-ember-gradient pr-2">3&nbsp;a.m.</em> page.
+        </h1>
+
+        <p class="mx-auto mt-7 max-w-2xl text-lg leading-8 text-pretty text-mist-400 sm:text-xl sm:leading-9">
+          Duskline is the on-call agent for the hours nobody wants. It picks up the alert, investigates the way your best engineer would, fixes what your policy allows, and leaves a clear handoff for the morning.
+        </p>
+
+        <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="#start" class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ember-400 px-6 font-medium text-night-950 shadow-[0_0_44px_-8px_rgb(255_138_60/0.8)] transition hover:bg-ember-300 sm:w-auto">
+            Start a night shift
+            <svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a href="#how" class="inline-flex h-12 w-full items-center justify-center rounded-full border border-white/15 px-6 font-medium text-mist-100 transition hover:border-white/30 hover:bg-white/5 sm:w-auto">See how it works</a>
+        </div>
+        <p class="mt-5 text-sm text-mist-500">Free for one service. Set up in about ten minutes.</p>
+      </div>
+
+      <!-- Incident console sitting on the horizon -->
+      <div class="relative mt-16 pb-20 sm:mt-20 sm:pb-28">
+        <div class="horizon-arc absolute left-1/2 top-24 -z-10 aspect-square w-[260%] min-w-[1500px] -translate-x-1/2 rounded-full sm:top-32" aria-hidden="true"></div>
+
+        <figure class="relative mx-auto max-w-5xl px-5 sm:px-8">
+          <figcaption class="sr-only">Example: Duskline handling a latency page on checkout-api at 3:12 in the morning.</figcaption>
+          <div class="overflow-hidden rounded-2xl border border-white/10 bg-night-900/85 text-left shadow-2xl shadow-black/70 backdrop-blur-xl">
+            <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-white/8 px-4 py-3 sm:px-5">
+              <div class="flex items-center gap-3">
+                <span class="relative flex size-2">
+                  <span class="absolute inline-flex size-full rounded-full bg-ember-400 opacity-60 motion-safe:animate-ping"></span>
+                  <span class="relative inline-flex size-2 rounded-full bg-ember-400"></span>
+                </span>
+                <p class="font-mono text-xs text-mist-300">night shift <span class="text-mist-500">/</span> checkout-api</p>
+              </div>
+              <p class="rounded-full border border-ok-400/25 bg-ok-400/10 px-2.5 py-1 font-mono text-[11px] text-ok-400">resolved · nobody woken</p>
+            </div>
+
+            <div class="grid lg:grid-cols-[1.4fr_1fr]">
+              <div class="flex flex-col">
+                <ol class="divide-y divide-white/5 font-mono text-[13px] leading-6">
+                  <li class="gap-x-4 px-4 py-3 sm:grid sm:grid-cols-[4.75rem_4.5rem_1fr] sm:px-5">
+                    <time class="text-mist-500">03:12:04</time>
+                    <span class="ml-3 text-ember-300 sm:ml-0">PAGE</span>
+                    <p class="text-mist-100">p99 latency 2.4 s <span class="text-mist-500">(threshold 800 ms)</span></p>
+                  </li>
+                  <li class="gap-x-4 px-4 py-3 sm:grid sm:grid-cols-[4.75rem_4.5rem_1fr] sm:px-5">
+                    <time class="text-mist-500">03:12:09</time>
+                    <span class="ml-3 text-moon-300 sm:ml-0">READ</span>
+                    <p class="text-mist-300">Pulled 15 min of traces, last 3 deploys</p>
+                  </li>
+                  <li class="gap-x-4 px-4 py-3 sm:grid sm:grid-cols-[4.75rem_4.5rem_1fr] sm:px-5">
+                    <time class="text-mist-500">03:12:31</time>
+                    <span class="ml-3 text-moon-300 sm:ml-0">FOUND</span>
+                    <p class="text-mist-300">Deploy #4821 added an unindexed query</p>
+                  </li>
+                  <li class="gap-x-4 px-4 py-3 sm:grid sm:grid-cols-[4.75rem_4.5rem_1fr] sm:px-5">
+                    <time class="text-mist-500">03:12:44</time>
+                    <span class="ml-3 text-moon-300 sm:ml-0">POLICY</span>
+                    <p class="text-mist-300">Rollback is pre-approved for this service</p>
+                  </li>
+                  <li class="gap-x-4 bg-ember-400/[0.06] px-4 py-3 sm:grid sm:grid-cols-[4.75rem_4.5rem_1fr] sm:px-5">
+                    <time class="text-mist-500">03:13:02</time>
+                    <span class="ml-3 text-ember-300 sm:ml-0">ACT</span>
+                    <p class="text-mist-100">Rolled back to #4820</p>
+                  </li>
+                  <li class="gap-x-4 px-4 py-3 sm:grid sm:grid-cols-[4.75rem_4.5rem_1fr] sm:px-5">
+                    <time class="text-mist-500">03:14:40</time>
+                    <span class="ml-3 text-ok-400 sm:ml-0">VERIFY</span>
+                    <p class="text-mist-300">p99 back to 310 ms, error rate 0.02%</p>
+                  </li>
+                  <li class="gap-x-4 px-4 py-3 sm:grid sm:grid-cols-[4.75rem_4.5rem_1fr] sm:px-5">
+                    <time class="text-mist-500">03:15:10</time>
+                    <span class="ml-3 text-ok-400 sm:ml-0">HANDOFF</span>
+                    <p class="text-mist-300">Summary posted to #checkout-oncall</p>
+                  </li>
+                </ol>
+                <p class="mt-auto flex flex-wrap gap-x-5 gap-y-1 border-t border-white/8 px-4 py-3.5 font-mono text-xs text-mist-500 sm:px-5"><span><span class="text-mist-300">3 min 06 s</span> start to finish</span><span><span class="text-mist-300">1</span> action taken</span><span><span class="text-mist-300">0</span> people paged</span></p>
+              </div>
+
+              <div class="border-t border-white/8 bg-night-800/70 p-5 sm:p-6 md:max-lg:grid md:max-lg:grid-cols-2 md:max-lg:gap-8 lg:border-l lg:border-t-0">
+                <div>
+                  <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-mist-500">Morning handoff</p>
+                  <p class="mt-3 font-display text-[1.75rem] leading-[1.1] text-balance text-mist-100">Checkout latency, resolved in 2&nbsp;min 36&nbsp;s</p>
+
+                  <svg viewBox="0 0 280 72" class="mt-5 w-full" role="img" aria-label="Latency chart: a sharp spike at 3:12 that returns to normal after the rollback.">
+                    <line x1="0" y1="34" x2="280" y2="34" stroke="#ffffff" stroke-opacity="0.14" stroke-dasharray="3 5"/>
+                    <path d="M0 56 L40 55 L72 54 L94 52 L106 18 L122 11 L140 13 L158 14 L170 50 L200 55 L240 56 L280 56 L280 72 L0 72 Z" fill="#ff8a3c" fill-opacity="0.12"/>
+                    <path d="M0 56 L40 55 L72 54 L94 52 L106 18 L122 11 L140 13 L158 14 L170 50 L200 55 L240 56 L280 56" fill="none" stroke="#ffab52" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/>
+                    <line x1="158" y1="4" x2="158" y2="72" stroke="#6ee7a8" stroke-opacity="0.6"/>
+                    <circle cx="158" cy="14" r="3" fill="#6ee7a8"/>
+                    <text x="166" y="12" fill="#6ee7a8" font-size="9" font-family="Geist Mono, ui-monospace, monospace">rollback</text>
+                    <text x="0" y="30" fill="#7d849a" font-size="9" font-family="Geist Mono, ui-monospace, monospace">800 ms</text>
+                  </svg>
+                </div>
+
+                <dl class="mt-5 space-y-4 text-sm leading-6 md:max-lg:mt-0">
+                  <div>
+                    <dt class="font-mono text-[11px] uppercase tracking-[0.14em] text-mist-500">Cause</dt>
+                    <dd class="mt-1 text-mist-300">Deploy #4821 shipped a query with no index on <code class="rounded bg-white/8 px-1 py-0.5 font-mono text-[12px] text-mist-100">orders.customer_ref</code>.</dd>
+                  </div>
+                  <div>
+                    <dt class="font-mono text-[11px] uppercase tracking-[0.14em] text-mist-500">Needs a human</dt>
+                    <dd class="mt-1 text-mist-300">Add the index before #4821 ships again. A draft fix is waiting for review.</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ Numbers ============ -->
+    <section aria-labelledby="numbers-heading" class="border-y border-white/5 bg-night-900/60">
+      <h2 id="numbers-heading" class="sr-only">Duskline in numbers</h2>
+      <dl class="mx-auto grid max-w-6xl divide-y divide-white/5 px-5 sm:px-8 md:grid-cols-3 md:divide-x md:divide-y-0">
+        <div class="flex flex-col-reverse gap-3 py-10 md:py-14 md:pr-10">
+          <dt class="max-w-[16rem] text-sm leading-6 text-mist-400">median time from page to mitigation, across every night shift last quarter</dt>
+          <dd class="font-display text-6xl leading-none text-mist-100 sm:text-7xl">4<span class="text-ember-400">m</span> 08<span class="text-ember-400">s</span></dd>
+        </div>
+        <div class="flex flex-col-reverse gap-3 py-10 md:px-10 md:py-14">
+          <dt class="max-w-[16rem] text-sm leading-6 text-mist-400">of overnight pages closed without waking a person</dt>
+          <dd class="font-display text-6xl leading-none text-mist-100 sm:text-7xl">71<span class="text-ember-400">%</span></dd>
+        </div>
+        <div class="flex flex-col-reverse gap-3 py-10 md:py-14 md:pl-10">
+          <dt class="max-w-[16rem] text-sm leading-6 text-mist-400">actions taken outside a customer's written policy. Ever.</dt>
+          <dd class="font-display text-6xl leading-none text-mist-100 sm:text-7xl">0</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ============ How it works ============ -->
+    <section id="how" class="scroll-mt-16 py-24 sm:py-32" aria-labelledby="how-heading">
+      <div class="mx-auto grid max-w-6xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
+        <div class="lg:sticky lg:top-28 lg:self-start">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-ember-400">How it works</p>
+          <h2 id="how-heading" class="mt-5 font-display text-5xl leading-[1.02] text-balance text-mist-100 sm:text-6xl">From page to handoff before you would have found your glasses.</h2>
+          <p class="mt-6 max-w-md text-lg leading-8 text-mist-400">Duskline takes first response on the services you choose, during the hours you choose. It works an incident the way your team would: evidence first, smallest safe action second.</p>
+        </div>
+
+        <ol class="relative space-y-14 border-l border-white/10 pl-8 sm:pl-10">
+          <li class="relative">
+            <span class="absolute top-1.5 left-[calc(-2rem_-_5px)] size-2.5 rounded-full bg-ember-400 ring-4 ring-night-950 sm:left-[calc(-2.5rem_-_5px)]" aria-hidden="true"></span>
+            <p class="font-mono text-xs text-mist-500">01 <span class="mx-1 text-white/20">/</span> 03:12:04</p>
+            <h3 class="mt-2 text-2xl font-medium tracking-tight text-mist-100">It takes the page</h3>
+            <p class="mt-3 leading-7 text-mist-400">Point any alert source at Duskline for the services and hours you pick. When something fires it acknowledges within seconds, so the escalation timer only reaches a person when it should.</p>
+          </li>
+
+          <li class="relative">
+            <span class="absolute top-1.5 left-[calc(-2rem_-_5px)] size-2.5 rounded-full bg-moon-300 ring-4 ring-night-950 sm:left-[calc(-2.5rem_-_5px)]" aria-hidden="true"></span>
+            <p class="font-mono text-xs text-mist-500">02 <span class="mx-1 text-white/20">/</span> 03:12:09</p>
+            <h3 class="mt-2 text-2xl font-medium tracking-tight text-mist-100">It gathers evidence</h3>
+            <p class="mt-3 leading-7 text-mist-400">Before touching anything, it reads. Traces, logs, recent deploys, the runbook for that alert, and what happened the last time it fired.</p>
+            <ul class="mt-5 flex flex-wrap gap-2 font-mono text-xs text-mist-300">
+              <li class="rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5">traces · 15 min</li>
+              <li class="rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5">deploys · last 3</li>
+              <li class="rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5">runbook · checkout-latency</li>
+              <li class="rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5">last seen · 28 Sep</li>
+            </ul>
+          </li>
+
+          <li class="relative">
+            <span class="absolute top-1.5 left-[calc(-2rem_-_5px)] size-2.5 rounded-full bg-moon-300 ring-4 ring-night-950 sm:left-[calc(-2.5rem_-_5px)]" aria-hidden="true"></span>
+            <p class="font-mono text-xs text-mist-500">03 <span class="mx-1 text-white/20">/</span> 03:13:02</p>
+            <h3 class="mt-2 text-2xl font-medium tracking-tight text-mist-100">It takes the smallest safe action</h3>
+            <p class="mt-3 leading-7 text-mist-400">If your policy allows the fix, Duskline makes it and watches the graphs to confirm it worked. If the fix needs permission, it asks the right person with everything they need to answer in one tap.</p>
+            <div class="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-ember-400/25 bg-ember-400/[0.07] px-4 py-3">
+              <p class="font-mono text-[13px] text-mist-100">rollback_deploy <span class="text-mist-500">→</span> #4820</p>
+              <p class="font-mono text-xs text-ember-300">allowed by policy · verified 90 s</p>
+            </div>
+          </li>
+
+          <li class="relative">
+            <span class="absolute top-1.5 left-[calc(-2rem_-_5px)] size-2.5 rounded-full bg-ok-400 ring-4 ring-night-950 sm:left-[calc(-2.5rem_-_5px)]" aria-hidden="true"></span>
+            <p class="font-mono text-xs text-mist-500">04 <span class="mx-1 text-white/20">/</span> 03:15:10</p>
+            <h3 class="mt-2 text-2xl font-medium tracking-tight text-mist-100">It writes the handoff</h3>
+            <p class="mt-3 leading-7 text-mist-400">You wake up to four lines: what broke, why, what changed, and what still needs a human. The full trail is one click away, and a postmortem draft is waiting if you want it.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ Capabilities ============ -->
+    <section id="capabilities" class="scroll-mt-16 border-t border-white/5 py-24 sm:py-32" aria-labelledby="capabilities-heading">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <div class="max-w-3xl">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-ember-400">Capabilities</p>
+          <h2 id="capabilities-heading" class="mt-5 font-display text-5xl leading-[1.02] text-balance text-mist-100 sm:text-6xl">A colleague for the night, not a chatbot with a pager.</h2>
+        </div>
+
+        <div class="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
+          <!-- Runbooks -->
+          <article class="group relative overflow-hidden rounded-3xl border border-white/8 bg-night-900 p-6 transition-colors hover:border-white/15 sm:p-8 md:col-span-2 lg:col-span-4">
+            <div class="grid h-full gap-8 sm:grid-cols-2 sm:items-center">
+              <div>
+                <h3 class="text-2xl font-medium tracking-tight text-mist-100">Reads the runbook before it touches anything</h3>
+                <p class="mt-3 leading-7 text-mist-400">Duskline follows the procedures your team already wrote and tells you which step it is on. Where a runbook is missing, it says so instead of improvising.</p>
+              </div>
+              <div class="rounded-xl border border-white/8 bg-night-800 p-4 font-mono text-xs leading-6" aria-hidden="true">
+                <p class="text-mist-500">runbooks/checkout-latency.md</p>
+                <p class="mt-3 text-mist-400">1. Check the error rate</p>
+                <p class="text-mist-400">2. Compare against last deploy</p>
+                <p class="-mx-2 rounded-md bg-ember-400/15 px-2 text-ember-200">3. Regressed after a deploy? Roll back</p>
+                <p class="text-mist-500">4. Otherwise scale read replicas</p>
+                <p class="text-mist-500">5. Still slow? Wake the owner</p>
+                <p class="mt-3 inline-flex items-center gap-2 text-ember-300"><span class="size-1.5 rounded-full bg-ember-400"></span>on step 3 of 5</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Service map -->
+          <article class="relative overflow-hidden rounded-3xl border border-white/8 bg-night-900 p-6 transition-colors hover:border-white/15 sm:p-8 lg:col-span-2">
+            <svg viewBox="0 0 280 150" class="w-full" role="img" aria-label="A service map: gateway calls checkout, which calls payments, orders-db and inventory. The path to orders-db is highlighted.">
+              <g fill="none" stroke="#ffffff" stroke-opacity="0.18">
+                <path d="M64 75H100"/>
+                <path d="M166 75C190 75 182 24 206 24"/>
+                <path d="M166 75C190 75 182 126 206 126"/>
+              </g>
+              <path d="M166 75H206" fill="none" stroke="#ffab52" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <g fill="#0f121c" stroke="#ffffff" stroke-opacity="0.22">
+                <rect x="4" y="61" width="60" height="28" rx="8"/>
+                <rect x="206" y="10" width="70" height="28" rx="8"/>
+                <rect x="206" y="112" width="70" height="28" rx="8"/>
+              </g>
+              <rect x="100" y="61" width="66" height="28" rx="8" fill="#171b29" stroke="#b8c2ff" stroke-opacity="0.6"/>
+              <rect x="206" y="61" width="70" height="28" rx="8" fill="#2a1a10" stroke="#ffab52"/>
+              <g font-family="Geist Mono, ui-monospace, monospace" font-size="10.5" text-anchor="middle">
+                <text x="34" y="78.5" fill="#9aa1b5">gateway</text>
+                <text x="133" y="78.5" fill="#eef0f7">checkout</text>
+                <text x="241" y="27.5" fill="#9aa1b5">payments</text>
+                <text x="241" y="78.5" fill="#ffc37d">orders-db</text>
+                <text x="241" y="129.5" fill="#9aa1b5">inventory</text>
+              </g>
+            </svg>
+            <h3 class="mt-6 text-xl font-medium tracking-tight text-mist-100">Knows what depends on what</h3>
+            <p class="mt-3 leading-7 text-mist-400">A service map built from your traces, so one slow database is not mistaken for six separate outages.</p>
+          </article>
+
+          <!-- Chat -->
+          <article class="relative overflow-hidden rounded-3xl border border-white/8 bg-night-900 p-6 transition-colors hover:border-white/15 sm:p-8 lg:col-span-2">
+            <div class="rounded-xl border border-white/8 bg-night-800 p-4" aria-hidden="true">
+              <p class="font-mono text-[11px] text-mist-500"># checkout-oncall</p>
+              <div class="mt-3 flex gap-3">
+                <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-ember-400 font-display text-lg leading-none text-night-950">D</span>
+                <div class="text-sm leading-6">
+                  <p class="text-mist-100"><span class="font-medium">Duskline</span> <span class="ml-1 font-mono text-[11px] text-mist-500">03:15</span></p>
+                  <p class="text-mist-300">Checkout is healthy again. I rolled back #4821. Summary in thread. Sleep well.</p>
+                </div>
+              </div>
+            </div>
+            <h3 class="mt-6 text-xl font-medium tracking-tight text-mist-100">Reports where your team already talks</h3>
+            <p class="mt-3 leading-7 text-mist-400">Plain updates in the incident channel, written for someone reading them half awake.</p>
+          </article>
+
+          <!-- Memory -->
+          <article class="relative overflow-hidden rounded-3xl border border-white/8 bg-night-900 p-6 transition-colors hover:border-white/15 sm:p-8 md:col-span-2 lg:col-span-4">
+            <div class="grid h-full gap-8 sm:grid-cols-2 sm:items-center">
+              <div class="sm:order-2">
+                <h3 class="text-2xl font-medium tracking-tight text-mist-100">Gets sharper with every incident</h3>
+                <p class="mt-3 leading-7 text-mist-400">Each resolved page becomes context for the next one. When the same thing keeps breaking, Duskline says so, and suggests the fix that would stop the pages altogether.</p>
+              </div>
+              <div class="font-mono text-xs" aria-hidden="true">
+                <ul class="space-y-2 text-mist-400">
+                  <li class="flex items-center justify-between gap-3 rounded-lg border border-white/8 bg-night-800 px-3 py-2.5"><span>12 Sep · checkout latency</span><span class="text-mist-500">bad deploy</span></li>
+                  <li class="flex items-center justify-between gap-3 rounded-lg border border-white/8 bg-night-800 px-3 py-2.5"><span>28 Sep · checkout latency</span><span class="text-mist-500">bad deploy</span></li>
+                  <li class="flex items-center justify-between gap-3 rounded-lg border border-white/8 bg-night-800 px-3 py-2.5"><span>14 Oct · checkout latency</span><span class="text-mist-500">bad deploy</span></li>
+                </ul>
+                <p class="mt-3 rounded-lg border border-moon-300/25 bg-moon-400/10 px-3 py-2.5 leading-5 text-moon-300">Pattern: 3 of 3 were unindexed queries. Suggest a migration check in CI.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Guardrails ============ -->
+    <section id="guardrails" class="scroll-mt-16 border-t border-white/5 bg-night-900/60 py-24 sm:py-32" aria-labelledby="guardrails-heading">
+      <div class="mx-auto grid max-w-6xl gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:items-center lg:gap-20">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-ember-400">Guardrails</p>
+          <h2 id="guardrails-heading" class="mt-5 font-display text-5xl leading-[1.02] text-balance text-mist-100 sm:text-6xl">You draw the line. It stays behind it.</h2>
+          <p class="mt-6 max-w-lg text-lg leading-8 text-mist-400">Nothing happens at night that you did not agree to in daylight. One short policy file per service decides what Duskline may do alone, what needs a yes, and what is off the table.</p>
+
+          <dl class="mt-10 space-y-6">
+            <div class="relative pl-7 before:absolute before:left-0 before:top-2 before:size-2.5 before:rounded-full before:bg-ok-400">
+              <dt class="font-medium text-mist-100">Allowed</dt>
+              <dd class="mt-1 leading-7 text-mist-400">Reversible actions it may take alone, like restarting a worker or rolling back a recent deploy.</dd>
+            </div>
+            <div class="relative pl-7 before:absolute before:left-0 before:top-2 before:size-2.5 before:rounded-full before:bg-ember-400">
+              <dt class="font-medium text-mist-100">Ask first</dt>
+              <dd class="mt-1 leading-7 text-mist-400">Actions that need a named person to say yes. One tap from a phone, with the evidence attached.</dd>
+            </div>
+            <div class="relative pl-7 before:absolute before:left-0 before:top-2 before:size-2.5 before:rounded-full before:bg-rose-400">
+              <dt class="font-medium text-mist-100">Never</dt>
+              <dd class="mt-1 leading-7 text-mist-400">Things it will not do, whoever asks and however urgent the page sounds.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <figure class="min-w-0">
+          <figcaption class="sr-only">An example Duskline policy file for the checkout-api service.</figcaption>
+          <div class="overflow-hidden rounded-2xl border border-white/10 bg-night-950 shadow-2xl shadow-black/50">
+            <div class="flex items-center gap-2 border-b border-white/8 px-4 py-3">
+              <span class="size-2.5 rounded-full bg-white/15" aria-hidden="true"></span>
+              <span class="size-2.5 rounded-full bg-white/15" aria-hidden="true"></span>
+              <span class="size-2.5 rounded-full bg-white/15" aria-hidden="true"></span>
+              <p class="ml-3 font-mono text-xs text-mist-400">checkout-api.policy</p>
+            </div>
+            <pre class="overflow-x-auto p-5 font-mono text-[13px] leading-7 text-mist-300 sm:p-6" tabindex="0"><code><span class="text-mist-500"># Who covers what, and when</span>
+<span class="text-moon-300">service</span>: checkout-api
+<span class="text-moon-300">hours</span>: 22:00 to 07:00, local time
+
+<span class="text-ok-400">allow</span>:
+  - restart_worker
+  - rollback_deploy  <span class="text-mist-500"># last 3 only</span>
+
+<span class="text-ember-300">ask_first</span>:
+  - scale_database   <span class="text-mist-500"># asks @imani</span>
+  - toggle_feature_flag
+
+<span class="text-rose-400">never</span>:
+  - delete_anything
+  - touch: billing-*
+
+<span class="text-moon-300">escalate</span>:
+  after: 10 min unresolved
+  to: secondary on-call</code></pre>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ Stories ============ -->
+    <section id="stories" class="scroll-mt-16 border-t border-white/5 py-24 sm:py-32" aria-labelledby="stories-heading">
+      <div class="mx-auto grid max-w-6xl gap-14 px-5 sm:px-8 lg:grid-cols-[1.25fr_1fr] lg:gap-20">
+        <figure>
+          <h2 id="stories-heading" class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-ember-400">From a real rotation</h2>
+          <blockquote class="mt-6 font-display text-4xl leading-[1.12] text-balance text-mist-100 sm:text-5xl">
+            <p>&ldquo;I used to keep my laptop on the nightstand. Now I read four lines with my coffee and decide whether the fix deserves a proper pull request.&rdquo;</p>
+          </blockquote>
+          <figcaption class="mt-8 flex items-center gap-4">
+            <span class="flex size-12 items-center justify-center rounded-full bg-linear-to-br from-ember-300 to-ember-600 font-display text-2xl leading-none text-night-950" aria-hidden="true">I</span>
+            <span>
+              <span class="block font-medium text-mist-100">Imani Okafor</span>
+              <span class="block text-sm text-mist-400">Staff reliability engineer, Halvorsen Freight</span>
+            </span>
+          </figcaption>
+        </figure>
+
+        <div class="rounded-3xl border border-white/8 bg-night-900 p-6 sm:p-8 lg:self-center">
+          <h3 class="font-medium text-mist-100">Her team's first week</h3>
+          <p class="mt-1 text-sm text-mist-400">Overnight pages, 22:00 to 07:00</p>
+
+          <div class="mt-8 flex items-end justify-between gap-2" role="img" aria-label="Pages per night: Monday 3, Tuesday 5 with one escalated, Wednesday 2, Thursday 4, Friday 6 with one escalated, Saturday 1, Sunday 2.">
+            <div class="flex flex-1 flex-col-reverse items-center gap-1.5">
+              <span class="mt-2 font-mono text-[11px] text-mist-500">Mon</span>
+              <span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span>
+            </div>
+            <div class="flex flex-1 flex-col-reverse items-center gap-1.5">
+              <span class="mt-2 font-mono text-[11px] text-mist-500">Tue</span>
+              <span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-moon-300"></span>
+            </div>
+            <div class="flex flex-1 flex-col-reverse items-center gap-1.5">
+              <span class="mt-2 font-mono text-[11px] text-mist-500">Wed</span>
+              <span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span>
+            </div>
+            <div class="flex flex-1 flex-col-reverse items-center gap-1.5">
+              <span class="mt-2 font-mono text-[11px] text-mist-500">Thu</span>
+              <span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span>
+            </div>
+            <div class="flex flex-1 flex-col-reverse items-center gap-1.5">
+              <span class="mt-2 font-mono text-[11px] text-mist-500">Fri</span>
+              <span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-moon-300"></span>
+            </div>
+            <div class="flex flex-1 flex-col-reverse items-center gap-1.5">
+              <span class="mt-2 font-mono text-[11px] text-mist-500">Sat</span>
+              <span class="size-3 rounded-full bg-ember-400"></span>
+            </div>
+            <div class="flex flex-1 flex-col-reverse items-center gap-1.5">
+              <span class="mt-2 font-mono text-[11px] text-mist-500">Sun</span>
+              <span class="size-3 rounded-full bg-ember-400"></span><span class="size-3 rounded-full bg-ember-400"></span>
+            </div>
+          </div>
+
+          <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/8 pt-5 text-sm text-mist-400">
+            <li class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-ember-400" aria-hidden="true"></span>21 handled alone</li>
+            <li class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-moon-300" aria-hidden="true"></span>2 escalated, with context</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Call to action ============ -->
+    <section id="start" class="scroll-mt-16 px-5 pb-24 sm:px-8 sm:pb-32" aria-labelledby="start-heading">
+      <div class="grain relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-white/10 bg-night-900 px-6 py-20 text-center sm:px-12 sm:py-28">
+        <div class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-full bg-radial-[80%_70%_at_50%_115%] from-ember-500/60 via-ember-600/15 to-transparent" aria-hidden="true"></div>
+        <div class="starfield pointer-events-none absolute inset-0 -z-10 opacity-60 mask-b-from-20%" aria-hidden="true"></div>
+
+        <h2 id="start-heading" class="mx-auto max-w-3xl font-display text-5xl leading-[0.98] text-balance text-mist-100 sm:text-7xl">Hand over the night shift.</h2>
+        <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-mist-300">Connect one service, write a ten-line policy, and let Duskline shadow your rotation for a week. It only acts when you tell it to.</p>
+        <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="#" class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ember-400 px-6 font-medium text-night-950 shadow-[0_0_44px_-8px_rgb(255_138_60/0.8)] transition hover:bg-ember-300 sm:w-auto">
+            Start a night shift
+            <svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a href="#" class="inline-flex h-12 w-full items-center justify-center rounded-full border border-white/20 bg-night-950/40 px-6 font-medium text-mist-100 transition hover:border-white/35 hover:bg-white/5 sm:w-auto">Talk to an engineer</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="border-t border-white/5">
+    <div class="mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div>
+        <a href="#top" class="inline-flex items-center gap-2.5 text-mist-100">
+          <svg viewBox="0 0 24 24" class="size-6 text-ember-400" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M12 2.75a9.25 9.25 0 0 1 0 18.5c2.6-2.5 3.9-5.6 3.9-9.25S14.6 5.25 12 2.75Z" fill="currentColor"/>
+          </svg>
+          <span class="font-display text-[1.65rem] leading-none">Duskline</span>
+        </a>
+        <p class="mt-4 max-w-xs text-sm leading-6 text-mist-400">The on-call agent for the hours nobody wants.</p>
+        <p class="mt-6 inline-flex items-center gap-2 rounded-full border border-white/8 px-3 py-1.5 font-mono text-[11px] text-mist-400"><span class="size-1.5 rounded-full bg-ok-400" aria-hidden="true"></span>All systems calm</p>
+      </div>
+
+      <nav aria-label="Product">
+        <h2 class="font-mono text-xs uppercase tracking-[0.18em] text-mist-500">Product</h2>
+        <ul class="mt-4 space-y-3 text-sm text-mist-300">
+          <li><a href="#how" class="transition-colors hover:text-white">How it works</a></li>
+          <li><a href="#capabilities" class="transition-colors hover:text-white">Capabilities</a></li>
+          <li><a href="#guardrails" class="transition-colors hover:text-white">Guardrails</a></li>
+          <li><a href="#" class="transition-colors hover:text-white">Changelog</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Company">
+        <h2 class="font-mono text-xs uppercase tracking-[0.18em] text-mist-500">Company</h2>
+        <ul class="mt-4 space-y-3 text-sm text-mist-300">
+          <li><a href="#stories" class="transition-colors hover:text-white">Stories</a></li>
+          <li><a href="#" class="transition-colors hover:text-white">Careers</a></li>
+          <li><a href="#" class="transition-colors hover:text-white">Security</a></li>
+          <li><a href="#" class="transition-colors hover:text-white">Contact</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Resources">
+        <h2 class="font-mono text-xs uppercase tracking-[0.18em] text-mist-500">Resources</h2>
+        <ul class="mt-4 space-y-3 text-sm text-mist-300">
+          <li><a href="#" class="transition-colors hover:text-white">Documentation</a></li>
+          <li><a href="#" class="transition-colors hover:text-white">Policy reference</a></li>
+          <li><a href="#" class="transition-colors hover:text-white">Status</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="border-t border-white/5">
+      <div class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-6 text-sm text-mist-500 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <p>&copy; 2026 Duskline Labs. All rights reserved.</p>
+        <ul class="flex gap-6">
+          <li><a href="#" class="transition-colors hover:text-mist-100">Privacy</a></li>
+          <li><a href="#" class="transition-colors hover:text-mist-100">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

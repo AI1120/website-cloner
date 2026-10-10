@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create your account — Frondly</title>
+  <meta name="description" content="Create a Frondly account in two minutes and get care reminders tuned to each of your houseplants.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..700&family=Fraunces:opsz,wght@9..144,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/tailwind.css">
+  <script defer src="assets/js/signup.js"></script>
+</head>
+<body class="bg-cream-50 font-sans text-forest-950 antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-forest-900 focus:px-5 focus:py-2 focus:font-semibold focus:text-cream-50">Skip to the form</a>
+
+  <div class="grid min-h-screen lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+    <!-- ============ Brand panel (large screens) ============ -->
+    <aside class="focus-light relative hidden overflow-hidden bg-forest-900 text-cream-100 lg:flex lg:flex-col lg:justify-between lg:gap-10 lg:p-12 xl:p-16" aria-label="About Frondly">
+      <div class="pointer-events-none absolute -left-32 -top-32 size-[30rem] rounded-full bg-forest-700/40 blur-3xl" aria-hidden="true"></div>
+
+      <a href="index.html" class="relative flex items-center gap-2.5 self-start text-cream-50">
+        <svg viewBox="0 0 32 32" class="size-8" aria-hidden="true">
+          <path d="M16 29V14" stroke="#d9f195" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M16 15C16 8 11 4 4 4c0 7 5 11 12 11Z" fill="#d9f195"/>
+          <path d="M16 21c0-6 4-10 12-10 0 6-4 10-12 10Z" fill="#8fd0b0"/>
+        </svg>
+        <span class="font-display text-[1.75rem] leading-none tracking-tight">Frondly</span>
+      </a>
+
+      <div class="relative mx-auto w-full max-w-md">
+        <img src="assets/img/shelf.svg" width="480" height="400" class="w-full" alt="Three potted plants on a shelf by a window: a snake plant, a monstera and a flowering cactus.">
+        <p class="absolute -left-2 top-8 flex -rotate-3 items-center gap-3 rounded-2xl bg-cream-50 py-2.5 pl-2.5 pr-4 text-forest-950 shadow-xl shadow-forest-950/40 xl:-left-8" aria-hidden="true">
+          <span class="flex size-10 items-center justify-center rounded-xl bg-forest-100 text-forest-700">
+            <svg viewBox="0 0 20 20" class="size-5" fill="currentColor"><path d="M10 2.5c3 3.6 5 6.2 5 8.8a5 5 0 0 1-10 0c0-2.6 2-5.2 5-8.8Z"/></svg>
+          </span>
+          <span class="text-sm leading-5"><span class="block font-bold">Water the monstera</span><span class="block text-moss-600">Today, before noon</span></span>
+        </p>
+      </div>
+
+      <figure class="relative max-w-md">
+        <blockquote class="font-display text-[1.75rem] leading-[1.25] text-cream-50">
+          <p>&ldquo;I have kept a fern alive for fourteen months. That beats my old record by thirteen.&rdquo;</p>
+        </blockquote>
+        <figcaption class="mt-4 text-sm text-forest-300">Odile, 23 plants and counting</figcaption>
+      </figure>
+    </aside>
+
+    <!-- ============ Form column ============ -->
+    <div class="flex min-h-screen flex-col">
+      <header class="flex items-center justify-between gap-4 px-6 py-5 sm:px-10 lg:justify-end">
+        <a href="index.html" class="flex items-center gap-2 text-forest-900 lg:hidden">
+          <svg viewBox="0 0 32 32" class="size-7" aria-hidden="true">
+            <path d="M16 29V14" stroke="#23614b" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M16 15C16 8 11 4 4 4c0 7 5 11 12 11Z" fill="#23614b"/>
+            <path d="M16 21c0-6 4-10 12-10 0 6-4 10-12 10Z" fill="#3f9d76"/>
+          </svg>
+          <span class="font-display text-2xl leading-none tracking-tight">Frondly</span>
+        </a>
+        <p class="text-sm text-moss-600">Have an account? <a href="#" class="font-semibold text-forest-800 underline decoration-forest-300 decoration-2 underline-offset-4 hover:decoration-forest-600">Sign in</a></p>
+      </header>
+
+      <main id="main" class="flex flex-1 items-center justify-center px-6 py-8 sm:px-10 sm:py-12">
+        <div class="w-full max-w-md">
+          <nav aria-label="Sign-up progress">
+            <ol class="flex items-center gap-3 text-sm font-semibold">
+              <li class="flex items-center gap-2 text-forest-900" aria-current="step"><span class="flex size-7 items-center justify-center rounded-full bg-forest-900 text-xs text-cream-50">1</span>Account</li>
+              <li class="h-px flex-1 bg-cream-300" aria-hidden="true"></li>
+              <li class="flex items-center gap-2 text-moss-600"><span class="flex size-7 items-center justify-center rounded-full text-xs ring-1 ring-inset ring-cream-300">2</span>Plan</li>
+              <li class="h-px flex-1 bg-cream-300" aria-hidden="true"></li>
+              <li class="flex items-center gap-2 text-moss-600"><span class="flex size-7 items-center justify-center rounded-full text-xs ring-1 ring-inset ring-cream-300">3</span>Done</li>
+            </ol>
+          </nav>
+
+          <h1 class="mt-10 font-display text-[2.6rem] leading-[1.05] tracking-tight text-forest-950 sm:text-5xl">Create your account</h1>
+          <p class="mt-4 text-lg leading-7 text-moss-600">Two minutes now, fewer crispy leaves later. Free to start, no card needed.</p>
+
+          <!-- Replace the action with your own sign-up endpoint. With JavaScript on, the
+               form is validated in the browser and then moves on to plan.html. -->
+          <form class="mt-8" action="plan.html" method="post" data-signup-form data-next="plan.html">
+            <p class="mb-6 rounded-xl border border-danger-600/30 bg-danger-50 px-4 py-3 text-sm font-semibold text-danger-600" role="alert" hidden data-error-summary></p>
+
+            <div class="space-y-5">
+              <div>
+                <label for="name" class="block text-sm font-semibold">Your name</label>
+                <input id="name" name="name" type="text" required minlength="2" autocomplete="name" aria-describedby="name-error" class="mt-2 block h-12 w-full rounded-xl border border-cream-300 bg-white px-4 text-base text-forest-950 shadow-xs transition-colors placeholder:text-moss-600/85 hover:border-forest-500 focus:border-forest-600 aria-invalid:border-danger-600 aria-invalid:bg-danger-50" placeholder="Dana Whitlock">
+                <p id="name-error" class="mt-2 text-sm font-medium text-danger-600" hidden></p>
+              </div>
+
+              <div>
+                <label for="email" class="block text-sm font-semibold">Email address</label>
+                <input id="email" name="email" type="email" required autocomplete="email" aria-describedby="email-error" class="mt-2 block h-12 w-full rounded-xl border border-cream-300 bg-white px-4 text-base text-forest-950 shadow-xs transition-colors placeholder:text-moss-600/85 hover:border-forest-500 focus:border-forest-600 aria-invalid:border-danger-600 aria-invalid:bg-danger-50" placeholder="dana@example.com">
+                <p id="email-error" class="mt-2 text-sm font-medium text-danger-600" hidden></p>
+              </div>
+
+              <div>
+                <div class="flex items-baseline justify-between gap-4">
+                  <label for="password" class="block text-sm font-semibold">Password</label>
+                  <button type="button" class="cursor-pointer rounded text-sm font-semibold text-forest-700 underline decoration-forest-300 decoration-2 underline-offset-4 hover:decoration-forest-600 noscript:hidden" aria-controls="password" data-password-toggle><span data-password-toggle-text>Show</span><span class="sr-only"> password</span></button>
+                </div>
+                <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password" aria-describedby="password-hint password-error" class="mt-2 block h-12 w-full rounded-xl border border-cream-300 bg-white px-4 text-base text-forest-950 shadow-xs transition-colors hover:border-forest-500 focus:border-forest-600 aria-invalid:border-danger-600 aria-invalid:bg-danger-50">
+                <p id="password-hint" class="mt-2 text-sm text-moss-600">At least 8 characters, with at least one number.</p>
+                <p id="password-error" class="mt-1 text-sm font-medium text-danger-600" hidden></p>
+              </div>
+
+              <div>
+                <label class="flex cursor-pointer items-start gap-3 text-sm leading-6 text-moss-600">
+                  <input id="terms" name="terms" type="checkbox" required aria-describedby="terms-error" class="mt-0.5 size-5 shrink-0 cursor-pointer rounded-md border border-cream-300 accent-forest-700 aria-invalid:outline-2 aria-invalid:outline-offset-2 aria-invalid:outline-danger-600">
+                  <span>I agree to the <a href="#" class="font-semibold text-forest-800 underline decoration-forest-300 decoration-2 underline-offset-4 hover:decoration-forest-600">Terms</a> and <a href="#" class="font-semibold text-forest-800 underline decoration-forest-300 decoration-2 underline-offset-4 hover:decoration-forest-600">Privacy Policy</a>.</span>
+                </label>
+                <p id="terms-error" class="mt-2 text-sm font-medium text-danger-600" hidden></p>
+              </div>
+            </div>
+
+            <button type="submit" class="mt-8 flex h-13 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-forest-900 text-base font-semibold text-cream-50 shadow-lg shadow-forest-900/20 transition hover:bg-forest-800 active:translate-y-px">
+              Continue
+              <svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </button>
+          </form>
+        </div>
+      </main>
+
+      <footer class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-5 text-sm text-moss-600 sm:px-10">
+        <p>&copy; 2026 Frondly</p>
+        <ul class="flex gap-5">
+          <li><a href="#" class="underline-offset-4 hover:text-forest-900 hover:underline">Help</a></li>
+          <li><a href="#" class="underline-offset-4 hover:text-forest-900 hover:underline">Privacy</a></li>
+          <li><a href="#" class="underline-offset-4 hover:text-forest-900 hover:underline">Terms</a></li>
+        </ul>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>

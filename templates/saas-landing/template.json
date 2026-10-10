@@ -1,0 +1,6 @@
+{
+  "name": "Brindle — SaaS landing page",
+  "description": "A crisp B2B SaaS landing page with a product-window hero, alternating feature rows, a customer story, pricing with a working monthly/yearly toggle and an FAQ accordion.",
+  "framework": "html",
+  "styling": "tailwind"
+}

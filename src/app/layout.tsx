@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Website Clone",
-  description: "Pixel-perfect website clone",
+  title: "SiteCloner",
+  description: "Clone a website from its URL, refine it with AI, export the code, and publish a link.",
 };
 
 export default function RootLayout({

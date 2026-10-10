@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* Frondly: cream paper, deep greenhouse green, a soft serif for warmth. */
+@theme {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+
+  --color-cream-50: #fbf9f3;
+  --color-cream-100: #f4f0e4;
+  --color-cream-200: #e8e2d0;
+  --color-cream-300: #d3ccb6;
+
+  --color-forest-50: #edf7f1;
+  --color-forest-100: #d9efe3;
+  --color-forest-300: #8fd0b0;
+  --color-forest-500: #3f9d76;
+  --color-forest-600: #2f7d5f;
+  --color-forest-700: #23614b;
+  --color-forest-800: #1a4a3a;
+  --color-forest-900: #12352a;
+  --color-forest-950: #0b231b;
+
+  --color-moss-600: #4b6156;
+
+  --color-sprout-300: #d9f195;
+  --color-sprout-400: #c5e866;
+
+  --color-danger-50: #fdf0ee;
+  --color-danger-600: #b3261e;
+
+  --animate-rise: rise 0.5s ease-out both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-forest-600);
+    outline-offset: 3px;
+  }
+
+  /* On the dark brand panel the focus ring switches to a light one. */
+  .focus-light :focus-visible {
+    outline-color: var(--color-sprout-300);
+  }
+
+  ::selection {
+    background: var(--color-sprout-300);
+    color: var(--color-forest-950);
+  }
+}

@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* Scrapwell: warm paper, black ink, one loud colour. Thick outlines and hard shadows. */
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Bricolage Grotesque", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-paper: #f8f3e8;
+  --color-paper-deep: #eee5d1;
+  --color-ink: #17150f;
+  --color-ink-soft: #4d4839;
+
+  --color-flame-400: #ff7a54;
+  --color-flame-500: #ff4b1f;
+  --color-flame-700: #b02a08;
+
+  --color-leaf-200: #cdeaa6;
+  --color-leaf-500: #2f8f4e;
+  --color-leaf-700: #1c5a34;
+  --color-leaf-900: #0f3a22;
+
+  --color-sun-300: #ffe38f;
+  --color-sun-400: #ffd23f;
+
+  --shadow-hard: 6px 6px 0 0 var(--color-ink);
+  --shadow-hard-sm: 3px 3px 0 0 var(--color-ink);
+
+  --animate-marquee: marquee 36s linear infinite;
+  --animate-spin-slow: spin 22s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+
+  /* On dark and coloured blocks the focus ring switches to a light one. */
+  .focus-light :focus-visible,
+  .focus-light:focus-visible {
+    outline-color: var(--color-paper);
+  }
+
+  ::selection {
+    background: var(--color-sun-400);
+    color: var(--color-ink);
+  }
+}

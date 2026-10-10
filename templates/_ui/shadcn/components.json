@@ -1,0 +1,141 @@
+{
+  "accordion.jsx": [
+    "Accordion",
+    "AccordionItem",
+    "AccordionTrigger",
+    "AccordionContent"
+  ],
+  "alert.jsx": [
+    "Alert",
+    "AlertTitle",
+    "AlertDescription",
+    "AlertAction"
+  ],
+  "avatar.jsx": [
+    "Avatar",
+    "AvatarImage",
+    "AvatarFallback",
+    "AvatarGroup",
+    "AvatarGroupCount",
+    "AvatarBadge"
+  ],
+  "badge.jsx": [
+    "Badge",
+    "badgeVariants"
+  ],
+  "button.jsx": [
+    "Button",
+    "buttonVariants"
+  ],
+  "card.jsx": [
+    "Card",
+    "CardHeader",
+    "CardFooter",
+    "CardTitle",
+    "CardAction",
+    "CardDescription",
+    "CardContent"
+  ],
+  "checkbox.jsx": [
+    "Checkbox"
+  ],
+  "dialog.jsx": [
+    "Dialog",
+    "DialogClose",
+    "DialogContent",
+    "DialogDescription",
+    "DialogFooter",
+    "DialogHeader",
+    "DialogOverlay",
+    "DialogPortal",
+    "DialogTitle",
+    "DialogTrigger"
+  ],
+  "dropdown-menu.jsx": [
+    "DropdownMenu",
+    "DropdownMenuPortal",
+    "DropdownMenuTrigger",
+    "DropdownMenuContent",
+    "DropdownMenuGroup",
+    "DropdownMenuLabel",
+    "DropdownMenuItem",
+    "DropdownMenuCheckboxItem",
+    "DropdownMenuRadioGroup",
+    "DropdownMenuRadioItem",
+    "DropdownMenuSeparator",
+    "DropdownMenuShortcut",
+    "DropdownMenuSub",
+    "DropdownMenuSubTrigger",
+    "DropdownMenuSubContent"
+  ],
+  "input.jsx": [
+    "Input"
+  ],
+  "label.jsx": [
+    "Label"
+  ],
+  "progress.jsx": [
+    "Progress",
+    "ProgressTrack",
+    "ProgressIndicator",
+    "ProgressLabel",
+    "ProgressValue"
+  ],
+  "select.jsx": [
+    "Select",
+    "SelectContent",
+    "SelectGroup",
+    "SelectItem",
+    "SelectLabel",
+    "SelectScrollDownButton",
+    "SelectScrollUpButton",
+    "SelectSeparator",
+    "SelectTrigger",
+    "SelectValue"
+  ],
+  "separator.jsx": [
+    "Separator"
+  ],
+  "sheet.jsx": [
+    "Sheet",
+    "SheetTrigger",
+    "SheetClose",
+    "SheetContent",
+    "SheetHeader",
+    "SheetFooter",
+    "SheetTitle",
+    "SheetDescription"
+  ],
+  "skeleton.jsx": [
+    "Skeleton"
+  ],
+  "switch.jsx": [
+    "Switch"
+  ],
+  "table.jsx": [
+    "Table",
+    "TableHeader",
+    "TableBody",
+    "TableFooter",
+    "TableHead",
+    "TableRow",
+    "TableCell",
+    "TableCaption"
+  ],
+  "tabs.jsx": [
+    "Tabs",
+    "TabsList",
+    "TabsTrigger",
+    "TabsContent",
+    "tabsListVariants"
+  ],
+  "textarea.jsx": [
+    "Textarea"
+  ],
+  "tooltip.jsx": [
+    "Tooltip",
+    "TooltipTrigger",
+    "TooltipContent",
+    "TooltipProvider"
+  ]
+}

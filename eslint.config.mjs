@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Cloned sites created by the app (third-party code, not ours to lint).
+    ".clones/**",
+    // Built-in templates are plain websites, not part of the Next.js app.
+    "templates/**",
   ]),
 ]);
 

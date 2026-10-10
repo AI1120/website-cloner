@@ -1,9 +1,23 @@
-export default function Home() {
+import { connection } from "next/server";
+
+import { StartScreen } from "@/components/cloner/start-screen";
+import { figmaToken } from "@/lib/ai/figma";
+import { aiReadsImages, isAiConfigured } from "@/lib/ai/provider";
+import { listProjects } from "@/lib/cloner/storage";
+import { listTemplates } from "@/lib/projects/create";
+
+export default async function Home() {
+  // Projects and settings live on disk and in the environment; both change between requests.
+  await connection();
+  const [projects, templates] = await Promise.all([listProjects(), listTemplates()]);
+
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <p className="text-muted-foreground">
-        Clone target not yet built. Run <code className="font-mono text-foreground">/clone-website</code> to start.
-      </p>
-    </main>
+    <StartScreen
+      initialProjects={projects}
+      templates={templates}
+      aiConfigured={isAiConfigured()}
+      figmaConfigured={figmaToken() !== ""}
+      imagesSupported={aiReadsImages()}
+    />
   );
 }

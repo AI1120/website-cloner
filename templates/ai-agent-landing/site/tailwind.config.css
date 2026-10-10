@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/* Duskline: night sky, one warm light on the horizon. */
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-display: "Instrument Serif", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+
+  --color-night-950: #05060a;
+  --color-night-900: #090b12;
+  --color-night-800: #0f121c;
+  --color-night-700: #171b29;
+  --color-night-600: #232839;
+
+  --color-mist-100: #eef0f7;
+  --color-mist-300: #c3c8d8;
+  --color-mist-400: #9aa1b5;
+  --color-mist-500: #7d849a;
+
+  --color-ember-200: #ffd9a8;
+  --color-ember-300: #ffc37d;
+  --color-ember-400: #ffab52;
+  --color-ember-500: #ff8a3c;
+  --color-ember-600: #e96a22;
+
+  --color-moon-300: #b8c2ff;
+  --color-moon-400: #8e9bff;
+
+  --color-ok-400: #6ee7a8;
+
+  --animate-twinkle: twinkle 6s ease-in-out infinite;
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-ember-300);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: rgb(255 171 82 / 0.3);
+    color: #fff;
+  }
+}
+
+/* Two offset layers of tiny dots read as an irregular star field. */
+.starfield {
+  background-image:
+    radial-gradient(1px 1px at 22px 34px, rgb(255 255 255 / 0.9) 50%, transparent 51%),
+    radial-gradient(1px 1px at 148px 96px, rgb(255 255 255 / 0.55) 50%, transparent 51%),
+    radial-gradient(1px 1px at 201px 182px, rgb(255 255 255 / 0.7) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 262px 48px, rgb(184 194 255 / 0.85) 50%, transparent 51%),
+    radial-gradient(1px 1px at 96px 214px, rgb(255 255 255 / 0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 318px 270px, rgb(255 255 255 / 0.45) 50%, transparent 51%),
+    radial-gradient(1px 1px at 30px 120px, rgb(255 255 255 / 0.5) 50%, transparent 51%),
+    radial-gradient(2px 2px at 204px 318px, rgb(255 217 168 / 0.75) 50%, transparent 51%),
+    radial-gradient(1px 1px at 58px 402px, rgb(255 255 255 / 0.55) 50%, transparent 51%),
+    radial-gradient(1px 1px at 402px 158px, rgb(255 255 255 / 0.75) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 356px 64px, rgb(255 255 255 / 0.6) 50%, transparent 51%);
+  background-size:
+    230px 230px,
+    230px 230px,
+    230px 230px,
+    370px 370px,
+    370px 370px,
+    370px 370px,
+    370px 370px,
+    490px 490px,
+    490px 490px,
+    490px 490px,
+    490px 490px;
+}
+
+/* The planet edge under the hero: a huge circle with light spilling over its rim. */
+.horizon-arc {
+  background: linear-gradient(to bottom, #10121d 0%, #05060a 9rem);
+  box-shadow:
+    0 -1px 0 0 rgb(255 205 150 / 0.95),
+    0 -8px 28px -2px rgb(255 138 60 / 0.8),
+    0 -48px 150px -10px rgb(255 138 60 / 0.5),
+    0 -140px 300px -40px rgb(142 155 255 / 0.22),
+    inset 0 36px 70px -34px rgb(255 171 82 / 0.32);
+}
+
+/* Fine film grain keeps the large dark areas from banding. */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.6) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.4) 0 1px, transparent 1px 4px);
+  mix-blend-mode: overlay;
+}
+
+.text-ember-gradient {
+  background-image: linear-gradient(100deg, var(--color-ember-200), var(--color-ember-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

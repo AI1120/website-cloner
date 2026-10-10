@@ -1,0 +1,6 @@
+{
+  "name": "Duskline — AI agent landing page",
+  "description": "A dark, atmospheric landing page for an AI on-call agent, with an incident console hero, a step-by-step timeline, a bento feature grid and a policy section.",
+  "framework": "html",
+  "styling": "tailwind"
+}

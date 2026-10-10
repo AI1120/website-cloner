@@ -2,15 +2,13 @@
 
 # AI Website Cloner Template
 
-### Clone any website with one command
+### Clone any website by its URL
 
-Give your AI coding agent a URL and watch it recreate the website as a clean Next.js app.
-
-**Best results with [Claude Code](https://docs.anthropic.com/en/docs/claude-code) + Opus 5.5. Also supports Codex, Cursor, and OpenCode.**
+Paste a link to copy a website, then change it by chatting with AI — or build a new site from a prompt, an image or a Figma frame.
 
 [![Use this template](https://img.shields.io/badge/Use_this_template-Create_your_copy-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JCodesMore/ai-website-cloner-template/generate) [![Discord](https://img.shields.io/badge/Join_the_community-Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/hrTSX5yTpB)
 
-[Quick Start](#quick-start) · [Watch Demo](#demo) · [Supported Platforms](#supported-platforms)
+[Quick Start](#quick-start) · [Watch Demo](#demo) · [Settings](#settings)
 
 <a href="https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a> <a href="https://github.com/JCodesMore/ai-website-cloner-template"><img src="https://img.shields.io/github/stars/JCodesMore/ai-website-cloner-template?style=flat" alt="Stars" /></a> <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/badges/token-badge.json" alt="tokens" />
 
@@ -28,65 +26,95 @@ Give your AI coding agent a URL and watch it recreate the website as a clean Nex
 
 ## Quick Start
 
-### 1. Set up your project
+You need [Node.js](https://nodejs.org/) 24+.
 
-**Recommended: ask your agent.** Paste this into Codex, Claude Code, or your coding agent:
-
-```text
-Set up https://github.com/JCodesMore/ai-website-cloner-template
-as a standalone project in a new folder on my computer.
-Ask me where to put it. Clone the repository, remove its origin remote,
-install dependencies, and run npm run check. Leave it ready for me
-to clone a website.
+```bash
+npm install
+npm run dev
 ```
 
-**Or create your own GitHub repository:**
+Open the address it prints (usually `http://localhost:3000`), paste a website's link into the prompt box and choose **Clone Website**. To build or change sites with AI, add a key first (see [Turning on the AI](#turning-on-the-ai)).
 
-[![Use this template](https://img.shields.io/badge/Use_this_template-Create_your_copy-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JCodesMore/ai-website-cloner-template/generate)
+## The SiteCloner App
 
-Give it a name and click **Create repository**. Then give your agent the new repository's link and ask it to clone it onto your computer, install dependencies, and run `npm run check`.
+The app is a studio for building websites and small apps with AI, starting from an idea, a design, or an existing site.
 
-### 2. Clone a website
+### Starting a project
 
-Open the project in your agent with browser access enabled. In Claude Code or Cursor, run:
+The start screen has one prompt box and several ways to begin:
 
-```text
-/clone-website https://example.com
-```
+| Start from | What happens |
+| --- | --- |
+| **A prompt** | Describe what you want. The AI builds it as a real project. |
+| **Clone Website** | Paste a link. The page is copied with its styles, images and fonts. **Choose pages** lists the site's other pages so you can pick which to include. Anything you type in the prompt box is carried out on the copy afterwards. |
+| **Match a Brand** | Paste a brand's site and say what to build. The result follows that site's colors, type and button shapes. |
+| **Image to App** | Upload screenshots or mockups to be rebuilt as working pages. |
+| **Import Figma** | Paste a link to a Figma frame (needs `FIGMA_TOKEN`). |
+| **A template** | Four built-in templates open as projects you can edit. |
 
-Replace the URL with the website you want to recreate. Once it's built, ask your agent for any changes you want.
+Options beside the prompt box:
 
-## Supported Platforms
+- **Framework and styling**: React or HTML, with Tailwind CSS or inline styles. React with Tailwind can include the **shadcn/ui** component library.
+- **Design system**: a ready-made one, or your own `DESIGN.md` for the AI to follow.
+- **Attach**: images, a code snippet, or a Markdown or text file as reference material.
+- **Dictate**: speak the prompt (in browsers that support speech recognition).
+- Type `/` in an empty prompt for a command menu.
 
-| Agent                                                         | Status                     |
-| ------------------------------------------------------------- | -------------------------- |
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | **Recommended** — Opus 5.5 |
-| [Codex CLI](https://github.com/openai/codex)                  | Supported                  |
-| [OpenCode](https://opencode.ai/)                              | Supported                  |
-| [Cursor](https://cursor.com/)                                 | Supported                  |
+### The workspace
 
-## Prerequisites
+| View | What it is for |
+| --- | --- |
+| **Chat** | Ask for changes in plain language. Attach files, or pick elements in the preview first so the request is about them. Requests keep running if you close the tab. |
+| **Preview** | The running project at desktop, tablet and phone widths. **Select elements** to refer to them in the chat, or **Edit text** directly in the page and apply the changes. |
+| **Code** | Browse, edit and save any file. |
+| **Data** | A small database per project: tables, rows, CSV import and export. Ask the AI for "a form that saves submissions" and it creates the table and wires up the page. |
+| **Flow** | A map of the project's screens and the links between them. |
 
-- [Node.js](https://nodejs.org/) 24+
-- An AI coding agent (see [Supported Platforms](#supported-platforms))
+Also in the header: **History** (undo any change), **Export** (a ZIP of the code), and **Publish** (a snapshot at `/p/<project>/` with a link and QR code; the link works wherever this app is reachable).
+
+### Turning on the AI
+
+Everything except cloning, code editing, export and publish needs an AI key:
+
+1. Create a key in [Google AI Studio](https://aistudio.google.com/) (Gemini), or use a Claude API key.
+2. Copy `.env.example` to `.env.local` and set `GEMINI_API_KEY` (or `ANTHROPIC_API_KEY`).
+3. Restart the app.
+
+Free Gemini keys work, with limits: only the Flash models, about five requests a minute per model, and occasional "busy" responses. The app paces itself and switches between models, so a build can take a few minutes.
+
+### Settings
+
+| Variable | Purpose |
+| --- | --- |
+| `GEMINI_API_KEY` | Enables the AI through Google Gemini. |
+| `GEMINI_MODELS` | Gemini models to use, in order. Default `gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash`. |
+| `GEMINI_RPM` | Requests per minute each Gemini model allows for your key. Default `5`. |
+| `ANTHROPIC_API_KEY` | Enables the AI through the Claude API instead (used when no Gemini key is set). |
+| `CLONER_AI_MODEL` | Claude model to use. Default `claude-opus-5-5`. |
+| `ANTHROPIC_BASE_URL` | Send Claude API requests to an Anthropic-compatible service instead. Give the address without `/v1`, and set `CLONER_AI_MODEL` to a model that service offers. |
+| `CLONER_AI_PROVIDER` | `gemini` or `anthropic`, to choose when keys for both are set. |
+| `CLONER_AI_FALLBACK` | `gemini` or `anthropic`: a second service that takes over when the main one can't finish a request. Requests with images go first to whichever service can read them. |
+| `CLONER_AI_IMAGES` | Set to `off` when the AI service does not pass images to the model. Image to App is then unavailable and attached images are not shown to the AI. |
+| `FIGMA_TOKEN` | A Figma personal access token, for **Import Figma**. |
+| `CLONER_DATA_DIR` | Where projects are stored. Default `.clones/` in the project folder. |
+| `CLONER_ALLOW_PRIVATE_HOSTS` | Set to `1` to allow cloning `localhost` and private-network sites. |
+
+### Good to know
+
+- A clone is a **static copy** of what the server sends. Pages that build their content in the browser may need **Keep JavaScript** turned on, and features that rely on a backend (logins, carts, search) do not work in a copy.
+- React projects can use `react`, `react-dom`, `react-router-dom`, `lucide-react` and `clsx`; with shadcn/ui also `@base-ui/react`, `class-variance-authority` and `tailwind-merge`. Exported React projects are ordinary Vite projects.
+- The AI cannot generate images. It draws with SVG and CSS, uses images you attach, and marks stock photos as placeholders.
+- A project's database is served by this app, so pages that use it need the app running at the same address. Tables are private by default: visitors can add rows, only you can read them.
+- Projects are stored on the machine running the app. On hosts with a read-only or temporary filesystem (such as Vercel), point `CLONER_DATA_DIR` at persistent storage or run the app on a server or in Docker.
+- The app has no sign-in. Anyone who can reach it can create, edit and delete projects, so put it behind your own access control before exposing it to the internet.
+- The server refuses to fetch private and local network addresses unless `CLONER_ALLOW_PRIVATE_HOSTS=1`.
 
 ## Tech Stack
 
 - **Next.js 16** — App Router, React 19, TypeScript strict
 - **shadcn/ui** — Base UI primitives + Tailwind CSS v4
 - **Tailwind CSS v4** — oklch design tokens
-- **Lucide React** — default icons (replaced by extracted SVGs during cloning)
-
-## How It Works
-
-The `/clone-website` skill follows four steps:
-
-1. **Map** — map source URLs to local routes and preserve existing work.
-2. **Observe** — inspect desktop/mobile pages, extract real assets and fonts, and exercise alternate states.
-3. **Build** — implement editable components and working interactions; delegate independent sections when useful.
-4. **Compare** — review source and local pages at matched sizes/states, repair visible differences, and run the production check.
-
-Framer pages and animated sites have focused inspection guidance for responsive variants, media, sticky scenes, and scroll/time-driven motion. Direct HTTP or asset tools handle extraction where practical; browser comparisons establish appearance and behavior. Deliverables include route mappings, run instructions, comparison screenshots, and any remaining gaps.
+- **Lucide React** — icons
 
 ## Use Cases
 
@@ -104,23 +132,23 @@ Framer pages and animated sites have focused inspection guidance for responsive 
 
 ```
 src/
-  app/              # Next.js routes
-  components/       # React components
+  app/              # Pages, API routes, and the preview and publish servers
+  components/
+    cloner/         # Start screen and workspace
     ui/             # shadcn/ui primitives
-    sites/<site>/   # Source-specific components and extracted SVGs
-  lib/utils.ts      # cn() utility
-  types/            # TypeScript interfaces
+  lib/
+    cloner/         # Cloning engine, storage, undo, ZIP
+    ai/             # AI agent, providers, prompts and tools
+    build/          # Builds projects for preview (esbuild, Tailwind)
+    projects/       # Project creation, templates, design systems
+    data/           # Per-project database
+    export/         # React and Vue exporters
   hooks/            # Custom React hooks
-public/
-  sites/<site>/     # Source-specific images, fonts, videos, and other assets
-docs/
-  research/<site>/  # Page brief, asset map, and inspection evidence
-  design-references/ # Screenshots
-.agents/skills/
-  clone-website/    # Canonical skill and inspection reference
-.claude/commands/
-  clone-website.md  # Thin Claude Code bridge
-AGENTS.md           # Agent instructions (single source of truth)
+  types/            # TypeScript interfaces
+public/sc-bridge.js # Runs inside the preview frame
+templates/          # Built-in templates and the shadcn/ui kit for projects
+.clones/            # Your projects (git-ignored)
+AGENTS.md           # Instructions for coding agents
 CLAUDE.md           # Claude Code config (imports AGENTS.md)
 ```
 
@@ -140,10 +168,6 @@ npm run check  # Run lint + typecheck + build
 docker compose up app --build # build and run the app
 docker compose up dev --build # run the app in dev mode on port 3001
 ```
-
-## Agent Support
-
-The project keeps one portable Agent Skill at `.agents/skills/clone-website/`. Codex, Cursor, and OpenCode read it directly. Claude Code uses the small command bridge at `.claude/commands/clone-website.md` so `/clone-website` and its arguments continue to work without exposing a duplicate skill to the other agents.
 
 ## Star History
 

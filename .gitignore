@@ -5,9 +5,9 @@ node_modules/
 
 # Build
 .next/
-out/
-build/
-dist/
+/out/
+/build/
+/dist/
 
 # Environment
 .env
@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Local temp files
 temp/
+
+# Cloned sites created by the app
+.clones/

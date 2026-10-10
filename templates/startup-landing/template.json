@@ -1,0 +1,6 @@
+{
+  "name": "Scrapwell — Startup landing page",
+  "description": "A light, confident landing page for an early-stage startup, with a type-led hero, waitlist form, illustrated how-it-works steps, traction numbers, a roadmap and a founders' note.",
+  "framework": "html",
+  "styling": "tailwind"
+}

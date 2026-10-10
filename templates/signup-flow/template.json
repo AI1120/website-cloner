@@ -1,0 +1,6 @@
+{
+  "name": "Frondly — Sign-up flow",
+  "description": "A three-page sign-up flow (create account, choose a plan, welcome) with a split-screen layout, inline form validation and the chosen plan carried through to the last page.",
+  "framework": "html",
+  "styling": "tailwind"
+}

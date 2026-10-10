@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en" class="motion-safe:scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrapwell — Compost pickup for apartment buildings</title>
+  <meta name="description" content="Scrapwell puts a sealed compost bin on every floor of your apartment building, empties it every Thursday, and brings finished soil back in spring. Join the waitlist.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/tailwind.css">
+  <script defer src="assets/js/menu.js"></script>
+  <script defer src="assets/js/waitlist.js"></script>
+</head>
+<body id="top" class="bg-paper font-sans text-ink antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:border-2 focus:border-ink focus:bg-sun-400 focus:px-5 focus:py-2 focus:font-bold">Skip to content</a>
+
+  <!-- ============ Header ============ -->
+  <header class="sticky top-0 z-50 border-b-2 border-ink bg-paper max-lg:noscript:static">
+    <div class="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
+      <a href="#top" class="flex items-center gap-2.5">
+        <svg viewBox="0 0 32 32" class="size-8" aria-hidden="true">
+          <path d="M7 12h18l-1.7 13.2a3 3 0 0 1-3 2.8H11.7a3 3 0 0 1-3-2.8L7 12Z" fill="#ff4b1f" stroke="#17150f" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M4.5 8.5h23" stroke="#17150f" stroke-width="3" stroke-linecap="round"/>
+          <path d="M12.5 8V6.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V8" fill="none" stroke="#17150f" stroke-width="2"/>
+        </svg>
+        <span class="font-display text-2xl font-extrabold tracking-tight">Scrapwell</span>
+      </a>
+
+      <nav aria-label="Primary" class="hidden lg:block">
+        <ul class="flex items-center gap-1 font-medium">
+          <li><a href="#how" class="rounded-full px-4 py-2 transition-colors hover:bg-ink hover:text-paper">How it works</a></li>
+          <li><a href="#buildings" class="rounded-full px-4 py-2 transition-colors hover:bg-ink hover:text-paper">For your building</a></li>
+          <li><a href="#progress" class="rounded-full px-4 py-2 transition-colors hover:bg-ink hover:text-paper">Progress</a></li>
+          <li><a href="#story" class="rounded-full px-4 py-2 transition-colors hover:bg-ink hover:text-paper">Our story</a></li>
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="#waitlist" class="hidden h-11 items-center rounded-full border-2 border-ink bg-flame-500 px-5 font-display font-bold shadow-hard-sm transition hover:-translate-y-0.5 active:translate-y-0 active:shadow-none sm:inline-flex">Join the waitlist</a>
+        <button type="button" class="group inline-flex h-11 cursor-pointer items-center gap-2 rounded-full border-2 border-ink bg-paper px-4 font-display font-bold transition-colors hover:bg-ink hover:text-paper aria-expanded:bg-ink aria-expanded:text-paper lg:hidden noscript:hidden" aria-controls="mobile-menu" aria-expanded="false" data-menu-toggle>
+          <svg viewBox="0 0 20 20" class="size-4 group-aria-expanded:hidden" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M3 6.5h14M3 13.5h14"/></svg>
+          <svg viewBox="0 0 20 20" class="hidden size-4 group-aria-expanded:block" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg>
+          <span data-menu-label>Menu</span>
+        </button>
+      </div>
+    </div>
+
+    <nav id="mobile-menu" aria-label="Mobile" class="hidden border-t-2 border-ink bg-sun-400 lg:hidden max-lg:noscript:block" data-menu>
+      <ul class="mx-auto max-w-7xl px-5 py-3 font-display text-2xl font-bold sm:px-8">
+        <li><a href="#how" class="block border-b-2 border-ink/15 py-3.5">How it works</a></li>
+        <li><a href="#buildings" class="block border-b-2 border-ink/15 py-3.5">For your building</a></li>
+        <li><a href="#progress" class="block border-b-2 border-ink/15 py-3.5">Progress</a></li>
+        <li><a href="#story" class="block border-b-2 border-ink/15 py-3.5">Our story</a></li>
+        <li class="py-4"><a href="#waitlist" class="flex h-14 items-center justify-center rounded-full border-2 border-ink bg-ink text-xl text-paper">Join the waitlist</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- ============ Hero ============ -->
+    <section class="overflow-hidden" aria-labelledby="hero-heading">
+      <div class="mx-auto max-w-7xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16 lg:pb-28">
+        <p class="inline-flex -rotate-2 items-center gap-2 rounded-full border-2 border-ink bg-sun-400 px-4 py-1.5 font-display text-sm font-bold shadow-hard-sm sm:text-base">
+          <span class="size-2.5 rounded-full bg-flame-500 ring-2 ring-ink" aria-hidden="true"></span>
+          Now collecting in Eastmoor and Calloway
+        </p>
+
+        <h1 id="hero-heading" class="mt-7 font-display text-[clamp(3.1rem,9.2vw,7.25rem)] font-extrabold leading-[0.9] tracking-[-0.035em]">
+          <span class="block">Scraps out
+            <span class="relative isolate inline-block whitespace-nowrap">Thursday.<span class="absolute inset-x-[-0.06em] bottom-[0.06em] -z-10 h-[0.3em] -rotate-1 rounded-sm bg-sun-400" aria-hidden="true"></span></span>
+          </span>
+          <span class="block">Soil back in <span class="text-leaf-500">spring.</span></span>
+        </h1>
+
+        <div class="mt-12 grid gap-14 lg:mt-16 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-20">
+          <div>
+            <p class="max-w-xl text-xl leading-8 text-ink-soft sm:text-[1.375rem] sm:leading-9">
+              Scrapwell is weekly compost pickup for apartment buildings. We put a sealed bin on every floor, empty it each Thursday, and bring the finished compost back for your building's planters.
+            </p>
+
+            <div class="mt-9 max-w-xl">
+              <form action="#" method="post" data-waitlist>
+                <label for="hero-email" class="block font-bold">Get your building on the list</label>
+                <div class="mt-2.5 flex flex-col gap-3 sm:flex-row">
+                  <input id="hero-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com" aria-describedby="hero-email-error" data-required-message="Add your email so we can reach you." class="h-14 w-full min-w-0 rounded-full border-2 border-ink bg-white px-6 text-lg sm:w-auto sm:flex-1 placeholder:text-ink/60 aria-invalid:border-flame-700 aria-invalid:bg-flame-500/10">
+                  <button type="submit" class="h-14 shrink-0 cursor-pointer rounded-full border-2 border-ink bg-ink px-7 font-display text-lg font-bold text-paper shadow-hard-sm transition hover:-translate-y-0.5 hover:bg-flame-500 hover:text-ink active:translate-y-0 active:shadow-none">Join the waitlist</button>
+                </div>
+                <p id="hero-email-error" class="mt-2.5 font-bold text-flame-700" hidden></p>
+              </form>
+              <p class="rounded-2xl border-2 border-ink bg-leaf-200 px-5 py-4 text-lg font-bold" role="status" tabindex="-1" hidden data-waitlist-success>You're on the list. We'll write as soon as there's a route near you.</p>
+            </div>
+
+            <p class="mt-6 flex items-center gap-3 text-ink-soft">
+              <span class="flex -space-x-2" aria-hidden="true">
+                <span class="size-8 rounded-full border-2 border-ink bg-flame-500"></span>
+                <span class="size-8 rounded-full border-2 border-ink bg-leaf-500"></span>
+                <span class="size-8 rounded-full border-2 border-ink bg-sun-400"></span>
+              </span>
+              <span><strong class="text-ink">41 buildings</strong> on board, 312 more waiting.</span>
+            </p>
+          </div>
+
+          <!-- Illustration -->
+          <div class="relative mx-auto w-full max-w-md lg:max-w-none">
+            <div class="relative overflow-hidden rounded-[2.5rem] border-2 border-ink bg-flame-500 shadow-hard">
+              <svg viewBox="0 0 400 310" class="block w-full" role="img" aria-label="Illustration: a green compost bin with its lid tipped open, and a leaf, an apple core and an eggshell dropping in.">
+                <circle cx="82" cy="86" r="46" fill="#ffd23f" stroke="#17150f" stroke-width="4"/>
+                <path d="M-10 252Q110 214 200 244T410 232V320H-10Z" fill="#e03a10"/>
+                <g transform="translate(0 -22)">
+                  <!-- lid, tipped open -->
+                  <g transform="rotate(-24 98 172)">
+                    <rect x="92" y="152" width="216" height="30" rx="13" fill="#17150f"/>
+                    <rect x="172" y="138" width="56" height="18" rx="9" fill="none" stroke="#17150f" stroke-width="6"/>
+                  </g>
+                  <!-- bin -->
+                  <path d="M112 182H288L273 332a18 18 0 0 1-18 16H145a18 18 0 0 1-18-16Z" fill="#1c5a34" stroke="#17150f" stroke-width="4" stroke-linejoin="round"/>
+                  <ellipse cx="200" cy="184" rx="88" ry="13" fill="#0f3a22" stroke="#17150f" stroke-width="4"/>
+                  <g stroke="#0f3a22" stroke-width="5" stroke-linecap="round">
+                    <path d="M150 222l6 96M250 222l-6 96"/>
+                  </g>
+                  <circle cx="200" cy="270" r="33" fill="#f8f3e8" stroke="#17150f" stroke-width="4"/>
+                  <path d="M186 281c0-17 11-27 29-27 0 17-10 28-29 27Zm0 0 13-13" fill="#2f8f4e" stroke="#17150f" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+                  <!-- scraps -->
+                  <g stroke="#17150f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+                    <path d="M0 0C16-26 54-26 70 0 54 26 16 26 0 0Zm0 0h70" fill="#cdeaa6" transform="translate(250 96) rotate(38)"/>
+                    <path d="M-17-27C-4-13-4 13-17 27H17C4 13 4-13 17-27Zm17 0V-40" fill="#f8f3e8" transform="translate(178 86) rotate(-18)"/>
+                    <path d="M-26 0A26 26 0 0 0 26 0L15-10 5 0-5-10-15 0Z" fill="#ffffff" transform="translate(226 152) rotate(14)"/>
+                  </g>
+                </g>
+                <g fill="#17150f">
+                  <circle cx="150" cy="34" r="5"/><circle cx="212" cy="26" r="3.5"/><circle cx="330" cy="150" r="4"/><circle cx="318" cy="196" r="3.5"/><circle cx="56" cy="170" r="4"/><circle cx="84" cy="206" r="3"/>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Rotating sticker -->
+            <div class="absolute -right-3 -top-9 size-28 sm:-right-6 sm:-top-12 sm:size-36" aria-hidden="true">
+              <svg viewBox="0 0 140 140" class="size-full motion-safe:animate-spin-slow">
+                <circle cx="70" cy="70" r="68" fill="#f8f3e8" stroke="#17150f" stroke-width="3"/>
+                <defs><path id="sticker-ring" d="M70 70m-50 0a50 50 0 1 1 100 0a50 50 0 1 1-100 0"/></defs>
+                <text font-family="Bricolage Grotesque, DM Sans, sans-serif" font-size="13.5" font-weight="800" letter-spacing="2.3" fill="#17150f"><textPath href="#sticker-ring">EVERY THURSDAY ✳ BEFORE 9 A.M. ✳</textPath></text>
+              </svg>
+              <span class="absolute inset-0 m-auto flex size-12 items-center justify-center rounded-full border-2 border-ink bg-leaf-500 sm:size-14">
+                <svg viewBox="0 0 24 24" class="size-6 text-paper" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+              </span>
+            </div>
+
+            <!-- Floor card -->
+            <div class="absolute -bottom-9 left-4 w-56 -rotate-2 rounded-2xl border-2 border-ink bg-white p-4 shadow-hard-sm sm:-left-6 sm:w-64" aria-hidden="true">
+              <p class="flex items-center justify-between text-sm font-bold"><span>Alder Court, floor 3</span><span class="rounded-full bg-leaf-200 px-2 py-0.5 text-xs">On route</span></p>
+              <div class="mt-3 h-3 overflow-hidden rounded-full border-2 border-ink bg-paper"><div class="h-full w-4/5 bg-leaf-500"></div></div>
+              <p class="mt-2 text-sm text-ink-soft">Bin 80% full. Swap Thursday, 7:40</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Marquee ============ -->
+    <div class="overflow-hidden border-y-2 border-ink bg-ink py-4 text-paper" aria-label="Things you can compost with Scrapwell" role="region">
+      <div class="flex w-max motion-safe:animate-marquee">
+        <ul class="flex shrink-0 items-center gap-8 pr-8 font-display text-2xl font-bold sm:text-3xl">
+          <li>Banana peels</li><li class="text-flame-400" aria-hidden="true">✳</li>
+          <li>Coffee grounds</li><li class="text-sun-400" aria-hidden="true">✳</li>
+          <li>Eggshells</li><li class="text-leaf-200" aria-hidden="true">✳</li>
+          <li>Tea bags</li><li class="text-flame-400" aria-hidden="true">✳</li>
+          <li>Wilted herbs</li><li class="text-sun-400" aria-hidden="true">✳</li>
+          <li>Pizza crusts</li><li class="text-leaf-200" aria-hidden="true">✳</li>
+          <li>Paper napkins</li><li class="text-flame-400" aria-hidden="true">✳</li>
+          <li>Last night's rice</li><li class="text-sun-400" aria-hidden="true">✳</li>
+        </ul>
+        <ul class="flex shrink-0 items-center gap-8 pr-8 font-display text-2xl font-bold sm:text-3xl" aria-hidden="true">
+          <li>Banana peels</li><li class="text-flame-400">✳</li>
+          <li>Coffee grounds</li><li class="text-sun-400">✳</li>
+          <li>Eggshells</li><li class="text-leaf-200">✳</li>
+          <li>Tea bags</li><li class="text-flame-400">✳</li>
+          <li>Wilted herbs</li><li class="text-sun-400">✳</li>
+          <li>Pizza crusts</li><li class="text-leaf-200">✳</li>
+          <li>Paper napkins</li><li class="text-flame-400">✳</li>
+          <li>Last night's rice</li><li class="text-sun-400">✳</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============ The problem ============ -->
+    <section class="py-20 sm:py-28" aria-labelledby="problem-heading">
+      <div class="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-20">
+        <div>
+          <p class="font-display text-lg font-bold text-flame-700">The problem</p>
+          <h2 id="problem-heading" class="mt-3 font-display text-4xl font-extrabold leading-[1.02] tracking-tight text-balance sm:text-6xl">Your building has three bins. None of them is for food.</h2>
+        </div>
+        <p class="max-w-xl text-xl leading-8 text-ink-soft">Houses get a green cart at the kerb. Apartments get a chute. So the peels, grounds and leftovers of a few hundred people go straight to landfill, every single week.</p>
+      </div>
+
+      <!-- Before / after -->
+      <div class="mx-auto mt-14 max-w-7xl px-5 sm:px-8">
+        <figure class="rounded-[2rem] border-2 border-ink bg-white p-6 shadow-hard sm:p-10">
+          <figcaption class="max-w-2xl text-lg leading-7 text-ink-soft"><strong class="font-display text-2xl font-extrabold text-ink">A third of the trash, gone.</strong><br>What goes down the chute in our pilot buildings, by weight.</figcaption>
+
+          <div class="mt-8 space-y-6">
+            <div>
+              <p class="font-bold">Before Scrapwell</p>
+              <div class="mt-2 flex h-14 overflow-hidden rounded-2xl border-2 border-ink font-bold sm:h-16" role="img" aria-label="Before: 34 percent food scraps, 66 percent everything else.">
+                <div class="flex w-[34%] min-w-0 shrink-0 items-center border-r-2 border-ink bg-flame-500 px-3 sm:px-5"><span class="block truncate">34%<span class="max-sm:hidden"> food</span></span></div>
+                <div class="flex min-w-0 flex-1 items-center bg-paper-deep px-3 sm:px-5"><span class="block truncate">Everything else</span></div>
+              </div>
+            </div>
+            <div>
+              <p class="font-bold">After eight weeks</p>
+              <div class="mt-2 flex h-14 overflow-hidden rounded-2xl border-2 border-ink font-bold sm:h-16" role="img" aria-label="After eight weeks: 6 percent food scraps still in the trash, 66 percent everything else, 28 percent now composted.">
+                <div class="w-[6%] shrink-0 border-r-2 border-ink bg-flame-500"></div>
+                <div class="flex w-[66%] min-w-0 shrink-0 items-center border-r-2 border-ink bg-paper-deep px-3 sm:px-5"><span class="block truncate">Everything else</span></div>
+                <div class="flex min-w-0 flex-1 items-center bg-leaf-200 px-3 sm:px-5"><span class="block truncate">28%<span class="max-sm:hidden"> composted</span></span></div>
+              </div>
+            </div>
+          </div>
+
+          <ul class="mt-7 flex flex-wrap gap-x-7 gap-y-2 text-ink-soft">
+            <li class="flex items-center gap-2"><span class="size-4 rounded border-2 border-ink bg-flame-500" aria-hidden="true"></span>Food scraps in the trash</li>
+            <li class="flex items-center gap-2"><span class="size-4 rounded border-2 border-ink bg-paper-deep" aria-hidden="true"></span>Everything else</li>
+            <li class="flex items-center gap-2"><span class="size-4 rounded border-2 border-ink bg-leaf-200" aria-hidden="true"></span>Collected by Scrapwell</li>
+          </ul>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ How it works ============ -->
+    <section id="how" class="scroll-mt-20 border-y-2 border-ink bg-paper-deep py-20 sm:py-28" aria-labelledby="how-heading">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p class="font-display text-lg font-bold text-flame-700">How it works</p>
+            <h2 id="how-heading" class="mt-3 max-w-3xl font-display text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">Three steps. You only do the middle one.</h2>
+          </div>
+          <p class="max-w-sm text-lg leading-7 text-ink-soft">No sorting quiz, no smell, no fruit flies. If it grew, it goes.</p>
+        </div>
+
+        <ol class="mt-14 grid gap-6 lg:grid-cols-3 lg:items-start lg:gap-7">
+          <li class="rounded-[2rem] border-2 border-ink bg-white p-7 shadow-hard sm:p-8">
+            <div class="flex items-center justify-between">
+              <span class="font-display text-7xl font-extrabold leading-none tracking-tighter">01</span>
+              <span class="flex size-16 items-center justify-center rounded-full border-2 border-ink bg-sun-400" aria-hidden="true">
+                <svg viewBox="0 0 32 32" class="size-8" fill="none" stroke="#17150f" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12h18l-1.7 13a3 3 0 0 1-3 3H11.7a3 3 0 0 1-3-3L7 12ZM4.5 8.5h23M13 8V6a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 19 6v2"/></svg>
+              </span>
+            </div>
+            <h3 class="mt-8 font-display text-2xl font-extrabold tracking-tight">We set up every floor</h3>
+            <p class="mt-3 text-lg leading-7 text-ink-soft">Sealed, pedal-operated bins sized for your building. Installation takes one morning and needs no plumbing or power.</p>
+          </li>
+
+          <li class="rounded-[2rem] border-2 border-ink bg-flame-500 p-7 shadow-hard sm:p-8 lg:mt-10">
+            <div class="flex items-center justify-between">
+              <span class="font-display text-7xl font-extrabold leading-none tracking-tighter">02</span>
+              <span class="flex size-16 items-center justify-center rounded-full border-2 border-ink bg-paper" aria-hidden="true">
+                <svg viewBox="0 0 32 32" class="size-8" fill="none" stroke="#17150f" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M16 27V13m0 0-5.5 5.5M16 13l5.5 5.5M6 6h20"/></svg>
+              </span>
+            </div>
+            <h3 class="mt-8 font-display text-2xl font-extrabold tracking-tight">You toss your scraps</h3>
+            <p class="mt-3 text-lg leading-7">Whenever you like, a few steps from your door. Our electric trikes swap the liners every Thursday before 9 a.m.</p>
+          </li>
+
+          <li class="rounded-[2rem] border-2 border-ink bg-leaf-700 p-7 text-paper shadow-hard sm:p-8 lg:mt-20">
+            <div class="flex items-center justify-between">
+              <span class="font-display text-7xl font-extrabold leading-none tracking-tighter">03</span>
+              <span class="flex size-16 items-center justify-center rounded-full border-2 border-ink bg-leaf-200" aria-hidden="true">
+                <svg viewBox="0 0 32 32" class="size-8" fill="none" stroke="#17150f" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28V16m0 0c0-6 4-10 11-10 0 6-4 10-11 10Zm0 4c0-4-3-7-9-7 0 4 3 7 9 7Z"/></svg>
+              </span>
+            </div>
+            <h3 class="mt-8 font-display text-2xl font-extrabold tracking-tight">Soil comes back</h3>
+            <p class="mt-3 text-lg leading-7 text-paper/85">Each spring your building gets its share of finished compost for planters, the roof garden, or the tree pit out front.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ Two audiences ============ -->
+    <section id="buildings" class="scroll-mt-20 py-20 sm:py-28" aria-labelledby="buildings-heading">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <h2 id="buildings-heading" class="max-w-4xl font-display text-4xl font-extrabold leading-[1.02] tracking-tight text-balance sm:text-6xl">Made for both sides of the lobby door.</h2>
+
+        <div class="mt-12 grid gap-6 lg:grid-cols-2 lg:gap-7">
+          <article class="flex flex-col rounded-[2rem] border-2 border-ink bg-sun-400 p-7 sm:p-10">
+            <p class="font-display text-lg font-bold">If you live there</p>
+            <h3 class="mt-2 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Free, close, and oddly satisfying.</h3>
+            <ul class="mt-8 space-y-4 text-lg leading-7">
+              <li class="flex gap-3"><svg viewBox="0 0 24 24" class="mt-0.5 size-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>A bin on your own floor, never the basement</li>
+              <li class="flex gap-3"><svg viewBox="0 0 24 24" class="mt-0.5 size-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>A free counter caddy and a year of liners</li>
+              <li class="flex gap-3"><svg viewBox="0 0 24 24" class="mt-0.5 size-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>A monthly note on what your floor kept out of landfill</li>
+            </ul>
+            <p class="mt-auto pt-10 font-display text-5xl font-extrabold tracking-tight">$0 <span class="mt-1 block text-xl font-bold tracking-normal sm:mt-0 sm:inline">for residents, always</span></p>
+          </article>
+
+          <article class="focus-light flex flex-col rounded-[2rem] border-2 border-ink bg-ink p-7 text-paper sm:p-10">
+            <p class="font-display text-lg font-bold text-sun-400">If you run the building</p>
+            <h3 class="mt-2 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Fewer trash pulls. Happier tenants.</h3>
+            <ul class="mt-8 space-y-4 text-lg leading-7 text-paper/90">
+              <li class="flex gap-3"><svg viewBox="0 0 24 24" class="mt-0.5 size-6 shrink-0 text-sun-400" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>We clean, swap and maintain every bin ourselves</li>
+              <li class="flex gap-3"><svg viewBox="0 0 24 24" class="mt-0.5 size-6 shrink-0 text-sun-400" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>A quarterly diversion report for owners and the city</li>
+              <li class="flex gap-3"><svg viewBox="0 0 24 24" class="mt-0.5 size-6 shrink-0 text-sun-400" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Month to month. Leave whenever, we take the bins</li>
+            </ul>
+            <p class="mt-auto pt-10 font-display text-5xl font-extrabold tracking-tight">$1.90 <span class="mt-1 block text-xl font-bold tracking-normal text-paper/85 sm:mt-0 sm:inline">per unit, per month</span></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Progress ============ -->
+    <section id="progress" class="scroll-mt-20 border-y-2 border-ink bg-leaf-200 py-20 sm:py-28" aria-labelledby="progress-heading">
+      <div class="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+        <div>
+          <p class="font-display text-lg font-bold text-leaf-700">Where we are</p>
+          <h2 id="progress-heading" class="mt-3 font-display text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">Small, on purpose.</h2>
+          <p class="mt-6 max-w-lg text-xl leading-8 text-ink-soft">We are fourteen months old and run three trikes. We would rather do two neighbourhoods properly than ten badly. Here is what that looks like so far.</p>
+
+          <dl class="mt-10 divide-y-2 divide-ink border-y-2 border-ink">
+            <div class="flex items-baseline justify-between gap-6 py-5">
+              <dt class="text-lg text-ink-soft">Buildings collecting</dt>
+              <dd class="font-display text-5xl font-extrabold tracking-tight sm:text-6xl">41</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-6 py-5">
+              <dt class="text-lg text-ink-soft">Tonnes kept out of landfill</dt>
+              <dd class="font-display text-5xl font-extrabold tracking-tight sm:text-6xl">18.4</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-6 py-5">
+              <dt class="text-lg text-ink-soft">Residents still at it after 3 months</dt>
+              <dd class="font-display text-5xl font-extrabold tracking-tight sm:text-6xl">88%</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="rounded-[2rem] border-2 border-ink bg-white p-7 shadow-hard sm:p-10 lg:self-end">
+          <h3 class="font-display text-2xl font-extrabold tracking-tight">Where the trikes go next</h3>
+          <ol class="mt-7 space-y-7">
+            <li class="grid grid-cols-[auto_1fr] gap-x-4">
+              <span class="mt-1 flex size-7 items-center justify-center rounded-full border-2 border-ink bg-leaf-500" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-4 text-paper" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+              <div>
+                <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-display text-xl font-bold">Eastmoor and Calloway <span class="rounded-full border-2 border-ink bg-leaf-200 px-2.5 py-0.5 font-sans text-xs font-bold uppercase tracking-wider">Running</span></p>
+                <p class="mt-1 text-lg leading-7 text-ink-soft">41 buildings, about 2,900 homes, every Thursday.</p>
+              </div>
+            </li>
+            <li class="grid grid-cols-[auto_1fr] gap-x-4">
+              <span class="mt-1 size-7 rounded-full border-2 border-ink bg-sun-400" aria-hidden="true"></span>
+              <div>
+                <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-display text-xl font-bold">Harbour Flats <span class="rounded-full border-2 border-ink bg-sun-300 px-2.5 py-0.5 font-sans text-xs font-bold uppercase tracking-wider">Spring</span></p>
+                <p class="mt-1 text-lg leading-7 text-ink-soft">19 of the 25 buildings we need have signed up.</p>
+                <div class="mt-3 h-3 max-w-xs overflow-hidden rounded-full border-2 border-ink bg-paper" role="img" aria-label="19 of 25 buildings signed up"><div class="h-full w-[76%] bg-sun-400"></div></div>
+              </div>
+            </li>
+            <li class="grid grid-cols-[auto_1fr] gap-x-4">
+              <span class="mt-1 size-7 rounded-full border-2 border-dashed border-ink bg-white" aria-hidden="true"></span>
+              <div>
+                <p class="font-display text-xl font-bold">Your neighbourhood?</p>
+                <p class="mt-1 text-lg leading-7 text-ink-soft">We open a new route when 25 buildings in it are ready. The waitlist decides where.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Founders' note ============ -->
+    <section id="story" class="scroll-mt-20 py-20 sm:py-28" aria-labelledby="story-heading">
+      <div class="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+        <div>
+          <p class="font-display text-lg font-bold text-flame-700">Our story</p>
+          <h2 id="story-heading" class="mt-3 font-display text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">It started in a bin room.</h2>
+        </div>
+
+        <div class="rounded-[2rem] border-2 border-ink bg-white p-7 shadow-hard sm:p-12 lg:-rotate-1">
+          <div class="space-y-5 text-lg leading-8 sm:text-xl sm:leading-9">
+            <p>We met taking out the trash. Same building, same floor, same guilty look at a bag that was mostly vegetable peelings.</p>
+            <p>Noor had spent six years planning waste routes for the city. Tomasz built cargo trikes. Between us we knew that the hard part of composting is not the composting. It is getting a clean bin within twenty steps of every kitchen, and emptying it before anyone has a reason to complain.</p>
+            <p>So that is the whole company. Bins close by, emptied on time, and something good coming back. If that sounds like your building, we would love to hear from you.</p>
+          </div>
+          <div class="mt-9 flex items-center gap-4">
+            <span class="flex -space-x-3" aria-hidden="true">
+              <span class="flex size-14 items-center justify-center rounded-full border-2 border-ink bg-flame-500 font-display text-xl font-extrabold">N</span>
+              <span class="flex size-14 items-center justify-center rounded-full border-2 border-ink bg-leaf-200 font-display text-xl font-extrabold">T</span>
+            </span>
+            <p class="leading-6"><span class="block font-display text-xl font-extrabold">Noor Haddad &amp; Tomasz Bielak</span><span class="text-ink-soft">Founders, and two of the three trike riders</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Waitlist ============ -->
+    <section id="waitlist" class="scroll-mt-20 px-5 pb-20 sm:px-8 sm:pb-28" aria-labelledby="waitlist-heading">
+      <div class="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border-2 border-ink bg-flame-500 px-6 py-14 shadow-hard sm:px-12 sm:py-20 lg:px-20">
+        <svg viewBox="0 0 200 200" class="pointer-events-none absolute size-72 text-sun-400 max-lg:-bottom-28 max-lg:-left-24 sm:size-96 lg:-right-16 lg:-top-16" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="currentColor" stroke="#17150f" stroke-width="2"/></svg>
+
+        <div class="relative grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-16">
+          <div>
+            <h2 id="waitlist-heading" class="font-display text-5xl font-extrabold leading-[0.95] tracking-[-0.03em] sm:text-7xl">Put your building on the map.</h2>
+            <p class="mt-6 max-w-lg text-xl leading-8">Tell us where you are. When 25 buildings near you are in, we bring the trikes. No cost and nothing to sign today.</p>
+          </div>
+
+          <div class="rounded-[1.75rem] border-2 border-ink bg-paper p-6 shadow-hard-sm sm:p-8">
+            <form action="#" method="post" data-waitlist>
+              <div>
+                <label for="waitlist-email" class="block font-bold">Email address</label>
+                <input id="waitlist-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com" aria-describedby="waitlist-email-error" data-required-message="Add your email so we can reach you." class="mt-2 h-14 w-full rounded-full border-2 border-ink bg-white px-6 text-lg placeholder:text-ink/60 aria-invalid:border-flame-700 aria-invalid:bg-flame-500/10">
+                <p id="waitlist-email-error" class="mt-2 font-bold text-flame-700" hidden></p>
+              </div>
+              <div class="mt-5">
+                <label for="waitlist-area" class="block font-bold">Neighbourhood or postcode</label>
+                <input id="waitlist-area" name="area" type="text" required autocomplete="postal-code" placeholder="Harbour Flats" aria-describedby="waitlist-area-error" data-required-message="Tell us roughly where your building is." class="mt-2 h-14 w-full rounded-full border-2 border-ink bg-white px-6 text-lg placeholder:text-ink/60 aria-invalid:border-flame-700 aria-invalid:bg-flame-500/10">
+                <p id="waitlist-area-error" class="mt-2 font-bold text-flame-700" hidden></p>
+              </div>
+              <button type="submit" class="mt-6 h-14 w-full cursor-pointer rounded-full border-2 border-ink bg-ink font-display text-lg font-bold text-paper shadow-hard-sm transition hover:-translate-y-0.5 hover:bg-leaf-700 active:translate-y-0 active:shadow-none">Join the waitlist</button>
+              <p class="mt-4 text-center text-sm text-ink-soft">One email when your route opens. That's all.</p>
+            </form>
+            <div class="py-6 text-center" role="status" tabindex="-1" hidden data-waitlist-success>
+              <p class="font-display text-3xl font-extrabold tracking-tight">You're on the list.</p>
+              <p class="mt-3 text-lg leading-7 text-ink-soft">We'll write as soon as there's a route near you. Telling a neighbour gets you there faster.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="focus-light overflow-hidden bg-ink text-paper">
+    <div class="mx-auto max-w-7xl px-5 pt-16 sm:px-8">
+      <div class="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <p class="max-w-xs font-display text-2xl font-bold leading-8">Compost pickup for buildings without a backyard.</p>
+        <nav aria-label="Service">
+          <h2 class="font-display font-bold text-sun-400">Service</h2>
+          <ul class="mt-4 space-y-2.5 text-paper/85">
+            <li><a href="#how" class="underline-offset-4 hover:text-paper hover:underline">How it works</a></li>
+            <li><a href="#buildings" class="underline-offset-4 hover:text-paper hover:underline">For your building</a></li>
+            <li><a href="#" class="underline-offset-4 hover:text-paper hover:underline">What goes in the bin</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Company">
+          <h2 class="font-display font-bold text-sun-400">Company</h2>
+          <ul class="mt-4 space-y-2.5 text-paper/85">
+            <li><a href="#story" class="underline-offset-4 hover:text-paper hover:underline">Our story</a></li>
+            <li><a href="#progress" class="underline-offset-4 hover:text-paper hover:underline">Progress</a></li>
+            <li><a href="#" class="underline-offset-4 hover:text-paper hover:underline">Ride with us</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Contact">
+          <h2 class="font-display font-bold text-sun-400">Say hello</h2>
+          <ul class="mt-4 space-y-2.5 text-paper/85">
+            <li><a href="#" class="underline-offset-4 hover:text-paper hover:underline">hello@scrapwell.example</a></li>
+            <li><a href="#" class="underline-offset-4 hover:text-paper hover:underline">Press kit</a></li>
+            <li><a href="#waitlist" class="underline-offset-4 hover:text-paper hover:underline">Join the waitlist</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="mt-14 flex flex-col gap-2 border-t-2 border-paper/20 pt-6 text-sm text-paper/70 sm:flex-row sm:justify-between">
+        <p>&copy; 2026 Scrapwell Cooperative. Made a few steps from the bin room.</p>
+        <p><a href="#" class="underline-offset-4 hover:text-paper hover:underline">Privacy</a> <span class="mx-2" aria-hidden="true">/</span> <a href="#" class="underline-offset-4 hover:text-paper hover:underline">Terms</a></p>
+      </div>
+    </div>
+    <p class="mt-6 select-none whitespace-nowrap text-center font-display pb-[0.14em] text-[21.5vw] font-extrabold leading-[0.8] tracking-[-0.05em] text-flame-500" aria-hidden="true">Scrapwell</p>
+  </footer>
+</body>
+</html>

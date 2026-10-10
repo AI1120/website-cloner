@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en" class="motion-safe:scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brindle — Purchase approvals that never get stuck</title>
+  <meta name="description" content="Brindle routes every purchase request to the right approver, lets them answer from team chat, and shows finance what is committed before it reaches the ledger.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/tailwind.css">
+  <script defer src="assets/js/menu.js"></script>
+  <script defer src="assets/js/pricing.js"></script>
+</head>
+<body id="top" class="bg-white font-sans text-slate-600 antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:font-semibold focus:text-white">Skip to content</a>
+
+  <!-- ============ Header ============ -->
+  <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-lg max-lg:noscript:static">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
+      <a href="#top" class="flex items-center gap-2.5 text-slate-950">
+        <svg viewBox="0 0 32 32" class="size-8" aria-hidden="true">
+          <rect width="32" height="32" rx="9" fill="#4541e6"/>
+          <path d="M9 21.5 21.5 9M9 14.5 14.5 9M16.5 23 23 16.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="text-xl font-extrabold tracking-tight">Brindle</span>
+      </a>
+
+      <nav aria-label="Primary" class="hidden lg:block">
+        <ul class="flex items-center gap-8 text-sm font-semibold text-slate-600">
+          <li><a href="#product" class="transition-colors hover:text-brand-700">Product</a></li>
+          <li><a href="#customers" class="transition-colors hover:text-brand-700">Customers</a></li>
+          <li><a href="#pricing" class="transition-colors hover:text-brand-700">Pricing</a></li>
+          <li><a href="#faq" class="transition-colors hover:text-brand-700">FAQ</a></li>
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="#" class="hidden h-10 items-center rounded-lg px-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 sm:inline-flex">Sign in</a>
+        <a href="#pricing" class="hidden h-10 items-center rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 sm:inline-flex">Start free</a>
+        <button type="button" class="group inline-flex size-10 cursor-pointer items-center justify-center rounded-lg text-slate-700 ring-1 ring-inset ring-slate-300 transition-colors hover:bg-slate-100 lg:hidden noscript:hidden" aria-controls="mobile-menu" aria-expanded="false" data-menu-toggle>
+          <span class="sr-only" data-menu-label>Open menu</span>
+          <svg viewBox="0 0 24 24" class="size-5 group-aria-expanded:hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg viewBox="0 0 24 24" class="hidden size-5 group-aria-expanded:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <nav id="mobile-menu" aria-label="Mobile" class="hidden border-t border-slate-200 bg-white lg:hidden max-lg:noscript:block" data-menu>
+      <ul class="mx-auto max-w-7xl space-y-1 px-5 py-4 font-semibold text-slate-800 sm:px-8">
+        <li><a href="#product" class="block rounded-lg px-3 py-3 hover:bg-slate-100">Product</a></li>
+        <li><a href="#customers" class="block rounded-lg px-3 py-3 hover:bg-slate-100">Customers</a></li>
+        <li><a href="#pricing" class="block rounded-lg px-3 py-3 hover:bg-slate-100">Pricing</a></li>
+        <li><a href="#faq" class="block rounded-lg px-3 py-3 hover:bg-slate-100">FAQ</a></li>
+        <li class="grid grid-cols-2 gap-3 pt-3">
+          <a href="#" class="flex h-12 items-center justify-center rounded-lg ring-1 ring-inset ring-slate-300">Sign in</a>
+          <a href="#pricing" class="flex h-12 items-center justify-center rounded-lg bg-brand-600 text-white">Start free</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- ============ Hero ============ -->
+    <section class="relative isolate overflow-hidden" aria-labelledby="hero-heading">
+      <div class="hero-grid pointer-events-none absolute inset-x-0 top-0 -z-10 h-[52rem]" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute left-1/2 top-[-14rem] -z-10 h-[34rem] w-[70rem] -translate-x-1/2 rounded-full bg-brand-200/50 blur-3xl" aria-hidden="true"></div>
+
+      <div class="mx-auto max-w-4xl px-5 pt-16 text-center sm:px-8 sm:pt-24">
+        <a href="#product" class="group inline-flex items-center gap-2 rounded-full bg-white py-1 pl-1 pr-3 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:ring-brand-300">
+          <span class="rounded-full bg-brand-600 px-2.5 py-0.5 text-xs font-bold text-white">New</span>
+          Approve from your team chat
+          <svg viewBox="0 0 16 16" class="size-3.5 text-slate-400 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+
+        <h1 id="hero-heading" class="mt-7 text-[clamp(2.6rem,6.6vw,4.75rem)] font-extrabold leading-[1.04] tracking-[-0.035em] text-balance text-slate-950">
+          Purchase approvals that <span class="text-brand-600">never get stuck</span>
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-pretty text-slate-600 sm:text-xl sm:leading-9">
+          Brindle sends every request to the right approver, nudges them where they already work, and shows finance what is committed long before the invoice arrives.
+        </p>
+
+        <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="#pricing" class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 font-semibold text-white shadow-[0_8px_24px_-6px_rgb(69_65_230/0.6)] transition hover:bg-brand-700 sm:w-auto">
+            Start free for 14 days
+            <svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a href="#" class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-6 font-semibold text-slate-800 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 sm:w-auto">
+            <svg viewBox="0 0 20 20" class="size-5 text-brand-600" fill="currentColor" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17ZM8.4 6.6l5 3a.5.5 0 0 1 0 .8l-5 3a.5.5 0 0 1-.8-.4V7a.5.5 0 0 1 .8-.4Z"/></svg>
+            Watch the 2-minute tour
+          </a>
+        </div>
+        <p class="mt-5 text-sm text-slate-500">No card needed. Set up in an afternoon.</p>
+      </div>
+
+      <!-- Product window -->
+      <div class="relative mx-auto mt-14 max-w-7xl px-5 pb-20 sm:mt-20 sm:px-8 sm:pb-28">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white text-left shadow-window" role="img" aria-label="The Brindle requests screen: five purchase requests, each with a requester, an amount and an approval status, next to this month's approval time and committed budget.">
+          <div class="flex items-center gap-2 border-b border-slate-200 bg-slate-50 px-4 py-3">
+            <span class="size-2.5 rounded-full bg-slate-300"></span>
+            <span class="size-2.5 rounded-full bg-slate-300"></span>
+            <span class="size-2.5 rounded-full bg-slate-300"></span>
+            <span class="ml-3 hidden rounded-md bg-white px-3 py-1 text-xs text-slate-500 ring-1 ring-slate-200 sm:block">app.brindle.example / requests</span>
+          </div>
+
+          <div class="grid lg:grid-cols-[13.5rem_1fr] xl:grid-cols-[13.5rem_1fr_16rem]">
+            <!-- Sidebar -->
+            <div class="hidden border-r border-slate-200 bg-slate-50/70 p-4 lg:block">
+              <p class="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-bold text-slate-900 ring-1 ring-slate-200">
+                <span class="flex size-6 items-center justify-center rounded-md bg-slate-900 text-[11px] text-white">A</span>
+                Aldercroft
+              </p>
+              <ul class="mt-5 space-y-1 text-sm font-semibold text-slate-600">
+                <li class="flex items-center justify-between rounded-lg bg-brand-50 px-3 py-2 text-brand-700">Requests <span class="rounded-full bg-brand-600 px-2 py-0.5 text-[11px] font-bold text-white">12</span></li>
+                <li class="px-3 py-2">Approvals</li>
+                <li class="px-3 py-2">Budgets</li>
+                <li class="px-3 py-2">Vendors</li>
+              </ul>
+            </div>
+
+            <!-- Request list -->
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+                <div class="flex items-center gap-2 text-sm font-semibold">
+                  <span class="rounded-full bg-slate-900 px-3 py-1.5 text-white">All</span>
+                  <span class="rounded-full px-3 py-1.5 text-slate-600 ring-1 ring-slate-200">Waiting on me <span class="text-brand-600">4</span></span>
+                  <span class="hidden rounded-full px-3 py-1.5 text-slate-600 ring-1 ring-slate-200 sm:inline">Approved</span>
+                </div>
+                <span class="hidden rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white sm:inline">New request</span>
+              </div>
+
+              <div class="hidden grid-cols-[1fr_8rem_5.5rem_10rem] gap-4 border-y border-slate-100 bg-slate-50/60 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-slate-500 md:grid">
+                <span>Request</span><span>Requested by</span><span class="text-right">Amount</span><span>Status</span>
+              </div>
+
+              <ul class="divide-y divide-slate-100 text-sm max-md:border-t max-md:border-slate-100">
+                <li class="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1.5 px-5 py-3 md:grid-cols-[1fr_8rem_5.5rem_10rem]">
+                  <span class="min-w-0"><span class="block truncate font-semibold text-slate-900">Design tool seats, 12</span><span class="block text-xs text-slate-600">Design</span></span>
+                  <span class="flex items-center gap-2 text-slate-600 max-md:hidden"><span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-bold text-slate-700">MR</span>Maya R.</span>
+                  <span class="text-right font-semibold tabular-nums text-slate-900 max-md:col-start-2 max-md:row-start-1">$2,160</span>
+                  <span class="max-md:col-span-2"><span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 ring-1 ring-inset ring-amber-200"><span class="size-1.5 rounded-full bg-amber-500"></span>Waiting on Finance</span></span>
+                </li>
+                <li class="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1.5 px-5 py-3 md:grid-cols-[1fr_8rem_5.5rem_10rem]">
+                  <span class="min-w-0"><span class="block truncate font-semibold text-slate-900">Team offsite, Lisbon</span><span class="block text-xs text-slate-600">People</span></span>
+                  <span class="flex items-center gap-2 text-slate-600 max-md:hidden"><span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-bold text-slate-700">JK</span>Jonas K.</span>
+                  <span class="text-right font-semibold tabular-nums text-slate-900 max-md:col-start-2 max-md:row-start-1">$18,400</span>
+                  <span class="max-md:col-span-2"><span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 ring-1 ring-inset ring-amber-200"><span class="size-1.5 rounded-full bg-amber-500"></span>Waiting on you</span></span>
+                </li>
+                <li class="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1.5 px-5 py-3 bg-brand-50/50 md:grid-cols-[1fr_8rem_5.5rem_10rem]">
+                  <span class="min-w-0"><span class="block truncate font-semibold text-slate-900">Laptop refresh, 4</span><span class="block text-xs text-slate-600">Engineering</span></span>
+                  <span class="flex items-center gap-2 text-slate-600 max-md:hidden"><span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-bold text-slate-700">PS</span>Priya S.</span>
+                  <span class="text-right font-semibold tabular-nums text-slate-900 max-md:col-start-2 max-md:row-start-1">$9,960</span>
+                  <span class="max-md:col-span-2"><span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200"><span class="size-1.5 rounded-full bg-emerald-500"></span>Approved in 4h</span></span>
+                </li>
+                <li class="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1.5 px-5 py-3 md:grid-cols-[1fr_8rem_5.5rem_10rem]">
+                  <span class="min-w-0"><span class="block truncate font-semibold text-slate-900">Annual security audit</span><span class="block text-xs text-slate-600">Security</span></span>
+                  <span class="flex items-center gap-2 text-slate-600 max-md:hidden"><span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-bold text-slate-700">TA</span>Tomás A.</span>
+                  <span class="text-right font-semibold tabular-nums text-slate-900 max-md:col-start-2 max-md:row-start-1">$32,000</span>
+                  <span class="max-md:col-span-2"><span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200"><span class="size-1.5 rounded-full bg-emerald-500"></span>Approved</span></span>
+                </li>
+                <li class="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1.5 px-5 py-3 md:grid-cols-[1fr_8rem_5.5rem_10rem]">
+                  <span class="min-w-0"><span class="block truncate font-semibold text-slate-900">Standing desks, 6</span><span class="block text-xs text-slate-600">Workplace</span></span>
+                  <span class="flex items-center gap-2 text-slate-600 max-md:hidden"><span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-bold text-slate-700">LO</span>Lena O.</span>
+                  <span class="text-right font-semibold tabular-nums text-slate-900 max-md:col-start-2 max-md:row-start-1">$4,140</span>
+                  <span class="max-md:col-span-2"><span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-800 ring-1 ring-inset ring-rose-200"><span class="size-1.5 rounded-full bg-rose-500"></span>Over budget</span></span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- This month -->
+            <div class="hidden border-l border-slate-200 p-5 xl:block">
+              <p class="text-xs font-bold uppercase tracking-wider text-slate-500">This month</p>
+              <p class="mt-4 text-xs font-semibold text-slate-500">Median time to approve</p>
+              <p class="mt-1 flex items-baseline gap-2"><span class="text-3xl font-extrabold tracking-tight text-slate-950">5h 40m</span><span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700">-93%</span></p>
+              <div class="mt-4 flex h-14 items-end gap-1.5">
+                <span class="h-[96%] flex-1 rounded-sm bg-brand-100"></span>
+                <span class="h-[84%] flex-1 rounded-sm bg-brand-100"></span>
+                <span class="h-[70%] flex-1 rounded-sm bg-brand-200"></span>
+                <span class="h-[52%] flex-1 rounded-sm bg-brand-200"></span>
+                <span class="h-[38%] flex-1 rounded-sm bg-brand-300"></span>
+                <span class="h-[26%] flex-1 rounded-sm bg-brand-400"></span>
+                <span class="h-[18%] flex-1 rounded-sm bg-brand-500"></span>
+                <span class="h-[12%] flex-1 rounded-sm bg-brand-600"></span>
+              </div>
+              <p class="mt-2 text-xs text-slate-500">Down from 3.2 days in 8 weeks</p>
+
+              <p class="mt-6 border-t border-slate-100 pt-5 text-xs font-semibold text-slate-500">Q4 committed</p>
+              <p class="mt-1 text-xl font-extrabold tracking-tight text-slate-950">$1.28m <span class="text-xs font-semibold text-slate-500">of $1.9m</span></p>
+              <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100"><div class="h-full w-[68%] rounded-full bg-brand-600"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast -->
+        <p class="absolute bottom-14 left-2 hidden w-60 items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 text-left text-sm shadow-float lg:flex xl:bottom-20" aria-hidden="true">
+          <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"><svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg></span>
+          <span><span class="block font-bold text-slate-900">Laptop refresh approved</span><span class="block text-xs text-slate-600">Dev M. just now</span></span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ Logos ============ -->
+    <section aria-labelledby="logos-heading" class="border-y border-slate-200 bg-slate-50">
+      <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8">
+        <h2 id="logos-heading" class="text-center text-sm font-semibold text-slate-500">Finance teams at 600+ growing companies run on Brindle</h2>
+        <ul class="mt-7 flex flex-wrap items-center justify-center gap-x-12 gap-y-6 text-slate-500">
+          <li class="flex items-center gap-2 text-xl font-extrabold tracking-tight"><svg viewBox="0 0 24 24" class="size-6" fill="currentColor" aria-hidden="true"><path d="M12 2 2 20h20L12 2Zm0 6.5 4.8 8.5H7.2L12 8.5Z"/></svg>Aldercroft</li>
+          <li class="text-xl font-bold lowercase tracking-[0.2em]">pinemoor</li>
+          <li class="flex items-center gap-2 text-xl font-semibold italic"><svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>Tuckaway</li>
+          <li class="text-xl font-extrabold uppercase tracking-tight">Fennick<span class="font-normal">&amp;Co</span></li>
+          <li class="flex items-center gap-2 text-xl font-bold"><svg viewBox="0 0 24 24" class="size-6" fill="currentColor" aria-hidden="true"><path d="M4 4h7v7H4zM13 13h7v7h-7zM13 4h7v7h-7z" opacity=".55"/><path d="M4 13h7v7H4z"/></svg>Northgable</li>
+          <li class="text-xl font-medium tracking-[0.3em] max-sm:hidden">HALVERN</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ Product ============ -->
+    <section id="product" class="scroll-mt-16 py-20 sm:py-28" aria-labelledby="product-heading">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="max-w-3xl">
+          <p class="text-sm font-bold uppercase tracking-[0.14em] text-brand-600">Product</p>
+          <h2 id="product-heading" class="mt-3 text-4xl font-extrabold leading-[1.08] tracking-[-0.03em] text-balance text-slate-950 sm:text-5xl">Everything between &ldquo;can I buy this?&rdquo; and &ldquo;it's paid&rdquo;</h2>
+          <p class="mt-5 text-lg leading-8">One request form for the whole company. Brindle works out who needs to say yes, chases them politely, and keeps the paper trail finance will be asked for later.</p>
+        </div>
+
+        <!-- Row 1: routing -->
+        <div class="mt-16 grid items-center gap-10 lg:mt-24 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <p class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700"><span class="size-1.5 rounded-full bg-brand-600" aria-hidden="true"></span>Routing</p>
+            <h3 class="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.025em] text-slate-950 sm:text-4xl">The right approver every time, without a flowchart on the wall</h3>
+            <p class="mt-4 text-lg leading-8">Write your approval policy as plain rules. Brindle applies them to each request, so nobody has to remember who signs off on what.</p>
+            <ul class="mt-6 space-y-3 font-medium text-slate-800">
+              <li class="flex gap-3"><svg viewBox="0 0 20 20" class="mt-0.5 size-5 shrink-0 text-brand-600" fill="currentColor" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm3.9 6.6-4.4 5a.75.75 0 0 1-1.1.05l-2.2-2.1a.75.75 0 1 1 1.04-1.08l1.63 1.56 3.9-4.43a.75.75 0 0 1 1.13.99Z"/></svg>Route by amount, department, vendor or category</li>
+              <li class="flex gap-3"><svg viewBox="0 0 20 20" class="mt-0.5 size-5 shrink-0 text-brand-600" fill="currentColor" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm3.9 6.6-4.4 5a.75.75 0 0 1-1.1.05l-2.2-2.1a.75.75 0 1 1 1.04-1.08l1.63 1.56 3.9-4.43a.75.75 0 0 1 1.13.99Z"/></svg>Automatic stand-ins when someone is on leave</li>
+              <li class="flex gap-3"><svg viewBox="0 0 20 20" class="mt-0.5 size-5 shrink-0 text-brand-600" fill="currentColor" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm3.9 6.6-4.4 5a.75.75 0 0 1-1.1.05l-2.2-2.1a.75.75 0 1 1 1.04-1.08l1.63 1.56 3.9-4.43a.75.75 0 0 1 1.13.99Z"/></svg>Small purchases under your limit skip the queue</li>
+            </ul>
+          </div>
+
+          <div class="rounded-3xl bg-linear-to-br from-brand-50 to-slate-50 p-4 ring-1 ring-brand-100 sm:p-8" aria-hidden="true">
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-float sm:p-6">
+              <p class="text-xs font-bold uppercase tracking-wider text-slate-500">When a request</p>
+              <div class="mt-3 space-y-2.5 text-sm">
+                <p class="flex flex-wrap items-center gap-2">
+                  <span class="rounded-lg bg-slate-100 px-3 py-2 font-semibold text-slate-700">Amount</span>
+                  <span class="text-slate-500">is over</span>
+                  <span class="rounded-lg bg-brand-50 px-3 py-2 font-bold text-brand-700 ring-1 ring-inset ring-brand-200">$5,000</span>
+                </p>
+                <p class="flex flex-wrap items-center gap-2">
+                  <span class="rounded-lg bg-slate-100 px-3 py-2 font-semibold text-slate-700">Department</span>
+                  <span class="text-slate-500">is</span>
+                  <span class="rounded-lg bg-brand-50 px-3 py-2 font-bold text-brand-700 ring-1 ring-inset ring-brand-200">Engineering</span>
+                </p>
+              </div>
+
+              <p class="mt-6 text-xs font-bold uppercase tracking-wider text-slate-500">Then ask, in order</p>
+              <ol class="mt-3 space-y-2 text-sm font-semibold text-slate-800">
+                <li class="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5"><span class="flex size-6 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">1</span>Budget owner<span class="ml-auto text-xs font-medium text-slate-500">Priya S.</span></li>
+                <li class="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5"><span class="flex size-6 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">2</span>VP Engineering<span class="ml-auto text-xs font-medium text-slate-500">Dev M.</span></li>
+                <li class="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5"><span class="flex size-6 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">3</span>Finance<span class="ml-auto text-xs font-medium text-slate-500">Anyone in the team</span></li>
+              </ol>
+
+              <p class="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-sm text-slate-500">
+                <span>Matched 38 requests last month</span>
+                <span class="inline-flex items-center gap-2 font-semibold text-emerald-700"><span class="size-2 rounded-full bg-emerald-500"></span>Active</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: chat approvals -->
+        <div class="mt-20 grid items-center gap-10 lg:mt-28 lg:grid-cols-2 lg:gap-20">
+          <div class="lg:order-2">
+            <p class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700"><span class="size-1.5 rounded-full bg-brand-600" aria-hidden="true"></span>Approvals</p>
+            <h3 class="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.025em] text-slate-950 sm:text-4xl">Say yes from the place you already are</h3>
+            <p class="mt-4 text-lg leading-8">Approvers get the request in team chat or email with everything they need: who is asking, what for, and what it does to the budget. One tap and it moves on.</p>
+            <p class="mt-6 border-l-4 border-brand-200 pl-5 text-lg font-semibold leading-8 text-slate-900">94% of Brindle approvals happen without anyone opening the app.</p>
+          </div>
+
+          <div class="rounded-3xl bg-linear-to-br from-slate-50 to-brand-50 p-4 ring-1 ring-brand-100 sm:p-8 lg:order-1" aria-hidden="true">
+            <div class="rounded-2xl border border-slate-200 bg-white shadow-float">
+              <p class="border-b border-slate-100 px-5 py-3 text-sm font-bold text-slate-700"># finance-approvals</p>
+              <div class="flex gap-3 p-5">
+                <svg viewBox="0 0 32 32" class="size-9 shrink-0">
+                  <rect width="32" height="32" rx="9" fill="#4541e6"/>
+                  <path d="M9 21.5 21.5 9M9 14.5 14.5 9M16.5 23 23 16.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm"><span class="font-bold text-slate-900">Brindle</span> <span class="ml-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-slate-600">App</span> <span class="ml-1 text-xs text-slate-500">9:41</span></p>
+                  <div class="mt-2 rounded-xl border border-l-4 border-slate-200 border-l-brand-500 p-4">
+                    <p class="text-sm text-slate-600"><span class="font-bold text-slate-900">Jonas K.</span> is asking for</p>
+                    <p class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">$18,400</p>
+                    <p class="text-sm font-semibold text-slate-700">Team offsite, Lisbon</p>
+                    <div class="mt-3 grid grid-cols-2 gap-3 border-t border-slate-100 pt-3 text-xs">
+                      <p><span class="block text-slate-500">Budget</span><span class="font-bold text-slate-800">People, Q4</span></p>
+                      <p><span class="block text-slate-500">After this</span><span class="font-bold text-slate-800">62% used</span></p>
+                    </div>
+                    <p class="mt-4 flex flex-wrap gap-2 text-sm font-semibold">
+                      <span class="rounded-lg bg-brand-600 px-3.5 py-2 text-white">Approve</span>
+                      <span class="rounded-lg px-3.5 py-2 text-slate-700 ring-1 ring-inset ring-slate-300">Decline</span>
+                      <span class="rounded-lg px-3.5 py-2 text-slate-700 ring-1 ring-inset ring-slate-300">Ask a question</span>
+                    </p>
+                  </div>
+                  <p class="mt-3 flex items-center gap-2 text-xs font-medium text-emerald-700">
+                    <svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg>
+                    Approved by you at 9:42. Jonas has been told.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: budgets -->
+        <div class="mt-20 grid items-center gap-10 lg:mt-28 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <p class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700"><span class="size-1.5 rounded-full bg-brand-600" aria-hidden="true"></span>Budgets</p>
+            <h3 class="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.025em] text-slate-950 sm:text-4xl">See committed spend before it reaches the ledger</h3>
+            <p class="mt-4 text-lg leading-8">The moment a request is approved, it counts against the budget. Finance sees what is spent, what is promised, and what is left, weeks before the invoice shows up.</p>
+            <a href="#pricing" class="group mt-6 inline-flex items-center gap-2 font-bold text-brand-700 underline-offset-4 hover:underline">
+              Included from the Growth plan
+              <svg viewBox="0 0 16 16" class="size-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+
+          <div class="rounded-3xl bg-linear-to-br from-brand-50 to-slate-50 p-4 ring-1 ring-brand-100 sm:p-8" aria-hidden="true">
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-float sm:p-6">
+              <p class="flex items-center justify-between"><span class="font-extrabold text-slate-950">Q4 budgets</span><span class="text-xs text-slate-500">Updated just now</span></p>
+              <div class="mt-5 space-y-5 text-sm">
+                <div>
+                  <p class="flex justify-between"><span class="font-bold text-slate-800">Engineering</span><span class="tabular-nums text-slate-500">$412k of $550k</span></p>
+                  <div class="mt-2 flex h-3 overflow-hidden rounded-full bg-slate-100"><span class="w-[54%] bg-brand-600"></span><span class="w-[21%] bg-brand-300"></span></div>
+                </div>
+                <div>
+                  <p class="flex justify-between"><span class="font-bold text-slate-800">Marketing</span><span class="tabular-nums text-slate-500">$267k of $300k</span></p>
+                  <div class="mt-2 flex h-3 overflow-hidden rounded-full bg-slate-100"><span class="w-[71%] bg-brand-600"></span><span class="w-[18%] bg-brand-300"></span></div>
+                </div>
+                <div>
+                  <p class="flex justify-between"><span class="font-bold text-slate-800">People</span><span class="tabular-nums text-slate-500">$93k of $150k</span></p>
+                  <div class="mt-2 flex h-3 overflow-hidden rounded-full bg-slate-100"><span class="w-[40%] bg-brand-600"></span><span class="w-[22%] bg-brand-300"></span></div>
+                </div>
+                <div>
+                  <p class="flex justify-between"><span class="flex items-center gap-2 font-bold text-slate-800">Workplace <span class="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-800 ring-1 ring-inset ring-amber-200">Fully committed</span></span><span class="tabular-nums text-slate-500">$80k of $80k</span></p>
+                  <div class="mt-2 flex h-3 overflow-hidden rounded-full bg-slate-100"><span class="w-[78%] bg-brand-600"></span><span class="w-[22%] bg-amber-400"></span></div>
+                </div>
+              </div>
+              <p class="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-slate-100 pt-4 text-xs font-medium text-slate-600">
+                <span class="flex items-center gap-2"><span class="size-2.5 rounded-sm bg-brand-600"></span>Spent</span>
+                <span class="flex items-center gap-2"><span class="size-2.5 rounded-sm bg-brand-300"></span>Committed</span>
+                <span class="flex items-center gap-2"><span class="size-2.5 rounded-sm bg-slate-200"></span>Remaining</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Also included -->
+        <div class="mt-20 border-t border-slate-200 pt-12 lg:mt-28">
+          <h3 class="text-xl font-extrabold tracking-tight text-slate-950">The parts finance asks about first</h3>
+          <dl class="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <dt class="flex items-center gap-2.5 font-bold text-slate-900"><svg viewBox="0 0 20 20" class="size-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10a6 6 0 0 1 10.5-4M16 10a6 6 0 0 1-10.5 4M14.5 2.5V6H11M5.5 17.5V14H9"/></svg>Accounting sync</dt>
+              <dd class="mt-2 leading-7">Approved requests arrive in your ledger as purchase orders, coded and ready to match.</dd>
+            </div>
+            <div>
+              <dt class="flex items-center gap-2.5 font-bold text-slate-900"><svg viewBox="0 0 20 20" class="size-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h7l3 3v11H5V3Zm2.5 7h5M7.5 13h5M7.5 7h2"/></svg>Audit trail</dt>
+              <dd class="mt-2 leading-7">Every request, comment, approval and change, with who did it and when. Export in one click.</dd>
+            </div>
+            <div>
+              <dt class="flex items-center gap-2.5 font-bold text-slate-900"><svg viewBox="0 0 20 20" class="size-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5 4 5v4.5c0 3.5 2.5 6.5 6 8 3.5-1.5 6-4.5 6-8V5l-6-2.5Zm-2.5 7.5 2 2 3.5-4"/></svg>Single sign-on</dt>
+              <dd class="mt-2 leading-7">Sign in through your identity provider and keep the people list in step with HR.</dd>
+            </div>
+            <div>
+              <dt class="flex items-center gap-2.5 font-bold text-slate-900"><svg viewBox="0 0 20 20" class="size-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h14v9H3V6Zm0 3h14M6.5 12.5h3"/></svg>Vendor records</dt>
+              <dd class="mt-2 leading-7">Contracts, renewal dates and past spend for each supplier, next to the request.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Customers ============ -->
+    <section id="customers" class="focus-light scroll-mt-16 bg-brand-950 py-20 text-brand-100 sm:py-28" aria-labelledby="customers-heading">
+      <div class="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
+        <figure>
+          <h2 id="customers-heading" class="text-sm font-bold uppercase tracking-[0.14em] text-brand-300">Customer story</h2>
+          <blockquote class="mt-6 text-3xl font-bold leading-[1.25] tracking-[-0.02em] text-balance text-white sm:text-[2.5rem]">
+            <p>&ldquo;We used to find out about purchases when the invoice landed. Now I know what the quarter looks like on day ten, and nobody has chased an approval in months.&rdquo;</p>
+          </blockquote>
+          <figcaption class="mt-8 flex items-center gap-4">
+            <span class="flex size-12 items-center justify-center rounded-full bg-brand-400 text-lg font-extrabold text-brand-950" aria-hidden="true">RC</span>
+            <span>
+              <span class="block font-bold text-white">Renata Castellanos</span>
+              <span class="block text-sm text-brand-200">Head of Finance, Aldercroft (240 people)</span>
+            </span>
+          </figcaption>
+        </figure>
+
+        <dl class="grid gap-px overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/10 lg:self-center">
+          <div class="flex items-center justify-between gap-6 bg-brand-950 px-6 py-6">
+            <dt class="text-brand-200">Median approval time</dt>
+            <dd class="text-right"><span class="block text-3xl font-extrabold tracking-tight text-white">5h 40m</span><span class="text-sm text-brand-300">was 3.2 days</span></dd>
+          </div>
+          <div class="flex items-center justify-between gap-6 bg-brand-950 px-6 py-6">
+            <dt class="text-brand-200">Approved without opening the app</dt>
+            <dd class="text-3xl font-extrabold tracking-tight text-white">94%</dd>
+          </div>
+          <div class="flex items-center justify-between gap-6 bg-brand-950 px-6 py-6">
+            <dt class="text-brand-200">Surprise invoices last quarter</dt>
+            <dd class="text-3xl font-extrabold tracking-tight text-white">0</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ============ Pricing ============ -->
+    <section id="pricing" class="scroll-mt-16 py-20 sm:py-28" aria-labelledby="pricing-heading">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="text-sm font-bold uppercase tracking-[0.14em] text-brand-600">Pricing</p>
+          <h2 id="pricing-heading" class="mt-3 text-4xl font-extrabold leading-[1.08] tracking-[-0.03em] text-balance text-slate-950 sm:text-5xl">Pay for approvers. Requesters are free.</h2>
+          <p class="mt-5 text-lg leading-8">Everyone in the company can ask for what they need. You only pay for the people who sign things off.</p>
+
+          <div class="mt-8 inline-flex rounded-full bg-slate-100 p-1 ring-1 ring-inset ring-slate-200 noscript:hidden" role="group" aria-label="Billing period" data-billing-toggle>
+            <button type="button" class="h-10 cursor-pointer rounded-full px-5 text-sm font-bold text-slate-600 transition aria-pressed:bg-white aria-pressed:text-slate-950 aria-pressed:shadow-sm" aria-pressed="true" data-billing="monthly">Monthly</button>
+            <button type="button" class="inline-flex h-10 cursor-pointer items-center gap-2 rounded-full px-5 text-sm font-bold text-slate-600 transition aria-pressed:bg-white aria-pressed:text-slate-950 aria-pressed:shadow-sm" aria-pressed="false" data-billing="yearly">Yearly <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-800">Save 20%</span></button>
+          </div>
+          <p class="sr-only" aria-live="polite" data-billing-announcer></p>
+          <p class="mt-6 hidden text-sm font-semibold text-slate-700 noscript:block">Prices shown are for monthly billing. Pay yearly and save 20%.</p>
+        </div>
+
+        <div class="mx-auto mt-12 grid max-w-md gap-6 lg:max-w-none lg:grid-cols-3 lg:items-start">
+          <!-- Starter -->
+          <article class="rounded-3xl border border-slate-200 bg-white p-7 sm:p-8">
+            <h3 class="text-lg font-extrabold text-slate-950">Starter</h3>
+            <p class="mt-1 text-sm leading-6">For small teams getting purchases out of email.</p>
+            <p class="mt-6 flex items-baseline gap-2">
+              <span class="text-5xl font-extrabold tracking-[-0.04em] text-slate-950">$0</span>
+              <span class="text-sm font-semibold text-slate-500">up to 5 approvers</span>
+            </p>
+            <p class="mt-2 text-sm text-slate-500">Free for as long as you like</p>
+            <a href="#" class="mt-7 flex h-12 items-center justify-center rounded-xl font-bold text-slate-900 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50">Start free</a>
+            <ul class="mt-8 space-y-3 text-sm font-medium text-slate-700">
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Unlimited requests and requesters</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Two routing rules</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Approvals by email</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>90 days of history</li>
+            </ul>
+          </article>
+
+          <!-- Growth -->
+          <article class="focus-light relative rounded-3xl bg-brand-950 p-7 text-brand-100 shadow-window ring-1 ring-brand-900 sm:p-8 lg:-mt-4 lg:pb-12">
+            <p class="absolute -top-3.5 left-7 rounded-full bg-brand-400 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-brand-950 sm:left-8">Most popular</p>
+            <h3 class="text-lg font-extrabold text-white">Growth</h3>
+            <p class="mt-1 text-sm leading-6 text-brand-200">For companies with real budgets and more than one approver chain.</p>
+            <p class="mt-6 flex items-baseline gap-2">
+              <span class="text-5xl font-extrabold tracking-[-0.04em] text-white" data-monthly="$15" data-yearly="$12">$15</span>
+              <span class="text-sm font-semibold text-brand-200">per approver / month</span>
+            </p>
+            <p class="mt-2 text-sm text-brand-300" data-monthly="Billed monthly" data-yearly="Billed yearly, $144 per approver">Billed monthly</p>
+            <a href="#" class="mt-7 flex h-12 items-center justify-center rounded-xl bg-white font-bold text-brand-950 transition hover:bg-brand-100">Start 14-day trial</a>
+            <ul class="mt-8 space-y-3 text-sm font-medium text-brand-100">
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Everything in Starter</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Unlimited routing rules and stand-ins</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Approvals from team chat</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Budgets and committed spend</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Accounting sync</li>
+            </ul>
+          </article>
+
+          <!-- Scale -->
+          <article class="rounded-3xl border border-slate-200 bg-white p-7 sm:p-8">
+            <h3 class="text-lg font-extrabold text-slate-950">Scale</h3>
+            <p class="mt-1 text-sm leading-6">For several entities, stricter controls and an auditor on speed dial.</p>
+            <p class="mt-6 flex items-baseline gap-2">
+              <span class="text-5xl font-extrabold tracking-[-0.04em] text-slate-950" data-monthly="$30" data-yearly="$24">$30</span>
+              <span class="text-sm font-semibold text-slate-500">per approver / month</span>
+            </p>
+            <p class="mt-2 text-sm text-slate-500" data-monthly="Billed monthly" data-yearly="Billed yearly, $288 per approver">Billed monthly</p>
+            <a href="#" class="mt-7 flex h-12 items-center justify-center rounded-xl bg-brand-600 font-bold text-white transition hover:bg-brand-700">Start 14-day trial</a>
+            <ul class="mt-8 space-y-3 text-sm font-medium text-slate-700">
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Everything in Growth</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Multiple entities and currencies</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Single sign-on and directory sync</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Audit log export</li>
+              <li class="flex gap-3"><svg viewBox="0 0 16 16" class="mt-0.5 size-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7.5"/></svg>Priority support with a named contact</li>
+            </ul>
+          </article>
+        </div>
+
+        <p class="mx-auto mt-10 flex max-w-md flex-col items-start gap-3 rounded-2xl bg-slate-50 px-6 py-5 text-slate-700 ring-1 ring-slate-200 sm:flex-row sm:items-center sm:justify-between lg:max-w-none">
+          <span><strong class="font-bold text-slate-950">More than 200 approvers, or procurement rules of your own?</strong> We'll put together a plan that fits.</span>
+          <a href="#" class="shrink-0 font-bold text-brand-700 underline-offset-4 hover:underline">Talk to sales</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq" class="scroll-mt-16 border-t border-slate-200 bg-slate-50 py-20 sm:py-28" aria-labelledby="faq-heading">
+      <div class="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1fr_1.6fr] lg:gap-20">
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.14em] text-brand-600">FAQ</p>
+          <h2 id="faq-heading" class="mt-3 text-4xl font-extrabold leading-[1.08] tracking-[-0.03em] text-slate-950 sm:text-5xl">Questions, answered</h2>
+          <p class="mt-5 text-lg leading-8">Not here? Write to <a href="#" class="font-bold text-brand-700 underline underline-offset-4 hover:text-brand-800">hello@brindle.example</a> and a person will reply within a working day.</p>
+        </div>
+
+        <div class="rounded-3xl bg-white px-6 ring-1 ring-slate-200 sm:px-8">
+          <details name="faq" class="faq-item group border-b border-slate-200" open>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-bold text-slate-950 [&::-webkit-details-marker]:hidden">
+              Who counts as an approver?
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full text-slate-500 ring-1 ring-inset ring-slate-300 transition group-open:rotate-45 group-open:bg-brand-600 group-open:text-white group-open:ring-brand-600" aria-hidden="true"><svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></span>
+            </summary>
+            <p class="pb-6 leading-7 sm:pr-14">Anyone who can approve or decline a request in a given month. People who only submit requests are always free, however many there are.</p>
+          </details>
+          <details name="faq" class="faq-item group border-b border-slate-200">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-bold text-slate-950 [&::-webkit-details-marker]:hidden">
+              Does Brindle replace our accounting system?
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full text-slate-500 ring-1 ring-inset ring-slate-300 transition group-open:rotate-45 group-open:bg-brand-600 group-open:text-white group-open:ring-brand-600" aria-hidden="true"><svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></span>
+            </summary>
+            <p class="pb-6 leading-7 sm:pr-14">No. Brindle sits in front of it. Requests are approved here, then arrive in your ledger as coded purchase orders, ready to match against the invoice.</p>
+          </details>
+          <details name="faq" class="faq-item group border-b border-slate-200">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-bold text-slate-950 [&::-webkit-details-marker]:hidden">
+              How long does it take to set up?
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full text-slate-500 ring-1 ring-inset ring-slate-300 transition group-open:rotate-45 group-open:bg-brand-600 group-open:text-white group-open:ring-brand-600" aria-hidden="true"><svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></span>
+            </summary>
+            <p class="pb-6 leading-7 sm:pr-14">Most teams send their first real request the same afternoon. Import your people, write two or three routing rules, and connect chat. Budgets and accounting sync can follow later.</p>
+          </details>
+          <details name="faq" class="faq-item group border-b border-slate-200">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-bold text-slate-950 [&::-webkit-details-marker]:hidden">
+              What happens when an approver is away?
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full text-slate-500 ring-1 ring-inset ring-slate-300 transition group-open:rotate-45 group-open:bg-brand-600 group-open:text-white group-open:ring-brand-600" aria-hidden="true"><svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></span>
+            </summary>
+            <p class="pb-6 leading-7 sm:pr-14">They name a stand-in for the dates they are out, or Brindle reads it from their calendar. Requests go to the stand-in automatically and the trail records who approved on whose behalf.</p>
+          </details>
+          <details name="faq" class="faq-item group border-b border-slate-200">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-bold text-slate-950 [&::-webkit-details-marker]:hidden">
+              Can we change plan or cancel at any time?
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full text-slate-500 ring-1 ring-inset ring-slate-300 transition group-open:rotate-45 group-open:bg-brand-600 group-open:text-white group-open:ring-brand-600" aria-hidden="true"><svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></span>
+            </summary>
+            <p class="pb-6 leading-7 sm:pr-14">Yes. Move up or down whenever you like and we adjust the next bill. If you cancel a yearly plan we refund the months you have not used.</p>
+          </details>
+          <details name="faq" class="faq-item group">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-bold text-slate-950 [&::-webkit-details-marker]:hidden">
+              How is our data protected?
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full text-slate-500 ring-1 ring-inset ring-slate-300 transition group-open:rotate-45 group-open:bg-brand-600 group-open:text-white group-open:ring-brand-600" aria-hidden="true"><svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></span>
+            </summary>
+            <p class="pb-6 leading-7 sm:pr-14">Everything is encrypted in transit and at rest, access is logged, and you choose the region your data lives in. Our security overview and latest independent audit report are available on request.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Call to action ============ -->
+    <section class="px-5 py-20 sm:px-8 sm:py-28" aria-labelledby="cta-heading">
+      <div class="focus-light relative isolate mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-brand-600 px-6 py-16 text-center sm:px-12 sm:py-24">
+        <div class="pointer-events-none absolute -left-24 -top-24 -z-10 size-96 rounded-full bg-brand-400/50 blur-3xl" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -bottom-32 -right-16 -z-10 size-[28rem] rounded-full bg-brand-800/70 blur-3xl" aria-hidden="true"></div>
+        <svg viewBox="0 0 400 400" class="pointer-events-none absolute -right-10 top-1/2 -z-10 hidden size-[30rem] -translate-y-1/2 text-white/10 lg:block" fill="none" stroke="currentColor" stroke-width="28" stroke-linecap="round" aria-hidden="true"><path d="M60 300 300 60M60 190 190 60M210 340 340 210"/></svg>
+
+        <h2 id="cta-heading" class="mx-auto max-w-3xl text-4xl font-extrabold leading-[1.06] tracking-[-0.03em] text-balance text-white sm:text-6xl">Get the next purchase approved before lunch</h2>
+        <p class="mx-auto mt-5 max-w-xl text-lg leading-8 text-brand-100">Free for up to five approvers. Bring the whole company along as requesters at no cost.</p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="#pricing" class="inline-flex h-12 w-full items-center justify-center rounded-xl bg-white px-6 font-bold text-brand-800 transition hover:bg-brand-50 sm:w-auto">Start free for 14 days</a>
+          <a href="#" class="inline-flex h-12 w-full items-center justify-center rounded-xl px-6 font-bold text-white ring-1 ring-inset ring-white/40 transition hover:bg-white/10 sm:w-auto">Book a demo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="border-t border-slate-200 bg-white">
+    <div class="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
+      <div>
+        <a href="#top" class="inline-flex items-center gap-2.5 text-slate-950">
+          <svg viewBox="0 0 32 32" class="size-8" aria-hidden="true">
+            <rect width="32" height="32" rx="9" fill="#4541e6"/>
+            <path d="M9 21.5 21.5 9M9 14.5 14.5 9M16.5 23 23 16.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <span class="text-xl font-extrabold tracking-tight">Brindle</span>
+        </a>
+        <p class="mt-4 max-w-xs leading-7">Purchase approvals for companies that have outgrown the spreadsheet and the email thread.</p>
+      </div>
+      <nav aria-label="Product links">
+        <h2 class="text-sm font-bold text-slate-950">Product</h2>
+        <ul class="mt-4 space-y-3 text-sm">
+          <li><a href="#product" class="transition-colors hover:text-brand-700">Routing</a></li>
+          <li><a href="#product" class="transition-colors hover:text-brand-700">Approvals</a></li>
+          <li><a href="#product" class="transition-colors hover:text-brand-700">Budgets</a></li>
+          <li><a href="#pricing" class="transition-colors hover:text-brand-700">Pricing</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Company links">
+        <h2 class="text-sm font-bold text-slate-950">Company</h2>
+        <ul class="mt-4 space-y-3 text-sm">
+          <li><a href="#customers" class="transition-colors hover:text-brand-700">Customers</a></li>
+          <li><a href="#" class="transition-colors hover:text-brand-700">About</a></li>
+          <li><a href="#" class="transition-colors hover:text-brand-700">Careers</a></li>
+          <li><a href="#" class="transition-colors hover:text-brand-700">Contact</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Resource links">
+        <h2 class="text-sm font-bold text-slate-950">Resources</h2>
+        <ul class="mt-4 space-y-3 text-sm">
+          <li><a href="#faq" class="transition-colors hover:text-brand-700">FAQ</a></li>
+          <li><a href="#" class="transition-colors hover:text-brand-700">Help centre</a></li>
+          <li><a href="#" class="transition-colors hover:text-brand-700">Security</a></li>
+          <li><a href="#" class="transition-colors hover:text-brand-700">Status</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="border-t border-slate-200">
+      <div class="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <p>&copy; 2026 Brindle Software Ltd. All rights reserved.</p>
+        <ul class="flex gap-6">
+          <li><a href="#" class="transition-colors hover:text-slate-900">Privacy</a></li>
+          <li><a href="#" class="transition-colors hover:text-slate-900">Terms</a></li>
+          <li><a href="#" class="transition-colors hover:text-slate-900">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

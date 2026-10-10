@@ -8,15 +8,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Website Reverse-Engineer Template
+# SiteCloner
 
 ## What This Is
-A reusable template for reverse-engineering any website into a clean, modern Next.js codebase using AI coding agents. The Next.js + shadcn/ui + Tailwind v4 base is pre-scaffolded — just run `/clone-website <url1> [<url2> ...]`.
+A Next.js app for cloning websites by URL and building or changing sites with AI (see "SiteCloner App" below).
 
 ## Tech Stack
 - **Framework:** Next.js 16 (App Router, React 19, TypeScript strict)
 - **UI:** shadcn/ui (Base UI primitives, Tailwind CSS v4, `cn()` utility)
-- **Icons:** Lucide React (default — will be replaced/supplemented by extracted SVGs)
+- **Icons:** Lucide React
 - **Styling:** Tailwind CSS v4 with oklch design tokens
 - **Deployment:** Vercel
 
@@ -34,37 +34,31 @@ A reusable template for reverse-engineering any website into a clean, modern Nex
 - 2-space indentation
 - Responsive: mobile-first
 
-## Design Principles
-- **Pixel-perfect emulation** — match the target's spacing, colors, typography exactly
-- **No personal aesthetic changes during emulation phase** — match 1:1 first, customize later
-- **Real content** — use actual text and assets from the target site, not placeholders
-- **Beauty-first** — every pixel matters
-
 ## Project Structure
 ```
 src/
-  app/              # Next.js routes
-  components/       # React components
+  app/              # Pages, API routes, preview and publish servers
+  components/
+    cloner/         # Start screen and workspace
     ui/             # shadcn/ui primitives
-    sites/<site>/   # Source-specific components, including extracted SVGs
-  lib/
-    utils.ts        # cn() utility (shadcn)
+  lib/              # Engine code (see below); utils.ts has cn()
   types/            # TypeScript interfaces
   hooks/            # Custom React hooks
-public/
-  sites/<site>/     # Source-specific images, fonts, video, and other assets
-docs/
-  research/<site>/  # Page brief, asset map, and inspection evidence
-  design-references/ # Screenshots and visual references
-scripts/            # Asset download scripts
-.agents/
-  skills/
-    clone-website/  # Canonical cross-agent cloning workflow
-.claude/
-  commands/
-    clone-website.md # Thin Claude Code invocation bridge
+public/sc-bridge.js # Preview-frame bridge
+templates/          # Built-in templates and the shadcn/ui kit for projects
 ```
 
-## Agent Workflow
-- Edit `.agents/skills/clone-website/` for cloning-workflow changes. It is the canonical skill used by Codex, Cursor, and OpenCode.
-- Keep `.claude/commands/clone-website.md` as a thin Claude Code bridge to the canonical skill; do not duplicate the workflow there.
+## SiteCloner App
+The app in `src/app/` is a studio for building sites with AI. Projects start from a prompt, a cloned site, a brand, an image, a Figma frame or a template.
+- `src/lib/cloner/` — cloning engine: guarded fetching (`safe-fetch.ts`), HTML/CSS rewriting, storage, checkpoints (undo), ZIP.
+- `src/lib/ai/` — the AI agent: `provider.ts` picks Gemini or the Claude API (`providers/`), `agent.ts` runs the tool loop, `prompts.ts` and `tools.ts` define what it knows and can do, `jobs.ts` keeps requests running in the background, plus attachments, brand extraction and Figma import.
+- `src/lib/build/` — turns project sources into a previewable site: `react.ts` bundles React projects with esbuild, `tailwind.ts` compiles Tailwind, `serve.ts` serves previews, `jsx.ts` and `text-edits.ts` map preview elements back to source, `flow.ts` finds screens and links.
+- `src/lib/projects/` — project creation (starter files, templates, duplication) and design-system presets. `src/lib/data/` — the per-project database. `src/lib/export/` — React and Vue exporters for static sites.
+- `src/app/api/projects/` — REST and streaming (NDJSON) endpoints; `src/app/api/data/` is the public data API generated apps call; `src/app/preview/`, `src/app/p/` and `src/app/template-preview/` serve project files.
+- `src/components/cloner/` — start screen and workspace UI. `public/sc-bridge.js` runs inside the preview frame and talks to the workspace by `postMessage`.
+- `templates/<slug>/` — built-in templates (`template.json` + `site/`). `templates/_ui/shadcn/` holds the shadcn/ui components copied into React + Tailwind projects that ask for them (generated with the shadcn CLI as JSX; regenerate rather than hand-edit).
+- Projects are stored in `.clones/<id>/` (git-ignored): `meta.json`, `site/` (working copy), `build/`, `published/`, `checkpoints/`, `uploads/`, `data/`, `chat.json`, `design.md`.
+- A project is either a static site (`framework: "html"`: cloned, or generated with Tailwind or inline styles) or a Vite-style React project (`framework: "react"`). Anything that changes files should go through `ChangeRecorder` so it can be undone, and `ensureBuilt` rebuilds what is derived.
+- Project pages are untrusted content (third-party sites, AI output): they are always served with a `sandbox` Content-Security-Policy, and mutating API routes check the request origin. Keep both when adding routes. The Tailwind compiler is given no way to load plugins or files from a project.
+- Every outbound request for a user-supplied URL must go through `safeFetch`, which blocks private and local addresses.
+- The Gemini provider paces requests and falls back across models; free keys allow about five requests a minute per model, so design AI features to need few model calls.
