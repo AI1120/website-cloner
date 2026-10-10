@@ -1,45 +1,37 @@
 <div align="center">
 
-# AI Website Cloner Template
+# SiteCloner
 
-### Clone any website by its URL
+### Clone a website or build a new one, then refine it by chatting with AI
 
-Paste a link to copy a website, then change it by chatting with AI — or build a new site from a prompt, an image or a Figma frame.
+Paste a link to copy a site, or start from a prompt, a screenshot, a brand or a Figma frame. Ask for changes in plain language, see exactly what each one changed, then export the code or publish a link.
 
-[![Use this template](https://img.shields.io/badge/Use_this_template-Create_your_copy-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JCodesMore/ai-website-cloner-template/generate) [![Discord](https://img.shields.io/badge/Join_the_community-Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/hrTSX5yTpB)
+[Quick Start](#quick-start) · [Features](#features) · [Turning on the AI](#turning-on-the-ai) · [Settings](#settings) · [Development](#development)
 
-[Quick Start](#quick-start) · [Watch Demo](#demo) · [Settings](#settings)
-
-<a href="https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a> <a href="https://github.com/JCodesMore/ai-website-cloner-template"><img src="https://img.shields.io/github/stars/JCodesMore/ai-website-cloner-template?style=flat" alt="Stars" /></a> <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/badges/token-badge.json" alt="tokens" />
-
-  <a href="https://trendshift.io/repositories/24302?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-24302" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/24302" alt="JCodesMore%2Fai-website-cloner-template | Trendshift" width="250" height="55" /></a> <a href="https://www.star-history.com/jcodesmore/ai-website-cloner-template/"><picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=JCodesMore/ai-website-cloner-template&amp;theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=JCodesMore/ai-website-cloner-template" /><img alt="Star History Global Rank" src="https://api.star-history.com/badge?repo=JCodesMore/ai-website-cloner-template" width="216" height="55" /></picture></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a> <img src="https://img.shields.io/badge/Next.js-16-black" alt="Next.js 16" /> <img src="https://img.shields.io/badge/Node.js-24%2B-339933" alt="Node.js 24 or newer" />
 
 </div>
 
----
-
-## Demo
-
-[![Watch the demo](docs/design-references/comparison.png)](https://youtu.be/O669pVZ_qr0)
-
-> Click the image above to watch the full demo on YouTube.
+![The SiteCloner workspace: the chat on the left with a formatted AI reply, the live preview on the right](docs/assets/workspace.png)
 
 ## Quick Start
 
-You need [Node.js](https://nodejs.org/) 24+.
+You need [Node.js](https://nodejs.org/) 24 or newer.
 
 ```bash
+git clone -b sitecloner-app https://github.com/AI1120/website-cloner.git
+cd website-cloner
 npm install
 npm run dev
 ```
 
-Open the address it prints (usually `http://localhost:3000`), paste a website's link into the prompt box and choose **Clone Website**. To build or change sites with AI, add a key first (see [Turning on the AI](#turning-on-the-ai)).
+The app is on the `sitecloner-app` branch until it is merged into `master`.
 
-## The SiteCloner App
+Open the address it prints (usually `http://localhost:3000`), paste a website's link into the prompt box and choose **Clone Website**. Cloning, code editing, export and publishing work straight away. To build or change sites with AI, add a key first (see [Turning on the AI](#turning-on-the-ai)).
 
-The app is a studio for building websites and small apps with AI, starting from an idea, a design, or an existing site.
+## Features
 
-### Starting a project
+### Start a project
 
 The start screen has one prompt box and several ways to begin:
 
@@ -60,7 +52,7 @@ Options beside the prompt box:
 - **Dictate**: speak the prompt (in browsers that support speech recognition).
 - Type `/` in an empty prompt for a command menu.
 
-### The workspace
+### Work on it in the workspace
 
 | View | What it is for |
 | --- | --- |
@@ -70,23 +62,53 @@ Options beside the prompt box:
 | **Data** | A small database per project: tables, rows, CSV import and export. Ask the AI for "a form that saves submissions" and it creates the table and wires up the page. |
 | **Flow** | A map of the project's screens and the links between them. |
 
-Also in the header: **History** (view or undo any change), **Export** (a ZIP of the code), and **Publish** (a snapshot at `/p/<project>/` with a link and QR code; the link works wherever this app is reachable).
+In the header:
 
-- **What changed**: every AI reply that edited files lists them, and **View changes** shows each file before and after, line by line.
-- **Search and commands**: press <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>⌘</kbd>+<kbd>K</kbd> on a Mac), even inside the preview, to switch views, open another project, export, publish, undo or change the theme.
-- **Theme**: light, dark, or matching the device, from the sun/moon button.
+- **History**: every change, newest first. View any change, or undo it (undoing a change also undoes the ones made after it).
+- **Export**: a ZIP of the code. Static sites can also be exported as a Vite project with React or Vue pages.
+- **Publish**: a snapshot at `/p/<project>/` with a link and QR code. The link works wherever this app is reachable; later changes stay private until you update it.
 
-### Turning on the AI
+### See what changed
+
+Each AI reply that edited files lists them under the reply, with **View changes** and **Undo**. **View changes** opens every file the change touched, before and after, line by line. The same view opens from **History** for any change, including your own edits in the Code view.
+
+![The "What changed" view: the changed files on the left, a line-by-line comparison on the right](docs/assets/what-changed.png)
+
+### Search and commands
+
+Press <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>⌘</kbd>+<kbd>K</kbd> on a Mac), or click **Search**, to switch views, open another project, export, publish, undo the latest change, rename the project or change the theme. It works while the preview has focus too.
+
+### Light and dark
+
+The sun/moon button switches between light, dark and matching your device. The choice is remembered in each browser.
+
+![The start screen in dark mode](docs/assets/start-screen.png)
+
+### Keyboard shortcuts
+
+| Keys | Where | Does |
+| --- | --- | --- |
+| <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>K</kbd> | Anywhere | Search and commands |
+| <kbd>/</kbd> | Empty start prompt | Command menu |
+| <kbd>Enter</kbd> / <kbd>Shift</kbd>+<kbd>Enter</kbd> | Prompt boxes | Send / new line |
+| <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>S</kbd> | Code view | Save the open file |
+| <kbd>Esc</kbd> | Preview, selecting elements | Stop selecting |
+| <kbd>Enter</kbd> | Preview, editing text | Finish the edit |
+| <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd> | Data view, row form | Save the row |
+
+## Turning on the AI
 
 Everything except cloning, code editing, export and publish needs an AI key:
 
-1. Create a key in [Google AI Studio](https://aistudio.google.com/) (Gemini), or use a Claude API key.
+1. Create a key in [Google AI Studio](https://aistudio.google.com/) (Gemini), or a Claude API key in the [Anthropic Console](https://console.anthropic.com/).
 2. Copy `.env.example` to `.env.local` and set `GEMINI_API_KEY` (or `ANTHROPIC_API_KEY`).
 3. Restart the app.
 
-Free Gemini keys work, with limits: only the Flash models, about five requests a minute per model, and occasional "busy" responses. The app paces itself and switches between models, so a build can take a few minutes.
+Free Gemini keys work, with limits: only the Flash models, about five requests a minute per model, a small daily allowance, and occasional "busy" responses. A build takes several requests, so on a free key it can take a few minutes and you may only get a handful a day. The app paces itself and switches between models to stay within the limits. A paid Gemini key or a Claude API key makes every AI feature faster and more dependable, and needs no other change than the key in `.env.local`.
 
-### Settings
+## Settings
+
+Set these in `.env.local` (see `.env.example`) and restart the app.
 
 | Variable | Purpose |
 | --- | --- |
@@ -103,81 +125,88 @@ Free Gemini keys work, with limits: only the Flash models, about five requests a
 | `CLONER_DATA_DIR` | Where projects are stored. Default `.clones/` in the project folder. |
 | `CLONER_ALLOW_PRIVATE_HOSTS` | Set to `1` to allow cloning `localhost` and private-network sites. |
 
-### Good to know
+`GOOGLE_API_KEY`, `GEMINI_MODEL`, `ANTHROPIC_AUTH_TOKEN` and `FIGMA_ACCESS_TOKEN` are also accepted, as alternative names for the matching settings above.
+
+## Running with Docker
+
+```bash
+docker compose up app --build   # production build, on port 3000 (set PORT to change it)
+docker compose up dev --build   # dev mode, on port 3001 (set DEV_PORT to change it)
+```
+
+Both read `.env.local`. Projects are kept inside the container, so they are lost when it is rebuilt; to keep them, mount a volume and point `CLONER_DATA_DIR` at it.
+
+## Good to know
 
 - A clone is a **static copy** of what the server sends. Pages that build their content in the browser may need **Keep JavaScript** turned on, and features that rely on a backend (logins, carts, search) do not work in a copy.
 - React projects can use `react`, `react-dom`, `react-router-dom`, `lucide-react` and `clsx`; with shadcn/ui also `@base-ui/react`, `class-variance-authority` and `tailwind-merge`. Exported React projects are ordinary Vite projects.
 - The AI cannot generate images. It draws with SVG and CSS, uses images you attach, and marks stock photos as placeholders.
+- A request keeps running if you close the tab, but one in progress is lost if the app itself restarts. Send "continue" to pick it up.
 - A project's database is served by this app, so pages that use it need the app running at the same address. Tables are private by default: visitors can add rows, only you can read them.
 - Projects are stored on the machine running the app. On hosts with a read-only or temporary filesystem (such as Vercel), point `CLONER_DATA_DIR` at persistent storage or run the app on a server or in Docker.
 - The app has no sign-in. Anyone who can reach it can create, edit and delete projects, so put it behind your own access control before exposing it to the internet.
 - The server refuses to fetch private and local network addresses unless `CLONER_ALLOW_PRIVATE_HOSTS=1`.
 
-## Tech Stack
+## Use it responsibly
 
-- **Next.js 16** — App Router, React 19, TypeScript strict
-- **shadcn/ui** — Base UI primitives + Tailwind CSS v4
-- **Tailwind CSS v4** — oklch design tokens
-- **Lucide React** — icons
-- **three.js** — the start screen's animated 3D backdrop (loaded on demand)
+Good uses:
 
-## Use Cases
+- **Platform migration**: rebuild a site you own from WordPress, Webflow or Squarespace as plain HTML, React or Vue code you control.
+- **Lost source code**: your site is live but the code is gone, the developer left, or the stack is outdated. Get it back in a modern format.
+- **Learning**: see how production sites achieve their layouts and responsive behavior by working with real code.
 
-- **Platform migration** — rebuild a site you own from WordPress/Webflow/Squarespace into a modern Next.js codebase
-- **Lost source code** — your site is live but the repo is gone, the developer left, or the stack is legacy. Get the code back in a modern format
-- **Learning** — deconstruct how production sites achieve specific layouts, animations, and responsive behavior by working with real code
+Not for:
 
-## Not Intended For
+- **Phishing or impersonation**: never use it for deception, impersonation or anything that breaks the law.
+- **Passing off someone else's design as your own**: logos, brand assets and original text belong to their owners.
+- **Breaking terms of service**: some sites prohibit copying or reproduction. Check first.
 
-- **Phishing or impersonation** — this project must not be used for deceptive purposes, impersonation, or any activity that breaks the law.
-- **Passing off someone's design as your own** — logos, brand assets, and original copy belong to their owners.
-- **Violating terms of service** — some sites explicitly prohibit scraping or reproduction. Check first.
+## Development
 
-## Project Structure
+```bash
+npm run dev        # Start the dev server
+npm run build      # Production build
+npm run lint       # ESLint
+npm run typecheck  # TypeScript
+npm run check      # lint + typecheck + build
+```
+
+Run `npm run check` before pushing. Coding agents should read `AGENTS.md` (Claude Code picks it up through `CLAUDE.md`), which covers the architecture and the rules for new code. Changes are listed in [CHANGELOG.md](CHANGELOG.md).
+
+### Tech stack
+
+- **Next.js 16**: App Router, React 19, TypeScript strict
+- **shadcn/ui**: Base UI primitives with Tailwind CSS v4 and oklch design tokens
+- **Lucide React**: icons
+- **three.js**: the start screen's animated backdrop, loaded on demand
+- **esbuild** and **Tailwind CSS**: build each project for the preview
+- **Gemini** or the **Claude API**: the AI
+
+### Project structure
 
 ```
 src/
   app/              # Pages, API routes, and the preview and publish servers
   components/
-    cloner/         # Start screen and workspace
-    ui/             # shadcn/ui primitives
+    cloner/         # Start screen, workspace, command palette, change viewer
+    ui/             # shadcn/ui primitives and toasts
   lib/
-    cloner/         # Cloning engine, storage, undo, ZIP
+    cloner/         # Cloning engine, storage, undo and change history, ZIP
     ai/             # AI agent, providers, prompts and tools
     build/          # Builds projects for preview (esbuild, Tailwind)
     projects/       # Project creation, templates, design systems
     data/           # Per-project database
     export/         # React and Vue exporters
-  hooks/            # Custom React hooks
+  hooks/            # Custom React hooks (theme, storage, speech)
   types/            # TypeScript interfaces
 public/sc-bridge.js # Runs inside the preview frame
 templates/          # Built-in templates and the shadcn/ui kit for projects
+docs/assets/        # Screenshots for this README
 .clones/            # Your projects (git-ignored)
 AGENTS.md           # Instructions for coding agents
 CLAUDE.md           # Claude Code config (imports AGENTS.md)
 ```
 
-## Commands
+## Credits and license
 
-```bash
-npm run dev    # Start dev server
-npm run build  # Production build
-npm run lint   # ESLint check
-npm run typecheck # TypeScript check
-npm run check  # Run lint + typecheck + build
-```
-
-### If using docker
-
-```bash
-docker compose up app --build # build and run the app
-docker compose up dev --build # run the app in dev mode on port 3001
-```
-
-## Star History
-
-![Star History Chart](docs/assets/star-history.png)
-
-## License
-
-MIT
+SiteCloner started from [JCodesMore/ai-website-cloner-template](https://github.com/JCodesMore/ai-website-cloner-template). Released under the [MIT License](LICENSE).

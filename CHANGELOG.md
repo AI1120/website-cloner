@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toast notifications for undo, publish, copying links, deleting and errors, in place of the workspace's notice bar.
 - Branded not-found, error and loading screens, including one for a project link that no longer exists.
 
+### Changed
+- Rewrote the README for SiteCloner: screenshots of the app, the new features, keyboard shortcuts, Docker storage, and setup from the `sitecloner-app` branch. Removed the upstream template's badges, demo video and star chart, and credited the template.
+
 ### Fixed
 - Count the README token badge in CI so it reflects the current default branch instead of a stale hosted count.
 
