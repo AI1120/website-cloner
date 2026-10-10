@@ -19,6 +19,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 
 import type { ChangesTarget } from "@/components/cloner/changes-dialog";
 import { Markdown } from "@/components/cloner/markdown";
+import { LogoMark } from "@/components/cloner/site-header";
 import {
   AttachmentChips,
   IMAGE_ACCEPT,
@@ -153,6 +154,17 @@ function ChangeSummary({ files, checkpointId, active, running, onView, onUndo }:
         </ul>
       )}
     </div>
+  );
+}
+
+/** The name above each AI reply, so replies read as the app's rather than anonymous text. */
+function AssistantLabel({ working = false }: { working?: boolean }) {
+  return (
+    <p className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+      <LogoMark className={cn(working && "animate-pulse")} />
+      SiteCloner
+      {working && <span className="font-normal">is working</span>}
+    </p>
   );
 }
 
@@ -523,6 +535,7 @@ export function ChatPanel({
             </div>
           ) : (
             <div key={message.id} className="max-w-[92%]">
+              <AssistantLabel />
               {message.error ? (
                 <p className="text-sm leading-relaxed break-words whitespace-pre-wrap text-destructive">
                   {message.text}
@@ -553,6 +566,7 @@ export function ChatPanel({
 
         {activity && (
           <div aria-live="polite" className="space-y-1.5 text-sm text-muted-foreground">
+            <AssistantLabel working />
             {activity.steps.map((step, index) => (
               <p key={`${index}-${step}`} className="truncate opacity-70">
                 {step}

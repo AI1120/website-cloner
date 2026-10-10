@@ -4,6 +4,7 @@ import path from "node:path";
 
 import type { CheerioAPI } from "cheerio";
 
+import { PageRenderer } from "@/lib/cloner/browser";
 import { rewriteCss } from "@/lib/cloner/css";
 import {
   collectPageLinks,
@@ -15,7 +16,7 @@ import {
 } from "@/lib/cloner/html";
 import { ASSET_DIRS, classifyAsset, type AssetKind } from "@/lib/cloner/mime";
 import { loadRobots } from "@/lib/cloner/robots";
-import { assertPublicUrl, FetchError, safeFetch } from "@/lib/cloner/safe-fetch";
+import { assertPublicUrl, FetchError, safeFetch, type SafeFetchResult } from "@/lib/cloner/safe-fetch";
 import { deleteProject, siteDir, writeProject } from "@/lib/cloner/storage";
 import {
   assetStem,
@@ -38,6 +39,8 @@ const MAX_PAGE_BYTES = 10 * 1024 * 1024;
 const MAX_TOTAL_BYTES = 300 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 25_000;
 const MAX_DURATION_MS = 4 * 60 * 1000;
+/** Time kept back for downloading assets when pages are loaded in a browser. */
+const ASSET_TIME_MS = 60 * 1000;
 const CONCURRENCY = 6;
 const PROGRESS_INTERVAL_MS = 120;
 
@@ -98,6 +101,9 @@ export function normalizeOptions(options: Partial<CloneOptions>): CloneOptions {
   return {
     maxPages: Number.isFinite(pages) ? Math.min(MAX_PAGES, Math.max(1, pages)) : 1,
     keepScripts: options.keepScripts === true,
+    // A kept script would run again over markup it already built, so pages that
+    // keep their JavaScript are copied as the server sends them.
+    renderPages: options.keepScripts !== true && options.renderPages !== false,
   };
 }
 
@@ -133,6 +139,8 @@ class AssetStore {
   private readonly signal: AbortSignal;
   private readonly deadline: number;
   private readonly emit: (event: CloneEvent) => void;
+  /** Files the cloning browser already downloaded, reused rather than fetched again. */
+  private readonly cached: (url: string) => SafeFetchResult | undefined;
   private readonly paths = new Map<string, Promise<string | null>>();
   private readonly usedPaths = new Set<string>();
   private readonly skippedUrls = new Set<string>();
@@ -149,11 +157,13 @@ class AssetStore {
     signal: AbortSignal,
     deadline: number,
     emit: (event: CloneEvent) => void,
+    cached: (url: string) => SafeFetchResult | undefined = () => undefined,
   ) {
     this.root = root;
     this.signal = signal;
     this.deadline = deadline;
     this.emit = emit;
+    this.cached = cached;
   }
 
   get skipped(): number {
@@ -200,14 +210,16 @@ class AssetStore {
     referer: string,
   ): Promise<string | null> {
     try {
-      const response = await this.limit(() =>
-        safeFetch(url, {
-          maxBytes: MAX_ASSET_BYTES,
-          timeoutMs: REQUEST_TIMEOUT_MS,
-          signal: this.signal,
-          referer,
-        }),
-      );
+      const response =
+        this.cached(url) ??
+        (await this.limit(() =>
+          safeFetch(url, {
+            maxBytes: MAX_ASSET_BYTES,
+            timeoutMs: REQUEST_TIMEOUT_MS,
+            signal: this.signal,
+            referer,
+          }),
+        ));
       if (response.status < 200 || response.status >= 300) {
         throw new Error(`HTTP ${response.status}`);
       }
@@ -293,32 +305,62 @@ class AssetStore {
 interface FetchedPage {
   url: string;
   $: CheerioAPI;
+  /** True when the markup was read from a browser after the page's scripts ran. */
+  rendered: boolean;
 }
 
-/** Fetches and parses a page. Returns a reason string when it can't be used. */
-async function fetchPage(url: string, signal: AbortSignal): Promise<FetchedPage | string> {
+/** Why a page response can't be used, or null when it can. */
+function responseProblem(status: number, contentType: string): string | null {
+  if (status === 401 || status === 403 || status === 429) {
+    return `The site refused the request (status ${status}). It may block automated copying.`;
+  }
+  if (status === 404 || status === 410) {
+    return `No page was found at that address (status ${status}).`;
+  }
+  if (status < 200 || status >= 300) {
+    return `The site answered with an error (status ${status}).`;
+  }
+  const mime = contentType.split(";")[0].trim().toLowerCase();
+  if (mime && !/html|xml/.test(mime)) {
+    return `That address is not a web page (it returned ${mime}).`;
+  }
+  return null;
+}
+
+/**
+ * Fetches and parses a page: through the browser when one is given, falling back
+ * to a plain request if the browser can't open it. Returns a reason string when
+ * the page can't be used.
+ */
+async function fetchPage(
+  url: string,
+  signal: AbortSignal,
+  renderer: PageRenderer | null = null,
+): Promise<FetchedPage | string> {
+  if (renderer) {
+    try {
+      const page = await renderer.render(url);
+      if (typeof page !== "string" && /^https?:/i.test(page.url)) {
+        return responseProblem(page.status, page.contentType) ?? { url: page.url, $: loadPage(page.html), rendered: true };
+      }
+    } catch (error) {
+      if (signal.aborted) throw error;
+    }
+  }
+
   const response = await safeFetch(url, {
     maxBytes: MAX_PAGE_BYTES,
     timeoutMs: REQUEST_TIMEOUT_MS,
     signal,
     accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
   });
-
-  if (response.status === 401 || response.status === 403 || response.status === 429) {
-    return `The site refused the request (status ${response.status}). It may block automated copying.`;
-  }
-  if (response.status === 404 || response.status === 410) {
-    return `No page was found at that address (status ${response.status}).`;
-  }
-  if (response.status < 200 || response.status >= 300) {
-    return `The site answered with an error (status ${response.status}).`;
-  }
-  const mime = response.contentType.split(";")[0].trim().toLowerCase();
-  if (mime && !/html|xml/.test(mime)) {
-    return `That address is not a web page (it returned ${mime}).`;
-  }
-
-  return { url: response.url, $: loadPage(decodeText(response.body, response.contentType)) };
+  return (
+    responseProblem(response.status, response.contentType) ?? {
+      url: response.url,
+      $: loadPage(decodeText(response.body, response.contentType)),
+      rendered: false,
+    }
+  );
 }
 
 function makeId(hostname: string): string {
@@ -357,6 +399,7 @@ export async function cloneSite(request: CloneRequest): Promise<Project> {
 
   const id = makeId(entryUrl.hostname);
   const root = siteDir(id);
+  let renderer: PageRenderer | null = null;
 
   try {
     await Promise.all(
@@ -365,16 +408,28 @@ export async function cloneSite(request: CloneRequest): Promise<Project> {
       ),
     );
     emit({ type: "start", id });
-    emit({ type: "status", message: `Opening ${entryUrl.hostname}` });
 
-    const entry = await fetchPage(entryUrl.href, signal);
+    const wantedRendering = options.renderPages === true;
+    if (wantedRendering) {
+      emit({ type: "status", message: "Starting a browser", stage: "open" });
+      renderer = await PageRenderer.open(signal);
+    }
+    options.renderPages = renderer !== null;
+    const pageDeadline = renderer ? deadline - ASSET_TIME_MS : deadline;
+    let unrendered = 0;
+
+    emit({ type: "status", message: `Opening ${entryUrl.hostname}`, stage: "open" });
+    const entry = await fetchPage(entryUrl.href, signal, renderer);
     if (typeof entry === "string") throw new CloneError(entry);
+    if (renderer && !entry.rendered) unrendered += 1;
 
     const entryFinalUrl = new URL(entry.url);
     const warnings: string[] = [];
-    if (!options.keepScripts && looksScriptRendered(entry.$)) {
+    if (!entry.rendered && !options.keepScripts && looksScriptRendered(entry.$)) {
       warnings.push(
-        "This page builds most of its content with JavaScript, so the copy may look empty. Try cloning it again with “Keep JavaScript” turned on.",
+        wantedRendering && !renderer
+          ? "This page builds most of its content with JavaScript, so the copy may look empty. Install Google Chrome or Microsoft Edge on the machine running the app so pages can be loaded in a browser, or clone it again with “Keep JavaScript” turned on."
+          : "This page builds most of its content with JavaScript, so the copy may look empty. Try cloning it again with “Keep JavaScript” turned on.",
       );
     }
 
@@ -405,7 +460,7 @@ export async function cloneSite(request: CloneRequest): Promise<Project> {
         pages.length < options.maxPages &&
         queue.length > 0 &&
         attempts < options.maxPages * 3 &&
-        Date.now() < deadline
+        Date.now() < pageDeadline
       ) {
         assertNotAborted(signal);
         const href = queue.shift();
@@ -423,15 +478,17 @@ export async function cloneSite(request: CloneRequest): Promise<Project> {
         emit({
           type: "status",
           message: `Reading page ${pages.length + 1} of up to ${options.maxPages}`,
+          stage: "pages",
         });
 
         let loaded: FetchedPage | string;
         try {
-          loaded = await fetchPage(next.href, signal);
+          loaded = await fetchPage(next.href, signal, renderer);
         } catch {
           continue;
         }
         if (typeof loaded === "string") continue;
+        if (renderer && !loaded.rendered) unrendered += 1;
 
         const finalUrl = new URL(loaded.url);
         if (!isSameSite(finalUrl, entryFinalUrl)) continue;
@@ -457,8 +514,16 @@ export async function cloneSite(request: CloneRequest): Promise<Project> {
       }
     }
 
+    // Every page is read; the browser's downloads stay available to the asset store.
+    await renderer?.close();
+    if (unrendered > 0) {
+      warnings.push(
+        `${plural(unrendered, "page")} couldn't be loaded in the browser and ${unrendered === 1 ? "was" : "were"} copied as the server sent ${unrendered === 1 ? "it" : "them"}.`,
+      );
+    }
+
     assertNotAborted(signal);
-    emit({ type: "status", message: "Downloading styles, images and fonts" });
+    emit({ type: "status", message: "Downloading styles, images and fonts", stage: "assets" });
 
     // Browsers request /favicon.ico on their own; make that explicit so the
     // icon is saved with the copy.
@@ -467,7 +532,8 @@ export async function cloneSite(request: CloneRequest): Promise<Project> {
       entry.$("head").append(`<link rel="icon" href="/favicon.ico" ${ICON_MARKER}>`);
     }
 
-    const assets = new AssetStore(root, signal, deadline, emit);
+    const browserFiles = renderer;
+    const assets = new AssetStore(root, signal, deadline, emit, (url) => browserFiles?.cached(url));
     await Promise.all(
       pages.map((page) =>
         rewritePage(page.$, {
@@ -490,7 +556,7 @@ export async function cloneSite(request: CloneRequest): Promise<Project> {
     const iconHref = entry.$('link[rel~="icon"]').first().attr("href") ?? "";
     const icon = iconHref.startsWith("assets/") ? iconHref.split("#")[0] : null;
 
-    emit({ type: "status", message: "Saving pages" });
+    emit({ type: "status", message: "Saving pages", stage: "save" });
     let pageBytes = 0;
     for (const page of pages) {
       const data = Buffer.from(page.$.html(), "utf8");
@@ -546,6 +612,8 @@ export async function cloneSite(request: CloneRequest): Promise<Project> {
   } catch (error) {
     await deleteProject(id).catch(() => undefined);
     throw describeFailure(error, signal);
+  } finally {
+    await renderer?.close();
   }
 }
 
@@ -576,9 +644,18 @@ export async function discoverPages(input: string, signal: AbortSignal): Promise
     throw describeFailure(error, signal);
   }
 
+  let renderer: PageRenderer | null = null;
   try {
-    const entry = await fetchPage(entryUrl.href, signal);
+    let entry = await fetchPage(entryUrl.href, signal);
     if (typeof entry === "string") throw new CloneError(entry);
+    // Menus that scripts build are invisible to a plain request; ask a browser.
+    if (looksScriptRendered(entry.$) || collectPageLinks(entry.$, entry.url).length < 3) {
+      renderer = await PageRenderer.open(signal);
+      if (renderer) {
+        const rendered = await fetchPage(entryUrl.href, signal, renderer).catch(() => null);
+        if (rendered && typeof rendered !== "string") entry = rendered;
+      }
+    }
     const finalUrl = new URL(entry.url);
     const allowedByRobots = await loadRobots(finalUrl.origin, signal);
 
@@ -605,5 +682,7 @@ export async function discoverPages(input: string, signal: AbortSignal): Promise
     return { url: entry.url, title: pageTitle(entry.$) || finalUrl.hostname, pages };
   } catch (error) {
     throw describeFailure(error, signal);
+  } finally {
+    await renderer?.close();
   }
 }

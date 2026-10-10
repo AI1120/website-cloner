@@ -77,6 +77,7 @@ function cloneResponse(request: NextRequest, fields: Fields): Response {
   const options = normalizeOptions({
     maxPages: Number(fields.get("maxPages")) || 1,
     keepScripts: fields.get("keepScripts") === "true",
+    renderPages: fields.get("renderPages") !== "false",
   });
 
   const abort = new AbortController();

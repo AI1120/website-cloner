@@ -1,26 +1,27 @@
 # Contributing
 
-Thanks for your interest in improving the **AI Website Cloner Template**! This guide covers how to contribute to the template itself.
-
-> **Note:** This repository is a *template*. If you just want to clone a website, don't open a PR here — click **Use this template** to make your own copy and work there (see the [README](README.md#quick-start)). Pull requests should improve the template: the `/clone-website` skill, support for the four documented agents, the scaffold, or the docs.
+Thanks for your interest in improving **SiteCloner**, a studio for cloning websites by URL and building or changing sites with AI.
 
 ## Ways to contribute
 
-- **Improve the `/clone-website` skill** — sharper extraction, better prompts, new behaviors to detect
-- **Improve agent support** — fixes for Claude Code, Codex, Cursor, or OpenCode
-- **Fix bugs** in the Next.js scaffold
-- **Improve documentation** — the README, `AGENTS.md`, or the skill references
+- **Cloning** — pages that copy badly, missing assets or fonts, sites that need a browser to render
+- **AI editing** — prompts, tools, and providers in `src/lib/ai/`
+- **The studio** — the start screen and workspace in `src/components/cloner/`
+- **Export and publish** — the ZIP, React and Vue exporters, published links
+- **Documentation** — the README and `AGENTS.md`
 
-Browse the [open issues](https://github.com/JCodesMore/ai-website-cloner-template/issues) for something to pick up. For substantial or potentially breaking changes, consider opening an issue first so we can align on the approach before significant work begins.
+Browse the [open issues](https://github.com/AI1120/website-cloner/issues) for something to pick up. For substantial or potentially breaking changes, open an issue first so the approach can be agreed before significant work begins.
 
 ## Development setup
 
-**Prerequisites:** [Node.js](https://nodejs.org/) 24+.
+**Prerequisites:** [Node.js](https://nodejs.org/) 24+. Google Chrome or Microsoft Edge lets the cloner render pages that build their content with JavaScript; without one it copies what the server sends.
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/ai-website-cloner-template.git
-cd ai-website-cloner-template
+git clone https://github.com/AI1120/website-cloner.git
+cd website-cloner
 npm ci
+cp .env.example .env.local   # add an AI key to use the AI features
+npm run dev
 ```
 
 Before opening a PR, make sure the project is green:
@@ -29,21 +30,18 @@ Before opening a PR, make sure the project is green:
 npm run check   # lint + typecheck + build
 ```
 
-## Source-of-truth files
+## Ground rules
 
-Project instructions live in `AGENTS.md`. The canonical cloning workflow lives in `.agents/skills/clone-website/` and is read directly by Codex, Cursor, and OpenCode. Claude Code enters through `.claude/commands/clone-website.md`, which must remain a thin bridge rather than a second workflow copy.
+`AGENTS.md` describes how the app is put together. A few rules matter most:
 
-Edit the canonical skill and its references directly. There is no generation or synchronization step.
+- Every outbound request for a user-supplied URL goes through `safeFetch`, which blocks private and local addresses. That includes requests made by the cloning browser.
+- Project pages are untrusted content: they are always served with a `sandbox` Content-Security-Policy, and mutating API routes check the request origin.
+- Changes to project files go through `ChangeRecorder`, so they can be undone.
 
 ## Submitting a pull request
 
-1. **Fork** the repo and create a branch off `master` (e.g. `fix/skill-hover-extraction` or `docs/clarify-setup`).
-2. Make your focused change in the appropriate source-of-truth file.
+1. **Fork** the repo and create a branch off `master` (e.g. `fix/srcset-rewrite` or `docs/clarify-setup`).
+2. Make one focused change.
 3. Run `npm run check` and make sure it passes.
 4. Write a clear commit message that describes the change. Prefixes such as `fix:`, `feat:`, or `docs:` are welcome but not required.
 5. Open a PR against `master`, fill out the PR template, and link a relevant issue when one exists (for example, `Closes #123`).
-6. Keep PRs focused — one logical change per PR is much easier to review and merge.
-
-## Questions
-
-Ask in the [Discord community](https://discord.gg/hrTSX5yTpB) — happy to help you get started.

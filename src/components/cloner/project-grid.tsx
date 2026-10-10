@@ -1,34 +1,16 @@
 "use client";
 
-import { Globe, TriangleAlert, Trash2 } from "lucide-react";
+import { TriangleAlert, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { ProjectIcon } from "@/components/cloner/project-icon";
 import { ProjectThumbnail } from "@/components/cloner/project-thumbnail";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatBytes, plural, timeAgo } from "@/lib/format";
 import { projectKind } from "@/lib/projects/labels";
 import type { Project } from "@/types/project";
-
-function ProjectIcon({ project }: { project: Project }) {
-  const [failed, setFailed] = useState(false);
-  if (!project.icon || failed) {
-    return <Globe className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />;
-  }
-  return (
-    // A small icon served by this app's own preview route; next/image adds nothing here.
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={`/preview/${project.id}/${project.icon}`}
-      alt=""
-      width={16}
-      height={16}
-      className="size-4 shrink-0 rounded-[3px]"
-      onError={() => setFailed(true)}
-    />
-  );
-}
 
 interface ProjectCardProps {
   project: Project;

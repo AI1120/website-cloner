@@ -36,11 +36,11 @@ body:
     attributes:
       label: Category
       options:
-        - Cloning pipeline
-        - Asset extraction
-        - Component generation
+        - Cloning
+        - AI editing
+        - Workspace (preview, code, data, flow)
+        - Export and publish
         - Documentation
-        - Developer experience
         - Other
 
   - type: textarea

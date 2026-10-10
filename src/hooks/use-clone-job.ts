@@ -3,13 +3,16 @@
 import { useCallback, useRef, useState } from "react";
 
 import { errorMessage, readNdjson } from "@/lib/ndjson";
-import type { CloneEvent, CloneOptions, Project } from "@/types/project";
+import type { CloneEvent, CloneOptions, CloneStage, Project } from "@/types/project";
 
 export interface CloneProgress {
   message: string;
+  stage: CloneStage;
   done: number;
   total: number;
   bytes: number;
+  /** True when the pages are being loaded in a browser first. */
+  viaBrowser: boolean;
 }
 
 export type CloneJob =
@@ -26,9 +29,11 @@ export interface CloneExtras {
 
 const INITIAL_PROGRESS: CloneProgress = {
   message: "Starting",
+  stage: "open",
   done: 0,
   total: 0,
   bytes: 0,
+  viaBrowser: false,
 };
 
 /**
@@ -44,7 +49,7 @@ export function useCloneJob() {
       abortRef.current?.abort();
       const abort = new AbortController();
       abortRef.current = abort;
-      let progress = INITIAL_PROGRESS;
+      let progress: CloneProgress = { ...INITIAL_PROGRESS, viaBrowser: options.renderPages === true };
       setJob({ status: "running", url, progress });
 
       try {
@@ -71,10 +76,12 @@ export function useCloneJob() {
 
         for await (const event of readNdjson<CloneEvent>(response)) {
           if (event.type === "status") {
-            progress = { ...progress, message: event.message };
+            progress = { ...progress, message: event.message, stage: event.stage ?? progress.stage };
           } else if (event.type === "progress") {
             progress = {
+              ...progress,
               message: "Downloading files",
+              stage: "assets",
               done: event.done,
               total: event.total,
               bytes: event.bytes,

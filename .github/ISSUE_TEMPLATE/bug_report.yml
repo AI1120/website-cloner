@@ -23,9 +23,9 @@ body:
       label: Steps to Reproduce
       description: Step-by-step instructions to reproduce the behavior.
       placeholder: |
-        1. Run `/clone-website https://example.com`
-        2. Wait for agents to finish
-        3. See error in terminal...
+        1. On the start screen, choose Clone Website and paste https://example.com
+        2. Open the project and ask the AI to "make the header dark"
+        3. See error in the chat / terminal...
     validations:
       required: true
 
@@ -72,12 +72,23 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: claude-code-version
+  - type: dropdown
+    id: ai-service
     attributes:
-      label: Claude Code Version
-      description: Run `claude --version` to find this.
-      placeholder: 1.x.x
+      label: AI Service
+      description: Which AI service the app was using, if the problem involves the AI.
+      options:
+        - Not AI-related
+        - Google Gemini
+        - Claude API
+        - Another Anthropic-compatible service
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: The browser you use the app in.
+      placeholder: Chrome 140
 
   - type: textarea
     id: additional

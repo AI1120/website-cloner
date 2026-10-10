@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { StartScreen } from "@/components/cloner/start-screen";
 import { figmaToken } from "@/lib/ai/figma";
 import { aiReadsImages, isAiConfigured } from "@/lib/ai/provider";
+import { browserAvailable } from "@/lib/cloner/browser";
 import { listProjects } from "@/lib/cloner/storage";
 import { listTemplates } from "@/lib/projects/create";
 
@@ -18,6 +19,7 @@ export default async function Home() {
       aiConfigured={isAiConfigured()}
       figmaConfigured={figmaToken() !== ""}
       imagesSupported={aiReadsImages()}
+      browserAvailable={browserAvailable()}
     />
   );
 }

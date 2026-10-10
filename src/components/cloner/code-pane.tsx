@@ -1,8 +1,20 @@
 "use client";
 
-import { ChevronRight, FileCode, LoaderCircle, Save } from "lucide-react";
+import {
+  Braces,
+  ChevronRight,
+  File,
+  FileCode,
+  FileImage,
+  FileText,
+  FileType,
+  LoaderCircle,
+  Palette,
+  Save,
+} from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { CodeEditor } from "@/components/cloner/code-editor";
 import { Button } from "@/components/ui/button";
 import { formatBytes } from "@/lib/format";
 import { errorMessage } from "@/lib/ndjson";
@@ -18,6 +30,20 @@ interface FileGroup {
 
 /** Name shown for the files at the top level of the project. */
 const ROOT = "";
+
+/** A small icon for a file's kind, tinted like the editor's syntax colours. */
+function FileIcon({ path }: { path: string }) {
+  const name = path.toLowerCase();
+  const props = { className: "size-3.5 shrink-0", "aria-hidden": true } as const;
+  if (IMAGE_EXTENSION.test(name)) return <FileImage {...props} className={cn(props.className, "text-(--code-number)")} />;
+  if (/\.(?:html?|xml|svg)$/.test(name)) return <FileCode {...props} className={cn(props.className, "text-(--code-tag)")} />;
+  if (/\.(?:css|scss|less)$/.test(name)) return <Palette {...props} className={cn(props.className, "text-(--code-keyword)")} />;
+  if (/\.(?:[cm]?[jt]sx?)$/.test(name)) return <FileCode {...props} className={cn(props.className, "text-(--code-attribute)")} />;
+  if (/\.(?:json|map|webmanifest)$/.test(name)) return <Braces {...props} className={cn(props.className, "text-(--code-function)")} />;
+  if (/\.(?:woff2?|ttf|otf|eot)$/.test(name)) return <FileType {...props} className={cn(props.className, "text-muted-foreground")} />;
+  if (/\.(?:md|txt)$/.test(name)) return <FileText {...props} className={cn(props.className, "text-muted-foreground")} />;
+  return <File {...props} className={cn(props.className, "text-muted-foreground")} />;
+}
 
 function groupFiles(files: ProjectFile[]): FileGroup[] {
   const groups = new Map<string, ProjectFile[]>();
@@ -166,12 +192,13 @@ export function CodePane({ project, version, onProjectChange }: CodePaneProps) {
                       aria-current={file.path === selected ? "true" : undefined}
                       title={file.path}
                       className={cn(
-                        "flex w-full items-center gap-2 rounded-md py-1 pr-1.5 pl-6 text-left text-[13px] outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+                        "flex w-full items-center gap-2 rounded-md py-1 pr-1.5 pl-5 text-left text-[13px] outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
                         file.path === selected
                           ? "bg-muted font-medium text-foreground"
                           : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                       )}
                     >
+                      <FileIcon path={file.path} />
                       <span className="min-w-0 flex-1 truncate">{name}</span>
                       <span className="shrink-0 text-[11px] tabular-nums opacity-70">
                         {formatBytes(file.size)}
@@ -245,24 +272,12 @@ export function CodePane({ project, version, onProjectChange }: CodePaneProps) {
               {loaded.message}
             </p>
           ) : (
-            <textarea
-              aria-label={`Contents of ${selected}`}
+            <CodeEditor
+              path={selected}
               value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={(event) => {
-                if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
-                  event.preventDefault();
-                  void save();
-                }
-              }}
-              spellCheck={false}
-              autoCapitalize="none"
-              autoCorrect="off"
-              wrap={wrap ? "soft" : "off"}
-              className={cn(
-                "absolute inset-0 size-full resize-none bg-background p-4 font-mono text-[13px] leading-5 outline-none",
-                wrap ? "break-all whitespace-pre-wrap" : "whitespace-pre",
-              )}
+              wrap={wrap}
+              onChange={setDraft}
+              onSave={() => void save()}
             />
           )}
         </div>

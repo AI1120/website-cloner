@@ -33,6 +33,7 @@ interface StartScreenProps {
   aiConfigured: boolean;
   figmaConfigured: boolean;
   imagesSupported: boolean;
+  browserAvailable: boolean;
 }
 
 export function StartScreen({
@@ -41,6 +42,7 @@ export function StartScreen({
   aiConfigured,
   figmaConfigured,
   imagesSupported,
+  browserAvailable,
 }: StartScreenProps) {
   const router = useRouter();
   const [projects, setProjects] = useState(initialProjects);
@@ -185,6 +187,7 @@ export function StartScreen({
                 aiConfigured={aiConfigured}
                 figmaConfigured={figmaConfigured}
                 imagesSupported={imagesSupported}
+                browserAvailable={browserAvailable}
                 onCreated={handleCreated}
               />
             </div>

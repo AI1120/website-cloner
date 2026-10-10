@@ -29,6 +29,7 @@ import {
   mergeFiles,
   TEXT_ACCEPT,
 } from "@/components/cloner/attachment-chips";
+import { CloneProgress } from "@/components/cloner/clone-progress";
 import { DesignSystemDialog, type DesignChoice } from "@/components/cloner/design-system-dialog";
 import { PageChooserDialog } from "@/components/cloner/page-chooser-dialog";
 import { Segmented } from "@/components/cloner/segmented";
@@ -48,11 +49,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { useCloneJob } from "@/hooks/use-clone-job";
 import { useSpeech } from "@/hooks/use-speech";
-import { formatBytes, plural } from "@/lib/format";
+import { plural } from "@/lib/format";
 import { errorMessage } from "@/lib/ndjson";
 import { cn } from "@/lib/utils";
 import type { Framework, Project, StartMode, Styling, UiLibrary } from "@/types/project";
@@ -145,6 +145,8 @@ interface StartComposerProps {
   figmaConfigured: boolean;
   /** False when the AI service in use can't look at images. */
   imagesSupported: boolean;
+  /** True when the server has Chrome or Edge to load pages in before copying them. */
+  browserAvailable: boolean;
   onCreated: (project: Project) => void;
 }
 
@@ -153,6 +155,7 @@ export function StartComposer({
   aiConfigured,
   figmaConfigured,
   imagesSupported,
+  browserAvailable,
   onCreated,
 }: StartComposerProps) {
   const router = useRouter();
@@ -171,6 +174,7 @@ export function StartComposer({
   const [chosenPages, setChosenPages] = useState<string[] | null>(null);
   const [chooserUrl, setChooserUrl] = useState<string | null>(null);
   const [keepScripts, setKeepScripts] = useState(false);
+  const [renderPages, setRenderPages] = useState(true);
   const [snippetOpen, setSnippetOpen] = useState(false);
   const [snippet, setSnippet] = useState("");
   const [creating, setCreating] = useState(false);
@@ -184,6 +188,7 @@ export function StartComposer({
   const imageInputRef = useRef<HTMLInputElement>(null);
   const textInputRef = useRef<HTMLInputElement>(null);
   const keepScriptsId = useId();
+  const renderPagesId = useId();
 
   const cloning = job.status === "running";
   const busy = creating || cloning;
@@ -254,7 +259,11 @@ export function StartComposer({
       }
       const project = await startClone(
         address,
-        { maxPages: chosenPages ? chosenPages.length + 1 : Number(pageCount), keepScripts },
+        {
+          maxPages: chosenPages ? chosenPages.length + 1 : Number(pageCount),
+          keepScripts,
+          renderPages: browserAvailable && renderPages && !keepScripts,
+        },
         { pages: chosenPages ?? undefined, prompt: text },
       );
       if (!project) return;
@@ -320,10 +329,6 @@ export function StartComposer({
     }
   };
 
-  const percent =
-    cloning && job.progress.total > 0
-      ? Math.round((job.progress.done / job.progress.total) * 100)
-      : null;
   const shownError = error ?? (job.status === "error" ? job.message : null);
   const designLabel = design.kind === "none" ? "Design system" : design.name;
 
@@ -486,16 +491,41 @@ export function StartComposer({
                 Choose pages
               </Button>
             </div>
-            <div className="flex items-center gap-2 sm:ml-auto">
-              <Switch
-                id={keepScriptsId}
-                checked={keepScripts}
-                onCheckedChange={setKeepScripts}
-                disabled={busy}
-              />
-              <label htmlFor={keepScriptsId} className="text-muted-foreground">
-                Keep JavaScript
-              </label>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:ml-auto">
+              {browserAvailable && (
+                <div
+                  className="flex items-center gap-2"
+                  title={
+                    keepScripts
+                      ? "Pages that keep their JavaScript build themselves in the preview instead."
+                      : "Opens each page in Chrome or Edge first, so content that scripts add is copied too."
+                  }
+                >
+                  <Switch
+                    id={renderPagesId}
+                    checked={renderPages && !keepScripts}
+                    onCheckedChange={setRenderPages}
+                    disabled={busy || keepScripts}
+                  />
+                  <label
+                    htmlFor={renderPagesId}
+                    className={cn("text-muted-foreground", keepScripts && "opacity-50")}
+                  >
+                    Load in a browser
+                  </label>
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <Switch
+                  id={keepScriptsId}
+                  checked={keepScripts}
+                  onCheckedChange={setKeepScripts}
+                  disabled={busy}
+                />
+                <label htmlFor={keepScriptsId} className="text-muted-foreground">
+                  Keep JavaScript
+                </label>
+              </div>
             </div>
           </div>
         )}
@@ -673,30 +703,18 @@ export function StartComposer({
                 mode !== "prompt" && !active && "opacity-60",
               )}
             >
-              {active ? <X className="size-4" aria-hidden="true" /> : <Icon className="size-4" aria-hidden="true" />}
-              {active ? "Clear" : label}
+              <Icon className="size-4" aria-hidden="true" />
+              {label}
+              {active && (
+                <X className="-mr-1 size-3.5 opacity-70" aria-label="(selected, click to clear)" />
+              )}
             </button>
           );
         })}
       </div>
 
       <div aria-live="polite" className="mx-auto mt-4 max-w-2xl empty:hidden">
-        {cloning && (
-          <div className="rounded-xl border bg-card px-4 py-3 text-left">
-            <div className="flex items-center justify-between gap-3 text-sm">
-              <span className="flex min-w-0 items-center gap-2 font-medium">
-                <LoaderCircle className="size-4 shrink-0 animate-spin text-brand" />
-                <span className="truncate">{job.progress.message}</span>
-              </span>
-              <span className="shrink-0 text-muted-foreground tabular-nums">
-                {job.progress.total > 0
-                  ? `${job.progress.done} of ${job.progress.total} files · ${formatBytes(job.progress.bytes)}`
-                  : "…"}
-              </span>
-            </div>
-            <Progress value={percent} className="mt-3" aria-label="Clone progress" />
-          </div>
-        )}
+        {cloning && <CloneProgress progress={job.progress} />}
         {creating && (
           <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
             <LoaderCircle className="size-4 animate-spin text-brand" />

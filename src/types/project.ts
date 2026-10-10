@@ -3,6 +3,12 @@ export interface CloneOptions {
   maxPages: number;
   /** Keep the source site's JavaScript. Off gives a more reliable static copy. */
   keepScripts: boolean;
+  /**
+   * Load each page in a browser and copy it after its scripts have run, for a
+   * static copy of sites that build their content with JavaScript. Missing on
+   * projects cloned before this existed; on a project, true only when it happened.
+   */
+  renderPages?: boolean;
 }
 
 /** How a project was started. */
@@ -76,9 +82,12 @@ export interface Project {
 /** A project as the command palette lists it. */
 export type ProjectSummary = Pick<Project, "id" | "name" | "host" | "updatedAt">;
 
+/** The stages of a clone, in order, for showing where it has got to. */
+export type CloneStage = "open" | "pages" | "assets" | "save";
+
 export type CloneEvent =
   | { type: "start"; id: string }
-  | { type: "status"; message: string }
+  | { type: "status"; message: string; stage?: CloneStage }
   | {
       type: "progress";
       done: number;

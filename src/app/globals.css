@@ -75,8 +75,18 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.625rem;
-  --brand: oklch(0.52 0.23 277);
+  /* The magenta of the logo's brush. */
+  --brand: oklch(0.53 0.22 328);
   --brand-foreground: oklch(0.985 0 0);
+  /* Syntax colours for the code editor. */
+  --code-keyword: oklch(0.5 0.2 300);
+  --code-string: oklch(0.5 0.13 150);
+  --code-number: oklch(0.58 0.15 55);
+  --code-comment: oklch(0.6 0.01 260);
+  --code-tag: oklch(0.5 0.15 250);
+  --code-attribute: oklch(0.55 0.13 70);
+  --code-function: oklch(0.52 0.12 205);
+  --code-punctuation: oklch(0.55 0 0);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -112,8 +122,16 @@
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --brand: oklch(0.72 0.16 277);
+  --brand: oklch(0.72 0.17 328);
   --brand-foreground: oklch(0.145 0 0);
+  --code-keyword: oklch(0.76 0.14 310);
+  --code-string: oklch(0.8 0.13 150);
+  --code-number: oklch(0.8 0.13 60);
+  --code-comment: oklch(0.6 0.01 260);
+  --code-tag: oklch(0.76 0.12 240);
+  --code-attribute: oklch(0.82 0.1 80);
+  --code-function: oklch(0.8 0.1 200);
+  --code-punctuation: oklch(0.65 0 0);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);

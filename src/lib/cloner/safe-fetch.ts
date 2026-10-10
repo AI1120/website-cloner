@@ -36,6 +36,16 @@ export interface SafeFetchOptions {
   signal?: AbortSignal;
   accept?: string;
   referer?: string;
+  /** GET unless given; the cloning browser also sends a page's POST requests. */
+  method?: string;
+  body?: Buffer;
+  /** Extra request headers. The user agent and accepted encodings stay this module's own. */
+  headers?: Record<string, string>;
+  /**
+   * "manual" returns a redirect response as it is instead of following it, for
+   * callers (the cloning browser) that follow redirects themselves.
+   */
+  redirect?: "follow" | "manual";
 }
 
 export interface SafeFetchResult {
@@ -43,8 +53,24 @@ export interface SafeFetchResult {
   url: string;
   status: number;
   contentType: string;
+  headers: http.IncomingHttpHeaders;
   body: Buffer;
 }
+
+/** Request headers a caller may not set: they belong to this module or to the connection. */
+const RESERVED_HEADERS = new Set([
+  "user-agent",
+  "accept-encoding",
+  "host",
+  "connection",
+  "content-length",
+  "transfer-encoding",
+  "keep-alive",
+  "upgrade",
+  "proxy-authorization",
+  "te",
+  "trailer",
+]);
 
 // Addresses the server must never fetch on a user's behalf: loopback, private
 // networks, link-local (cloud metadata lives there), and reserved ranges.
@@ -178,15 +204,20 @@ function requestOnce(url: URL, options: SafeFetchOptions): Promise<RawResponse> 
   return new Promise((resolve, reject) => {
     const transport = url.protocol === "https:" ? https : http;
     const headers: Record<string, string> = {
-      "user-agent": USER_AGENT,
       accept: options.accept ?? "*/*",
       "accept-language": "en-US,en;q=0.9",
-      "accept-encoding": "gzip, deflate, br",
     };
+    for (const [name, value] of Object.entries(options.headers ?? {})) {
+      const key = name.toLowerCase();
+      if (!RESERVED_HEADERS.has(key) && !key.startsWith(":")) headers[key] = value;
+    }
+    headers["user-agent"] = USER_AGENT;
+    headers["accept-encoding"] = "gzip, deflate, br";
     if (options.referer) headers.referer = options.referer;
+    if (options.body) headers["content-length"] = String(options.body.length);
 
     const request = transport.request(url, {
-      method: "GET",
+      method: options.method ?? "GET",
       headers,
       lookup: guardedLookup,
       signal: options.signal,
@@ -250,7 +281,7 @@ function requestOnce(url: URL, options: SafeFetchOptions): Promise<RawResponse> 
         resolve({ status, headers: response.headers, body: Buffer.concat(chunks) });
       });
     });
-    request.end();
+    request.end(options.body);
   });
 }
 
@@ -263,19 +294,25 @@ export async function safeFetch(
   options: SafeFetchOptions,
 ): Promise<SafeFetchResult> {
   let url = assertPublicUrl(input);
+  let current = options;
 
   for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
     if (options.signal?.aborted) throw new FetchError("Cancelled.", "aborted");
-    const response = await requestOnce(url, options);
+    const response = await requestOnce(url, current);
 
-    if (response.status >= 300 && response.status < 400 && response.headers.location) {
+    const isRedirect = response.status >= 300 && response.status < 400 && response.headers.location;
+    if (isRedirect && options.redirect !== "manual") {
       let next: URL;
       try {
-        next = new URL(response.headers.location, url);
+        next = new URL(String(response.headers.location), url);
       } catch {
         throw new FetchError("The site sent an invalid redirect.", "network");
       }
       url = assertPublicUrl(next.href);
+      // As browsers do: only 307 and 308 repeat the method and body.
+      if (response.status !== 307 && response.status !== 308) {
+        current = { ...current, method: undefined, body: undefined };
+      }
       continue;
     }
 
@@ -283,6 +320,7 @@ export async function safeFetch(
       url: url.href,
       status: response.status,
       contentType: String(response.headers["content-type"] ?? ""),
+      headers: response.headers,
       body: response.body,
     };
   }

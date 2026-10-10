@@ -16,16 +16,14 @@ Paste a link to copy a site, or start from a prompt, a screenshot, a brand or a 
 
 ## Quick Start
 
-You need [Node.js](https://nodejs.org/) 24 or newer.
+You need [Node.js](https://nodejs.org/) 24 or newer. Google Chrome or Microsoft Edge is recommended: the cloner uses it to copy pages that build their content with JavaScript.
 
 ```bash
-git clone -b sitecloner-app https://github.com/AI1120/website-cloner.git
+git clone https://github.com/AI1120/website-cloner.git
 cd website-cloner
 npm install
 npm run dev
 ```
-
-The app is on the `sitecloner-app` branch until it is merged into `master`.
 
 Open the address it prints (usually `http://localhost:3000`), paste a website's link into the prompt box and choose **Clone Website**. Cloning, code editing, export and publishing work straight away. To build or change sites with AI, add a key first (see [Turning on the AI](#turning-on-the-ai)).
 
@@ -38,7 +36,7 @@ The start screen has one prompt box and several ways to begin:
 | Start from | What happens |
 | --- | --- |
 | **A prompt** | Describe what you want. The AI builds it as a real project. |
-| **Clone Website** | Paste a link. The page is copied with its styles, images and fonts. **Choose pages** lists the site's other pages so you can pick which to include. Anything you type in the prompt box is carried out on the copy afterwards. |
+| **Clone Website** | Paste a link. The page is copied with its styles, images and fonts. With **Load in a browser** on (the default when Chrome or Edge is installed), each page is opened in a real browser first, so content its scripts add is copied too. **Choose pages** lists the site's other pages so you can pick which to include. Anything you type in the prompt box is carried out on the copy afterwards. |
 | **Match a Brand** | Paste a brand's site and say what to build. The result follows that site's colors, type and button shapes. |
 | **Image to App** | Upload screenshots or mockups to be rebuilt as working pages. |
 | **Import Figma** | Paste a link to a Figma frame (needs `FIGMA_TOKEN`). |
@@ -58,7 +56,7 @@ Options beside the prompt box:
 | --- | --- |
 | **Chat** | Ask for changes in plain language. Attach files, or pick elements in the preview first so the request is about them. Requests keep running if you close the tab. |
 | **Preview** | The running project at desktop, tablet and phone widths. **Select elements** to refer to them in the chat, or **Edit text** directly in the page and apply the changes. |
-| **Code** | Browse, edit and save any file. |
+| **Code** | Browse, edit and save any file, in an editor with syntax colours, line numbers, folding and search (<kbd>Ctrl</kbd>+<kbd>F</kbd>); <kbd>Ctrl</kbd>+<kbd>S</kbd> saves. |
 | **Data** | A small database per project: tables, rows, CSV import and export. Ask the AI for "a form that saves submissions" and it creates the table and wires up the page. |
 | **Flow** | A map of the project's screens and the links between them. |
 
@@ -124,6 +122,7 @@ Set these in `.env.local` (see `.env.example`) and restart the app.
 | `FIGMA_TOKEN` | A Figma personal access token, for **Import Figma**. |
 | `CLONER_DATA_DIR` | Where projects are stored. Default `.clones/` in the project folder. |
 | `CLONER_ALLOW_PRIVATE_HOSTS` | Set to `1` to allow cloning `localhost` and private-network sites. |
+| `CLONER_BROWSER` | The browser used to load pages before copying them. Chrome or Edge is found in its usual install folder; set a path to use another Chromium browser, or `off` to copy pages as the server sends them. |
 
 `GOOGLE_API_KEY`, `GEMINI_MODEL`, `ANTHROPIC_AUTH_TOKEN` and `FIGMA_ACCESS_TOKEN` are also accepted, as alternative names for the matching settings above.
 
@@ -138,7 +137,8 @@ Both read `.env.local`. Projects are kept inside the container, so they are lost
 
 ## Good to know
 
-- A clone is a **static copy** of what the server sends. Pages that build their content in the browser may need **Keep JavaScript** turned on, and features that rely on a backend (logins, carts, search) do not work in a copy.
+- A clone is a **static copy** of the page as a visitor sees it: loaded in a browser when one is available, otherwise as the server sends it. Features that rely on a backend (logins, carts, search) do not work in a copy. **Keep JavaScript** keeps the site's scripts running in the copy instead; pages then load as the server sends them, since their scripts rebuild them.
+- The cloning browser never reaches the network itself: every request it makes goes through the same checks as the rest of the app, so it can't reach private or local addresses. The Docker image has no browser, so clones made there use the server's markup.
 - React projects can use `react`, `react-dom`, `react-router-dom`, `lucide-react` and `clsx`; with shadcn/ui also `@base-ui/react`, `class-variance-authority` and `tailwind-merge`. Exported React projects are ordinary Vite projects.
 - The AI cannot generate images. It draws with SVG and CSS, uses images you attach, and marks stock photos as placeholders.
 - A request keeps running if you close the tab, but one in progress is lost if the app itself restarts. Send "continue" to pick it up.

@@ -1,9 +1,10 @@
 "use client";
 
-import { CopyPlus, Ellipsis, Globe, Plus, Sparkles, Trash2 } from "lucide-react";
+import { CopyPlus, Ellipsis, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 
+import { ProjectIcon } from "@/components/cloner/project-icon";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -85,11 +86,7 @@ export function ProjectSidebar({ projects, open, onDelete, onDuplicate, onNew }:
                     href={`/projects/${project.id}`}
                     className="flex items-center gap-2 rounded-lg py-1.5 pr-8 pl-2 text-sm outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
-                    {project.source === "clone" ? (
-                      <Globe className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
-                    ) : (
-                      <Sparkles className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
-                    )}
+                    <ProjectIcon project={project} className="size-3.5" />
                     <span className="min-w-0 truncate">{project.name}</span>
                   </Link>
                   <DropdownMenu>

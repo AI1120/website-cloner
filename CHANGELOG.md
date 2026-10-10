@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Cloning loads each page in the installed Chrome or Edge first (**Load in a browser**, on by default), so content that scripts build, CSS-in-JS styles and web components are copied. Every request the browser makes goes through `safeFetch`; without a browser, pages are copied as the server sends them. `CLONER_BROWSER` picks or turns off the browser.
+- A code editor in the Code view (CodeMirror): syntax colours in both themes, line numbers, folding, search and replace, <kbd>Ctrl</kbd>+<kbd>S</kbd> to save, and file-type icons in the file list. It loads only when the Code view opens.
+- Clone progress shows its four steps (open, read pages, download files, save) with file counts.
+- The SiteCloner logo in the header, browser tab, home-screen icon and beside AI replies; the accent colour now matches the logo's magenta.
+- Cloned projects show their site's icon in the sidebar; thumbnails show a placeholder while they load instead of a white box.
 - AI replies render formatting (lists, bold, code, links), and the prompts let the AI use a little of it.
 - A "What changed" view: each AI turn lists the files it changed, and **View changes** (also in History) compares every file before and after the change, line by line.
 - Dark mode, with a light / dark / match-the-device toggle remembered per browser and applied before the page paints.
@@ -16,10 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Branded not-found, error and loading screens, including one for a project link that no longer exists.
 
 ### Changed
-- Rewrote the README for SiteCloner: screenshots of the app, the new features, keyboard shortcuts, Docker storage, and setup from the `sitecloner-app` branch. Removed the upstream template's badges, demo video and star chart, and credited the template.
+- Rewrote the README for SiteCloner: screenshots of the app, the new features, keyboard shortcuts, Docker storage, and setup steps. Removed the upstream template's badges, demo video and star chart, and credited the template.
 
 ### Fixed
-- Count the README token badge in CI so it reflects the current default branch instead of a stale hosted count.
+- The selected start option keeps its name (with × to clear it) instead of reading "Clear".
+
+### Removed
+- The original template's leftovers: its funding file, token-badge workflow, and `/clone-website` references in the contributing guide and issue forms. The package is now named `sitecloner`.
 
 ## [0.6.1] - 2026-10-05
 
