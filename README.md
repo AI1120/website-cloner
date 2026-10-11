@@ -178,7 +178,7 @@ Run `npm run check` before pushing. Coding agents should read `AGENTS.md` (Claud
 - **Next.js 16**: App Router, React 19, TypeScript strict
 - **shadcn/ui**: Base UI primitives with Tailwind CSS v4 and oklch design tokens
 - **Lucide React**: icons
-- **three.js**: the start screen's animated backdrop, loaded on demand
+- **three.js**: animated 3D scenes on the start screen, in empty and loading states, on error pages, while cloning and while comparing; loaded on demand, paused off screen, and still under reduced motion
 - **esbuild** and **Tailwind CSS**: build each project for the preview
 - **Gemini** or the **Claude API**: the AI
 

@@ -132,25 +132,67 @@ createRoot(document.getElementById("root")).render(
     "src/App.jsx": tailwind
       ? `export default function App() {
   return (
-    <main className="grid min-h-screen place-items-center bg-slate-50 font-sans text-slate-500">
-      <p>Your app will appear here.</p>
+    <main className="grid min-h-screen place-items-center bg-slate-50 bg-[radial-gradient(60%_45%_at_50%_0%,#ede9fe,transparent)] p-6 font-sans">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-xl shadow-slate-200/70 backdrop-blur">
+        <div className="mb-5 flex gap-1.5">
+          <span className="size-2.5 rounded-full bg-rose-300" />
+          <span className="size-2.5 rounded-full bg-amber-300" />
+          <span className="size-2.5 rounded-full bg-emerald-300" />
+        </div>
+        <div className="animate-pulse space-y-3">
+          <div className="h-5 w-2/3 rounded-md bg-slate-200" />
+          <div className="h-3 w-full rounded bg-slate-100" />
+          <div className="h-3 w-5/6 rounded bg-slate-100" />
+          <div className="mt-5 h-24 rounded-xl bg-gradient-to-br from-violet-100 to-fuchsia-100" />
+        </div>
+        <p className="mt-6 text-center text-sm text-slate-500">Your app will appear here.</p>
+      </div>
     </main>
   );
 }
 `
-      : `export default function App() {
+      : `const bar = (width, color = "#f1f5f9", height = 12) => ({
+  height,
+  width,
+  borderRadius: 6,
+  background: color,
+  marginTop: 12,
+});
+
+export default function App() {
   return (
     <main
       style={{
         minHeight: "100vh",
         display: "grid",
         placeItems: "center",
+        padding: 24,
         fontFamily: "system-ui, sans-serif",
-        color: "#64748b",
-        background: "#f8fafc",
+        background: "radial-gradient(60% 45% at 50% 0%, #ede9fe, transparent), #f8fafc",
       }}
     >
-      <p>Your app will appear here.</p>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 448,
+          padding: 24,
+          borderRadius: 16,
+          border: "1px solid #e2e8f0",
+          background: "rgba(255, 255, 255, 0.85)",
+          boxShadow: "0 20px 40px -20px rgba(15, 23, 42, 0.25)",
+        }}
+      >
+        <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+          {["#fda4af", "#fcd34d", "#6ee7b7"].map((color) => (
+            <span key={color} style={{ width: 10, height: 10, borderRadius: 999, background: color }} />
+          ))}
+        </div>
+        <div style={bar("66%", "#e2e8f0", 20)} />
+        <div style={bar("100%")} />
+        <div style={bar("83%")} />
+        <div style={{ ...bar("100%", "linear-gradient(135deg, #ede9fe, #fae8ff)", 96), borderRadius: 12, marginTop: 20 }} />
+        <p style={{ marginTop: 24, textAlign: "center", fontSize: 14, color: "#64748b" }}>Your app will appear here.</p>
+      </div>
     </main>
   );
 }

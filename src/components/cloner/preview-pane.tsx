@@ -15,7 +15,7 @@ import {
   Type,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { OPEN_PALETTE_EVENT } from "@/components/cloner/command-palette";
 import { PREVIEW_SANDBOX } from "@/components/cloner/project-thumbnail";
@@ -71,6 +71,8 @@ interface PreviewPaneProps {
   onUnsavedEdits: (edits: TextEdit[]) => void;
   /** Opens "Compare with the original"; left out when the page has no original. */
   onCompare?: () => void;
+  /** Shown over the page instead of it, e.g. while nothing has been built yet. */
+  overlay?: ReactNode;
 }
 
 export function PreviewPane({
@@ -87,6 +89,7 @@ export function PreviewPane({
   onBuildErrors,
   onUnsavedEdits,
   onCompare,
+  overlay,
 }: PreviewPaneProps) {
   const [device, setDevice] = useState<Device>("desktop");
   const [tool, setTool] = useState<Tool>("none");
@@ -397,10 +400,11 @@ export function PreviewPane({
 
       <div
         className={cn(
-          "flex min-h-0 flex-1 justify-center overflow-auto bg-muted",
+          "relative flex min-h-0 flex-1 justify-center overflow-auto bg-muted",
           framed && "p-4 sm:p-6",
         )}
       >
+        {overlay && <div className="absolute inset-0 z-10">{overlay}</div>}
         <iframe
           ref={frameRef}
           key={frameKey}

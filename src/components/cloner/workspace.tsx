@@ -40,6 +40,7 @@ import {
   type Command,
 } from "@/components/cloner/command-palette";
 import { DataPane } from "@/components/cloner/data-pane";
+import { EmptyPreview } from "@/components/cloner/empty-preview";
 import { ExportMenu, exportUrl, formatsFor } from "@/components/cloner/export-menu";
 import { FlowPane } from "@/components/cloner/flow-pane";
 import { HistoryMenu } from "@/components/cloner/history-menu";
@@ -123,6 +124,10 @@ export function Workspace({
   const [version, setVersion] = useState(0);
   const [changesTarget, setChangesTarget] = useState<ChangesTarget | null>(null);
   const [comparing, setComparing] = useState(false);
+  // AI-made projects show a designed empty state until their first version exists.
+  const neverBuilt =
+    project.source !== "clone" && project.source !== "template" && project.checkpoints.length === 0;
+  const firstRequest = initialMessages.find((message) => message.role === "user")?.text ?? null;
   // Pages copied from a site can be set against the live original.
   const comparablePage = browserAvailable
     ? project.pages.find((page) => page.path === currentPage && page.url !== "")
@@ -570,6 +575,16 @@ export function Workspace({
               onBuildErrors={handleBuildErrors}
               onUnsavedEdits={handleUnsavedEdits}
               onCompare={comparablePage ? () => setComparing(true) : undefined}
+              overlay={
+                neverBuilt ? (
+                  <EmptyPreview
+                    running={running}
+                    request={firstRequest}
+                    aiConfigured={aiConfigured}
+                    onBuild={askAi}
+                  />
+                ) : undefined
+              }
             />
           </div>
           {mainView === "code" && (

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { ProjectIcon } from "@/components/cloner/project-icon";
+import { Scene3D } from "@/components/cloner/scene-3d";
 import { ProjectThumbnail } from "@/components/cloner/project-thumbnail";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -101,7 +102,8 @@ export function ProjectGrid({ projects, onDelete }: ProjectGridProps) {
 
   if (projects.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed px-6 py-12 text-center">
+      <div className="rounded-xl border border-dashed px-6 pt-2 pb-10 text-center">
+        <Scene3D preset="idle" className="mx-auto h-44 w-full max-w-md" />
         <p className="text-sm font-medium">No projects yet</p>
         <p className="mt-1 text-sm text-muted-foreground">
           Describe an idea or paste a website address above, and your first project will appear here.

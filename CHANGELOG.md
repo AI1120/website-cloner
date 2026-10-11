@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Animated three.js scenes across the app, built from one shared kit: a page assembling itself while the AI builds, a blueprint waiting to be built, pages tumbling past an empty outline on not-found and error pages, and an original and its copy scanned together while cloning and comparing. They load on demand, pause off screen, follow the theme, and stand still under reduced motion.
+- A designed empty state in the preview for projects with nothing built yet: the build in progress, or the original request with **Build it now** (and **Clone {site}** when the request asks to copy a site).
+- The start screen offers **Clone it instead** when a prompt asks to copy a site by its address, and `/?clone=<address>` opens Clone Website with the address filled in.
 - After the AI changes a project it built, the changed pages are opened in a browser; uncaught errors, console errors and missing files are handed back to the AI for one round of fixes in the same request. Copied sites are skipped.
 - **Compare with the original** (preview toolbar and <kbd>Ctrl</kbd>+<kbd>K</kbd>, for copied pages): screenshots the live page and the copy in the same browser at desktop or phone width, scores how closely they match (tolerating content that has only shifted up or down), and shows them side by side, with a slider, or with the differences and missing parts marked.
 - Cloning loads each page in the installed Chrome or Edge first (**Load in a browser**, on by default), so content that scripts build, CSS-in-JS styles and web components are copied. Every request the browser makes goes through `safeFetch`; without a browser, pages are copied as the server sends them. `CLONER_BROWSER` picks or turns off the browser.

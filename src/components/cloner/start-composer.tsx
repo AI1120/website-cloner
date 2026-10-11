@@ -52,6 +52,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Switch } from "@/components/ui/switch";
 import { useCloneJob } from "@/hooks/use-clone-job";
 import { useSpeech } from "@/hooks/use-speech";
+import { cloneIntent, displayAddress } from "@/lib/clone-intent";
 import { plural } from "@/lib/format";
 import { errorMessage } from "@/lib/ndjson";
 import { cn } from "@/lib/utils";
@@ -147,6 +148,8 @@ interface StartComposerProps {
   imagesSupported: boolean;
   /** True when the server has Chrome or Edge to load pages in before copying them. */
   browserAvailable: boolean;
+  /** Opens in Clone Website mode with this address filled in (from `/?clone=`). */
+  initialCloneUrl?: string;
   onCreated: (project: Project) => void;
 }
 
@@ -156,14 +159,15 @@ export function StartComposer({
   figmaConfigured,
   imagesSupported,
   browserAvailable,
+  initialCloneUrl,
   onCreated,
 }: StartComposerProps) {
   const router = useRouter();
   const { job, start: startClone, cancel: cancelClone, dismissError } = useCloneJob();
 
-  const [mode, setMode] = useState<StartMode>("prompt");
+  const [mode, setMode] = useState<StartMode>(initialCloneUrl ? "clone" : "prompt");
   const [prompt, setPrompt] = useState("");
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState(initialCloneUrl ?? "");
   const [files, setFiles] = useState<File[]>([]);
   const [framework, setFramework] = useState<Framework>("react");
   const [styling, setStyling] = useState<Exclude<Styling, "original">>("tailwind");
@@ -191,6 +195,8 @@ export function StartComposer({
   const renderPagesId = useId();
 
   const cloning = job.status === "running";
+  // A prompt like "clone https://example.com" is offered the Clone Website mode.
+  const copyAddress = mode === "prompt" ? cloneIntent(prompt) : null;
   const busy = creating || cloning;
   const needsAi = mode !== "clone";
   // The component library is built on Tailwind, so it is only offered with React and Tailwind.
@@ -422,6 +428,27 @@ export function StartComposer({
           }}
           className="block max-h-60 min-h-16 w-full resize-none bg-transparent px-2.5 pt-2 pb-1 text-[15px] leading-relaxed outline-none placeholder:text-muted-foreground disabled:opacity-60"
         />
+
+        {copyAddress && !busy && (
+          <div className="mx-1 mb-1 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-brand/25 bg-brand/5 px-3 py-2 text-sm">
+            <Globe className="size-4 shrink-0 text-brand" aria-hidden="true" />
+            <span className="min-w-0 flex-1 text-muted-foreground">
+              Want a copy of <span className="font-medium text-foreground">{displayAddress(copyAddress)}</span>?
+              Clone Website copies the real page, with its images and fonts.
+            </span>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                setUrl(copyAddress);
+                setPrompt("");
+                selectMode("clone");
+              }}
+            >
+              Clone it instead
+            </Button>
+          </div>
+        )}
 
         {commandsOpen && (
           <ul

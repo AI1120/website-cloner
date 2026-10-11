@@ -34,6 +34,7 @@ interface StartScreenProps {
   figmaConfigured: boolean;
   imagesSupported: boolean;
   browserAvailable: boolean;
+  initialCloneUrl?: string;
 }
 
 export function StartScreen({
@@ -43,6 +44,7 @@ export function StartScreen({
   figmaConfigured,
   imagesSupported,
   browserAvailable,
+  initialCloneUrl,
 }: StartScreenProps) {
   const router = useRouter();
   const [projects, setProjects] = useState(initialProjects);
@@ -188,6 +190,7 @@ export function StartScreen({
                 figmaConfigured={figmaConfigured}
                 imagesSupported={imagesSupported}
                 browserAvailable={browserAvailable}
+                initialCloneUrl={initialCloneUrl}
                 onCreated={handleCreated}
               />
             </div>

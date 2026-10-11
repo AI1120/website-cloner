@@ -106,6 +106,10 @@ for (const [address, prefix] of BLOCKED_V6) {
   blockList.addSubnet(address, prefix, "ipv6");
 }
 
+/** How to allow private addresses, for messages about blocked ones. */
+const PRIVATE_HINT =
+  "To clone sites on your own network, set CLONER_ALLOW_PRIVATE_HOSTS=1 in .env.local and restart the app (only where nobody else can reach it).";
+
 function allowPrivateHosts(): boolean {
   return process.env.CLONER_ALLOW_PRIVATE_HOSTS === "1";
 }
@@ -148,7 +152,7 @@ export function assertPublicUrl(input: string): URL {
   const host = url.hostname.replace(/^\[|\]$/g, "");
   if (net.isIP(host) !== 0 ? isBlockedAddress(host) : isBlockedHostname(host)) {
     throw new FetchError(
-      "That address points to a private or local network, which can't be cloned.",
+      `That address is on a private or local network, which is blocked by default. ${PRIVATE_HINT}`,
       "blocked",
     );
   }
@@ -171,7 +175,9 @@ const guardedLookup: net.LookupFunction = (hostname, options, callback) => {
     if (!allowPrivateHosts() && list.some((entry) => isBlockedAddress(entry.address))) {
       callback(
         new FetchError(
-          `${hostname} resolves to a private or local address, which can't be cloned.`,
+          `${hostname} resolves to a private address here (${list.find((entry) => isBlockedAddress(entry.address))?.address}), so it's blocked. ` +
+            "If it's a public site, a VPN, proxy or network filter on this computer is answering with a stand-in address; turning it off for this site, or using another DNS mode, fixes it. " +
+            PRIVATE_HINT,
           "blocked",
         ),
         "",

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { Scene3D } from "@/components/cloner/scene-3d";
 import { Wordmark } from "@/components/cloner/site-header";
 
 /** A page sketch with its dashed copy offset behind it: the app's "cloned page" motif. */
 function PageSketch() {
   return (
-    <div aria-hidden="true" className="relative mx-auto mb-10 h-28 w-40">
+    <div aria-hidden="true" className="relative mx-auto mb-6 h-28 w-40">
       <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-xl border-2 border-dashed border-brand/40" />
       <div className="absolute inset-0 space-y-2 rounded-xl border bg-card p-3 shadow-sm">
         <div className="flex gap-1">
@@ -50,7 +51,15 @@ export function StatusScreen({ code, title, children, actions, footnote }: Statu
           className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] bg-[radial-gradient(55%_65%_at_50%_0%,color-mix(in_oklch,var(--brand)_16%,transparent),transparent_70%)]"
         />
         <div className="relative w-full max-w-md text-center">
-          <PageSketch />
+          <Scene3D
+            preset="lost"
+            className="-mx-24 mb-4 h-56 sm:-mx-40 sm:h-64"
+            fallback={
+              <div className="flex h-full items-end justify-center">
+                <PageSketch />
+              </div>
+            }
+          />
           <p className="font-mono text-xs font-medium tracking-widest text-brand uppercase">{code}</p>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-balance">{title}</h1>
           <div className="mt-3 text-base leading-relaxed text-pretty text-muted-foreground">{children}</div>

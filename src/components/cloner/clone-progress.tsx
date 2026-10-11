@@ -1,5 +1,6 @@
 import { Check, LoaderCircle } from "lucide-react";
 
+import { Scene3D } from "@/components/cloner/scene-3d";
 import { Progress } from "@/components/ui/progress";
 import type { CloneProgress as Progressing } from "@/hooks/use-clone-job";
 import { formatBytes } from "@/lib/format";
@@ -32,7 +33,11 @@ export function CloneProgress({ progress }: { progress: Progressing }) {
         : null;
 
   return (
-    <div className="rounded-xl border bg-card px-4 py-3.5 text-left shadow-xs">
+    <div className="overflow-hidden rounded-xl border bg-card px-4 pb-3.5 text-left shadow-xs">
+      <Scene3D
+        preset="compare"
+        className="-mx-4 mb-3 h-36 border-b bg-[radial-gradient(60%_80%_at_50%_50%,color-mix(in_oklch,var(--brand)_10%,transparent),transparent)]"
+      />
       <ol className="flex items-center gap-1.5" aria-label="Clone steps">
         {STAGES.map((stage, index) => {
           const done = index < current;

@@ -1,5 +1,7 @@
 import { LoaderCircle } from "lucide-react";
 
+import { Scene3D } from "@/components/cloner/scene-3d";
+
 /** The workspace's outline while a project opens. */
 export default function ProjectLoading() {
   return (
@@ -26,7 +28,8 @@ export default function ProjectLoading() {
           </div>
           <div className="m-3 h-24 rounded-xl border" />
         </div>
-        <div className="flex min-w-0 flex-1 items-center justify-center bg-muted/40 p-6">
+        <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1 bg-muted/40 p-6">
+          <Scene3D preset="building" className="h-64 w-full max-w-lg" />
           <p className="flex items-center gap-2 text-sm text-muted-foreground">
             <LoaderCircle className="size-4 animate-spin text-brand" aria-hidden="true" />
             Opening project…

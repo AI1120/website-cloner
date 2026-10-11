@@ -3,6 +3,7 @@
 import { CircleAlert, Columns2, ExternalLink, LoaderCircle, Monitor, RotateCw, ScanEye, Smartphone, SplitSquareHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { Scene3D } from "@/components/cloner/scene-3d";
 import { Segmented } from "@/components/cloner/segmented";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -139,7 +140,15 @@ export function CompareDialog({ projectId, page, onClose }: CompareDialogProps) 
 
         {state.status === "running" && (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center" aria-live="polite">
-            <LoaderCircle className="size-6 animate-spin text-brand" aria-hidden="true" />
+            <Scene3D
+              preset="compare"
+              className="h-[min(40vh,320px)] w-full max-w-3xl"
+              fallback={
+                <div className="flex h-full items-center justify-center">
+                  <LoaderCircle className="size-6 animate-spin text-brand" />
+                </div>
+              }
+            />
             <p className="font-medium">{state.message}</p>
             <p className="max-w-sm text-xs text-muted-foreground">
               Both pages are opened in a browser at {number.format(WIDTH[device])} pixels wide and
