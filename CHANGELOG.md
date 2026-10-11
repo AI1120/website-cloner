@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- After the AI changes a project it built, the changed pages are opened in a browser; uncaught errors, console errors and missing files are handed back to the AI for one round of fixes in the same request. Copied sites are skipped.
 - **Compare with the original** (preview toolbar and <kbd>Ctrl</kbd>+<kbd>K</kbd>, for copied pages): screenshots the live page and the copy in the same browser at desktop or phone width, scores how closely they match (tolerating content that has only shifted up or down), and shows them side by side, with a slider, or with the differences and missing parts marked.
 - Cloning loads each page in the installed Chrome or Edge first (**Load in a browser**, on by default), so content that scripts build, CSS-in-JS styles and web components are copied. Every request the browser makes goes through `safeFetch`; without a browser, pages are copied as the server sends them. `CLONER_BROWSER` picks or turns off the browser.
 - A code editor in the Code view (CodeMirror): syntax colours in both themes, line numbers, folding, search and replace, <kbd>Ctrl</kbd>+<kbd>S</kbd> to save, and file-type icons in the file list. It loads only when the Code view opens.

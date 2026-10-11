@@ -112,7 +112,39 @@ export interface Comparison {
 /** Answers a request the browser makes to an address served from disk. */
 export type LocalServer = (
   url: URL,
+  method: string,
 ) => Promise<{ status: number; headers: Record<string, string>; body: Buffer }>;
+
+/** Problems reported by `diagnose`, longest first cut to a readable size. */
+const MAX_PROBLEMS = 8;
+const MAX_PROBLEM_CHARS = 400;
+
+/**
+ * Fills a console message's %s, %d, %i, %f, %o, %O and %c placeholders with its
+ * arguments, as the browser's console shows it (React's warnings rely on this).
+ */
+function formatConsoleArgs(values: unknown[]): string {
+  if (values.length === 0) return "";
+  const [first, ...rest] = values;
+  if (typeof first !== "string") return values.map((value) => describeValue(value)).join(" ");
+  let index = 0;
+  const text = first.replace(/%[sdifoOc]/g, (token) => {
+    if (index >= rest.length) return token;
+    const value = rest[index];
+    index += 1;
+    return token === "%c" ? "" : describeValue(value);
+  });
+  return [text, ...rest.slice(index).map((value) => describeValue(value))].join(" ").trim();
+}
+
+function describeValue(value: unknown): string {
+  if (typeof value === "string") return value;
+  try {
+    return JSON.stringify(value) ?? String(value);
+  } catch {
+    return String(value);
+  }
+}
 
 /** Width the screenshots are reduced to before comparing, which also evens out noise. */
 const COMPARE_SAMPLE_WIDTH = 200;
@@ -432,7 +464,7 @@ export class PageRenderer {
       this.inFlight += 1;
       this.lastActivity = Date.now();
       try {
-        await route.fulfill(await this.local.serve(new URL(url)));
+        await route.fulfill(await this.local.serve(new URL(url), method));
       } catch {
         await route.abort("failed").catch(() => undefined);
       } finally {
@@ -544,6 +576,59 @@ export class PageRenderer {
         timeout: 20_000,
       });
       return { image, width, height, fullHeight: Math.round(fullHeight) };
+    } finally {
+      await page.close().catch(() => undefined);
+    }
+  }
+
+  /**
+   * Opens a page served by `serveLocally` and lists what went wrong while it
+   * loaded: uncaught errors, console errors, and its own files that are missing
+   * or failed. `ignore` leaves out requests that aren't the page's fault. Problems
+   * with other sites' files are left out, since the page can't fix those.
+   */
+  async diagnose(url: string, ignore: (pathname: string) => boolean = () => false): Promise<string[] | string> {
+    const page = await this.newPage();
+    const problems: string[] = [];
+    const pending: Promise<void>[] = [];
+    const local = this.local?.origin ?? "";
+    const isOwn = (address: string) => local !== "" && address.startsWith(`${local}/`);
+    const add = (problem: string) => {
+      const text = problem.replace(/\s+/g, " ").trim().slice(0, MAX_PROBLEM_CHARS);
+      if (text && !problems.includes(text)) problems.push(text);
+    };
+
+    page.on("pageerror", (error) => add(`Uncaught error: ${error.message}`));
+    page.on("console", (message) => {
+      if (message.type() !== "error") return;
+      // Failed loads are reported more precisely by the request events below.
+      if (/^Failed to load resource/i.test(message.text())) return;
+      pending.push(
+        Promise.all(message.args().map((arg) => arg.jsonValue().catch(() => undefined)))
+          .then((values) => add(`Console error: ${formatConsoleArgs(values) || message.text()}`))
+          .catch(() => add(`Console error: ${message.text()}`)),
+      );
+    });
+    page.on("response", (response) => {
+      const address = response.url();
+      if (!isOwn(address) || response.status() < 400) return;
+      const pathname = new URL(address).pathname;
+      if (!ignore(pathname)) add(`Missing file: ${pathname} (status ${response.status()})`);
+    });
+    page.on("requestfailed", (request) => {
+      const address = request.url();
+      if (!isOwn(address)) return;
+      const pathname = new URL(address).pathname;
+      if (!ignore(pathname)) add(`Couldn't load ${pathname}: ${request.failure()?.errorText ?? "failed"}`);
+    });
+
+    try {
+      const opened = await this.open(page, url);
+      if (typeof opened === "string") return opened;
+      // Errors from timers and effects that run just after load.
+      await wait(800);
+      await Promise.all(pending);
+      return problems.slice(0, MAX_PROBLEMS);
     } finally {
       await page.close().catch(() => undefined);
     }

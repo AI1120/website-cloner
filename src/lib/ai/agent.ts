@@ -14,6 +14,7 @@ import { buildFirstMessage, systemPromptFor } from "@/lib/ai/prompts";
 import { ProjectTools, toolsFor } from "@/lib/ai/tools";
 import { describeBuildErrors, ensureBuilt, needsBuild } from "@/lib/build";
 import { analyzeFlow } from "@/lib/build/flow";
+import { describePageProblems, findPageProblems } from "@/lib/build/page-check";
 import { ChangeRecorder } from "@/lib/cloner/checkpoints";
 import { readProject, siteDir, touchProject } from "@/lib/cloner/storage";
 import type {
@@ -31,6 +32,16 @@ export { isAiConfigured } from "@/lib/ai/provider";
 const MAX_TURNS = 40;
 /** How many times a failing build is handed back to the model to fix. */
 const MAX_BUILD_FIXES = 3;
+/** Rounds spent fixing errors seen in the browser; kept low, as each costs model calls. */
+const MAX_PAGE_FIXES = 1;
+
+/** The pages worth opening after a change: the one in view, then changed pages. */
+function pagesToCheck(project: Project, currentPage: string, changed: string[]): string[] {
+  if (project.framework === "react") return [currentPage || project.entry];
+  const changedPages = changed.filter((file) => /\.html?$/i.test(file));
+  const current = currentPage.split("#")[0] || project.entry;
+  return [current, ...changedPages];
+}
 
 /** An error whose message can be shown to the person using the editor. */
 export class AgentError extends Error {
@@ -181,6 +192,7 @@ export async function runEditAgent(request: AgentRequest): Promise<AgentResult> 
       };
       let finished = false;
       let buildFixes = 0;
+      let pageFixes = 0;
 
       for (let turn = 0; turn < MAX_TURNS && !finished; turn += 1) {
         const output = await session.send(input, {
@@ -228,6 +240,32 @@ export async function runEditAgent(request: AgentRequest): Promise<AgentResult> 
               };
               continue;
             }
+          }
+        }
+
+        // Then the pages must work in a browser. Copied sites are left out: their
+        // pages often carry the original site's own errors, which aren't the AI's.
+        if (
+          buildProblem === null &&
+          pageFixes < MAX_PAGE_FIXES &&
+          project.source !== "clone" &&
+          recorder.changedFiles.length > 0
+        ) {
+          emit({ type: "status", message: "Opening the page in a browser to check it" });
+          const found = await findPageProblems(project, pagesToCheck(project, request.currentPage, recorder.changedFiles), signal).catch(
+            (error: unknown) => {
+              console.error("Page check failed:", error);
+              return null;
+            },
+          );
+          if (found && found.length > 0) {
+            pageFixes += 1;
+            emit({ type: "status", message: "Fixing errors on the page" });
+            input = {
+              kind: "user",
+              text: `The project builds, but opening it in a browser shows these errors. Fix their causes in the project's files; ignore anything that only concerns other sites' files. When it is fixed, end with your summary of everything you did for the person's request, not of this fix.\n\n${describePageProblems(found)}`,
+            };
+            continue;
           }
         }
         finished = true;

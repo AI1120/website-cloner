@@ -1,4 +1,4 @@
-import { servePreview } from "@/lib/build/serve";
+import { serveProjectFile } from "@/lib/build/page-check";
 import { PageRenderer, type Screenshot } from "@/lib/cloner/browser";
 import type { CompareDevice, PageComparison, Project } from "@/types/project";
 
@@ -42,15 +42,7 @@ export async function compareWithOriginal(
     throw new CompareError("Comparing needs Chrome or Edge on the machine running the app.");
   }
   try {
-    renderer.serveLocally(COPY_ORIGIN, async (url) => {
-      const segments = url.pathname.split("/").filter(Boolean).map((part) => decodeURIComponent(part));
-      const response = await servePreview(new Request(url.href), project, segments);
-      return {
-        status: response.status,
-        headers: Object.fromEntries(response.headers),
-        body: Buffer.from(await response.arrayBuffer()),
-      };
-    });
+    renderer.serveLocally(COPY_ORIGIN, (url) => serveProjectFile(project, url));
 
     const width = WIDTHS[device];
     const maxHeight = MAX_HEIGHT[device];
