@@ -1,5 +1,6 @@
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import fs from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 
 import { buildReactApp, renderReactIndex } from "@/lib/build/react";
@@ -17,6 +18,7 @@ import {
   siteDir,
   writeJson,
 } from "@/lib/cloner/storage";
+import { readDirectory } from "@/lib/cloner/zip";
 import type { BuildMessage, Project } from "@/types/project";
 
 /** Tailwind input of an HTML project, at the site root. */
@@ -294,4 +296,15 @@ export async function materialize(project: Project, outDir: string): Promise<voi
         await fs.writeFile(file, injectRuntime(await fs.readFile(file, "utf8"), project.id, false));
       }),
   );
+}
+
+/** The finished static site (what publishing serves), built into a temporary folder and read back. */
+export async function readBuiltSite(project: Project): Promise<Record<string, Uint8Array>> {
+  const folder = path.join(os.tmpdir(), `sitecloner-build-${randomBytes(6).toString("hex")}`);
+  try {
+    await materialize(project, folder);
+    return await readDirectory(folder);
+  } finally {
+    await remove(folder).catch(() => undefined);
+  }
 }

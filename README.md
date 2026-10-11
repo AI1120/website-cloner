@@ -64,7 +64,7 @@ In the header:
 
 - **History**: every change, newest first. View any change, or undo it (undoing a change also undoes the ones made after it).
 - **Export**: a ZIP of the code. Static sites can also be exported as a Vite project with React or Vue pages.
-- **Publish**: a snapshot at `/p/<project>/` with a link and QR code. The link works wherever this app is reachable; later changes stay private until you update it. **Link settings** give it a title, description and preview image for when it is shared (the image can be photographed from your page), and an optional password that visitors enter once per browser.
+- **Publish**: a snapshot at `/p/<project>/` with a link and QR code. The link works wherever this app is reachable; later changes stay private until you update it. **Link settings** give it a title, description and preview image for when it is shared (the image can be photographed from your page), and an optional password that visitors enter once per browser. **Deploy elsewhere** puts the finished site on Netlify or Vercel, or pushes the code to a private GitHub repository, with your own tokens; later deploys update the same site or repository.
 
 ### See what changed
 
@@ -123,6 +123,9 @@ Set these in `.env.local` (see `.env.example`) and restart the app.
 | `CLONER_DATA_DIR` | Where projects are stored. Default `.clones/` in the project folder. |
 | `CLONER_ALLOW_PRIVATE_HOSTS` | Set to `1` to allow cloning `localhost` and private-network sites. |
 | `CLONER_BROWSER` | The browser used to load pages before copying them. Chrome or Edge is found in its usual install folder; set a path to use another Chromium browser, or `off` to copy pages as the server sends them. |
+| `NETLIFY_TOKEN` | A Netlify personal access token, to deploy projects to Netlify. |
+| `VERCEL_TOKEN` | A Vercel access token, to deploy projects to Vercel. Add `VERCEL_TEAM_ID` to deploy to a team. |
+| `GITHUB_TOKEN` | A GitHub token allowed to create repositories and write their contents, to push projects to GitHub. |
 
 `GOOGLE_API_KEY`, `GEMINI_MODEL`, `ANTHROPIC_AUTH_TOKEN` and `FIGMA_ACCESS_TOKEN` are also accepted, as alternative names for the matching settings above.
 

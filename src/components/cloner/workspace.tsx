@@ -2,6 +2,7 @@
 
 import {
   ArrowLeft,
+  Cloud,
   Code,
   Copy,
   Database,
@@ -41,6 +42,7 @@ import {
   type Command,
 } from "@/components/cloner/command-palette";
 import { DataPane } from "@/components/cloner/data-pane";
+import { DeployDialog } from "@/components/cloner/deploy-dialog";
 import { EmptyPreview } from "@/components/cloner/empty-preview";
 import { ExportMenu, exportUrl, formatsFor } from "@/components/cloner/export-menu";
 import { FlowPane } from "@/components/cloner/flow-pane";
@@ -55,7 +57,7 @@ import { toast } from "@/components/ui/toast";
 import { errorMessage } from "@/lib/ndjson";
 import { projectKind } from "@/lib/projects/labels";
 import { cn } from "@/lib/utils";
-import type { BuildMessage, ChatMessage, Project, SelectedElement, TextEdit } from "@/types/project";
+import type { BuildMessage, ChatMessage, DeployTarget, Project, SelectedElement, TextEdit } from "@/types/project";
 
 type Panel = "chat" | "preview" | "code" | "data" | "flow";
 
@@ -112,6 +114,8 @@ interface WorkspaceProps {
   browserAvailable: boolean;
   /** True when the project has only its starter page, so the preview shows an empty state. */
   initiallyEmpty: boolean;
+  /** Which deploy services have a token set. */
+  deployTargets: Record<DeployTarget, boolean>;
 }
 
 export function Workspace({
@@ -121,6 +125,7 @@ export function Workspace({
   aiConfigured,
   browserAvailable,
   initiallyEmpty,
+  deployTargets,
 }: WorkspaceProps) {
   const router = useRouter();
   const [project, setProject] = useState(initialProject);
@@ -130,6 +135,7 @@ export function Workspace({
   const [changesTarget, setChangesTarget] = useState<ChangesTarget | null>(null);
   const [comparing, setComparing] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [deployOpen, setDeployOpen] = useState(false);
   // AI-made projects show a designed empty state until their first version exists.
   const neverBuilt =
     initiallyEmpty && project.checkpoints.length === 0;
@@ -353,6 +359,14 @@ export function Workspace({
       run: () => void publish(),
     });
     list.push({
+      id: "deploy",
+      group: "Project",
+      label: "Deploy to Netlify, Vercel or GitHub",
+      icon: Cloud,
+      keywords: "host hosting live github repository push netlify vercel domain",
+      run: () => setDeployOpen(true),
+    });
+    list.push({
       id: "share-settings",
       group: "Project",
       label: "Link settings",
@@ -423,7 +437,12 @@ export function Workspace({
       />
       <ThemeToggle />
       <ExportMenu project={project} />
-      <PublishControl project={project} onProjectChange={setProject} onOpenSettings={() => setShareOpen(true)} />
+      <PublishControl
+        project={project}
+        onProjectChange={setProject}
+        onOpenSettings={() => setShareOpen(true)}
+        onOpenDeploy={() => setDeployOpen(true)}
+      />
     </>
   );
 
@@ -619,6 +638,14 @@ export function Workspace({
         page={currentPage}
         canPicture={browserAvailable}
       />
+      {deployOpen && (
+        <DeployDialog
+          project={project}
+          available={deployTargets}
+          onClose={() => setDeployOpen(false)}
+          onProjectChange={setProject}
+        />
+      )}
       {shareOpen && (
         <ShareSettingsDialog project={project} onClose={() => setShareOpen(false)} onProjectChange={setProject} />
       )}

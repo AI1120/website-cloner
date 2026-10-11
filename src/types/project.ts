@@ -78,6 +78,8 @@ export interface Project {
   published: { publishedAt: string } | null;
   /** How the published link presents itself when shared, and whether it needs a password. */
   share?: ShareSettings;
+  /** Where the project has been deployed, so the next deploy updates the same place. */
+  deployments?: Partial<Record<DeployTarget, DeployRecord>>;
   checkpoints: ProjectCheckpoint[];
 }
 
@@ -99,6 +101,23 @@ export interface ShareSettings {
   /** True when visitors need a password to open the pages. */
   protected: boolean;
 }
+
+export type DeployTarget = "netlify" | "vercel" | "github";
+
+export interface DeployRecord {
+  /** The live site, or the repository page for GitHub. */
+  url: string;
+  deployedAt: string;
+  /** Netlify site id, Vercel project name, or GitHub "owner/repo". */
+  ref: string;
+  /** Where to manage it (the Netlify dashboard, say), when there is one. */
+  adminUrl?: string;
+}
+
+export type DeployEvent =
+  | { type: "status"; message: string }
+  | { type: "done"; project: Project; url: string }
+  | { type: "error"; message: string };
 
 export type CompareDevice = "desktop" | "phone";
 

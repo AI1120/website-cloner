@@ -7,6 +7,7 @@ import { readChat } from "@/lib/ai/chat-store";
 import { runningJob } from "@/lib/ai/jobs";
 import { browserAvailable } from "@/lib/cloner/browser";
 import { readProject } from "@/lib/cloner/storage";
+import { deployTargets } from "@/lib/deploy";
 import { hasOnlyStarter } from "@/lib/projects/create";
 
 type Props = { params: Promise<{ id: string }> };
@@ -30,6 +31,7 @@ export default async function ProjectPage({ params }: Props) {
       aiConfigured={isAiConfigured()}
       browserAvailable={browserAvailable()}
       initiallyEmpty={await hasOnlyStarter(project)}
+      deployTargets={deployTargets()}
     />
   );
 }

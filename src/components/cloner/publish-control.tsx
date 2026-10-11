@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy, ExternalLink, LoaderCircle, Lock, RefreshCw, Rocket, Settings2 } from "lucide-react";
+import { Check, Cloud, Copy, ExternalLink, LoaderCircle, Lock, RefreshCw, Rocket, Settings2 } from "lucide-react";
 import QRCode from "qrcode";
 import { useCallback, useEffect, useState } from "react";
 
@@ -36,6 +36,8 @@ interface PublishControlProps {
   onProjectChange: (project: Project) => void;
   /** Opens the link settings (title, preview image, password). */
   onOpenSettings: () => void;
+  /** Opens Deploy (Netlify, Vercel, GitHub). */
+  onOpenDeploy: () => void;
 }
 
 /** A QR code for the address, as an image URL. Null until it has been drawn. */
@@ -58,7 +60,7 @@ function useQrCode(text: string | null): string | null {
   return code && code.text === text ? code.image : null;
 }
 
-export function PublishControl({ project, onProjectChange, onOpenSettings }: PublishControlProps) {
+export function PublishControl({ project, onProjectChange, onOpenSettings, onOpenDeploy }: PublishControlProps) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<"publish" | "unpublish" | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -105,6 +107,11 @@ export function PublishControl({ project, onProjectChange, onOpenSettings }: Pub
     } catch {
       setError("The link couldn't be copied. Select it and copy it by hand.");
     }
+  };
+
+  const openDeploy = () => {
+    setOpen(false);
+    onOpenDeploy();
   };
 
   const openSettings = () => {
@@ -172,6 +179,7 @@ export function PublishControl({ project, onProjectChange, onOpenSettings }: Pub
             </div>
 
             <LinkSettingsButton project={project} onOpen={openSettings} />
+            <DeployButton project={project} onOpen={openDeploy} />
 
             {error && (
               <p role="alert" className="text-xs text-destructive">
@@ -209,6 +217,7 @@ export function PublishControl({ project, onProjectChange, onOpenSettings }: Pub
               </p>
             </div>
             <LinkSettingsButton project={project} onOpen={openSettings} />
+            <DeployButton project={project} onOpen={openDeploy} />
             {error && (
               <p role="alert" className="text-xs text-destructive">
                 {error}
@@ -252,6 +261,27 @@ function LinkSettingsButton({ project, onOpen }: { project: Project; onOpen: () 
         <span className="block font-medium">Link settings</span>
         <span className="block truncate text-xs text-muted-foreground">
           {summary.length > 0 ? `Set: ${summary.join(", ")}` : "Title, preview image, password"}
+        </span>
+      </span>
+    </button>
+  );
+}
+
+/** Opens Deploy, with where the project is already deployed. */
+function DeployButton({ project, onOpen }: { project: Project; onOpen: () => void }) {
+  const names = { netlify: "Netlify", vercel: "Vercel", github: "GitHub" } as const;
+  const done = (Object.keys(names) as (keyof typeof names)[]).filter((target) => project.deployments?.[target]);
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
+    >
+      <Cloud className={done.length > 0 ? "size-4 shrink-0 text-brand" : "size-4 shrink-0 text-muted-foreground"} aria-hidden="true" />
+      <span className="min-w-0 flex-1">
+        <span className="block font-medium">Deploy elsewhere</span>
+        <span className="block truncate text-xs text-muted-foreground">
+          {done.length > 0 ? `On ${done.map((target) => names[target]).join(", ")}` : "Netlify, Vercel or GitHub"}
         </span>
       </span>
     </button>

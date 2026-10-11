@@ -1,29 +1,14 @@
-import { randomBytes } from "node:crypto";
-import os from "node:os";
-import path from "node:path";
-
 import type { NextRequest } from "next/server";
 
-import { BuildFailedError, describeBuildErrors, ensureBuilt, materialize } from "@/lib/build";
+import { BuildFailedError, describeBuildErrors, ensureBuilt, readBuiltSite } from "@/lib/build";
 import { jsonError } from "@/lib/cloner/http";
-import { readProject, remove, siteDir } from "@/lib/cloner/storage";
+import { readProject, siteDir } from "@/lib/cloner/storage";
 import { readDirectory, zipFiles } from "@/lib/cloner/zip";
 import { buildReactExport } from "@/lib/export/react";
 import { buildVueExport } from "@/lib/export/vue";
-import type { ExportFormat, Project } from "@/types/project";
+import type { ExportFormat } from "@/types/project";
 
 const FORMATS: ReadonlySet<string> = new Set<ExportFormat>(["html", "react", "vue", "source"]);
-
-/** The finished static site, built into a temporary folder and read back. */
-async function builtSite(project: Project): Promise<Record<string, Uint8Array>> {
-  const folder = path.join(os.tmpdir(), `sitecloner-export-${randomBytes(6).toString("hex")}`);
-  try {
-    await materialize(project, folder);
-    return await readDirectory(folder);
-  } finally {
-    await remove(folder).catch(() => undefined);
-  }
-}
 
 /**
  * Downloads the project as a ZIP. A static site can be exported as plain HTML
@@ -50,13 +35,13 @@ export async function GET(
         return jsonError("A React project can't be exported as Vue.", 400);
       }
       // The project folder already is a complete Vite project.
-      files = format === "html" ? await builtSite(project) : await readDirectory(root);
+      files = format === "html" ? await readBuiltSite(project) : await readDirectory(root);
     } else {
       // Brings the generated stylesheet up to date before the files are read.
       await ensureBuilt(project);
       if (format === "react") files = await buildReactExport(root, project);
       else if (format === "vue") files = await buildVueExport(root, project);
-      else files = project.source === "clone" ? await readDirectory(root) : await builtSite(project);
+      else files = project.source === "clone" ? await readDirectory(root) : await readBuiltSite(project);
     }
   } catch (error) {
     if (error instanceof BuildFailedError) {
