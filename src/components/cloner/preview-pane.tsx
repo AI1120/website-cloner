@@ -3,6 +3,7 @@
 import {
   Check,
   ExternalLink,
+  GitCompareArrows,
   LoaderCircle,
   Maximize2,
   Minimize2,
@@ -68,6 +69,8 @@ interface PreviewPaneProps {
   onBuildErrors: (errors: BuildMessage[]) => void;
   /** Text edits that could not be saved; the workspace offers them to the AI. */
   onUnsavedEdits: (edits: TextEdit[]) => void;
+  /** Opens "Compare with the original"; left out when the page has no original. */
+  onCompare?: () => void;
 }
 
 export function PreviewPane({
@@ -83,6 +86,7 @@ export function PreviewPane({
   onRuntimeError,
   onBuildErrors,
   onUnsavedEdits,
+  onCompare,
 }: PreviewPaneProps) {
   const [device, setDevice] = useState<Device>("desktop");
   const [tool, setTool] = useState<Tool>("none");
@@ -321,6 +325,17 @@ export function PreviewPane({
         </Button>
         <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
         <Segmented label="Screen size" value={device} options={DEVICES} onChange={setDevice} />
+        {onCompare && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Compare with the original"
+            title="Compare with the original site"
+            onClick={onCompare}
+          >
+            <GitCompareArrows />
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="icon-sm"

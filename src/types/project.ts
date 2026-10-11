@@ -82,6 +82,33 @@ export interface Project {
 /** A project as the command palette lists it. */
 export type ProjectSummary = Pick<Project, "id" | "name" | "host" | "updatedAt">;
 
+export type CompareDevice = "desktop" | "phone";
+
+/** A page of a copy set against the live original, from "Compare with the original". */
+export interface PageComparison {
+  /** Preview path of the page that was compared. */
+  page: string;
+  /** The original page's address. */
+  url: string;
+  device: CompareDevice;
+  /** How much of the copy matches the original, 0–100. */
+  score: number;
+  /** JPEG data URLs: the original, the copy, and the copy with differences marked. */
+  original: string;
+  copy: string;
+  diff: string;
+  /** Height in CSS pixels of each whole page; the pictures stop at a limit. */
+  originalHeight: number;
+  copyHeight: number;
+  /** True when a page was taller than the pictures cover. */
+  truncated: boolean;
+}
+
+export type CompareEvent =
+  | { type: "status"; message: string }
+  | { type: "done"; result: PageComparison }
+  | { type: "error"; message: string };
+
 /** The stages of a clone, in order, for showing where it has got to. */
 export type CloneStage = "open" | "pages" | "assets" | "save";
 

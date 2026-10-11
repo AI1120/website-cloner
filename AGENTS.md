@@ -51,7 +51,7 @@ templates/          # Built-in templates and the shadcn/ui kit for projects
 
 ## SiteCloner App
 The app in `src/app/` is a studio for building sites with AI. Projects start from a prompt, a cloned site, a brand, an image, a Figma frame or a template.
-- `src/lib/cloner/` — cloning engine: guarded fetching (`safe-fetch.ts`), page rendering in the installed Chrome/Edge (`browser.ts`, via playwright-core), HTML/CSS rewriting, storage, checkpoints (undo, and `checkpointChanges` for before/after diffs via `lib/diff.ts`), ZIP.
+- `src/lib/cloner/` — cloning engine: guarded fetching (`safe-fetch.ts`), page rendering in the installed Chrome/Edge (`browser.ts`, via playwright-core), "Compare with the original" (`compare.ts`: screenshots plus an in-browser canvas diff; the copy is served to the browser from disk at a `.invalid` address), HTML/CSS rewriting, storage, checkpoints (undo, and `checkpointChanges` for before/after diffs via `lib/diff.ts`), ZIP.
 - `src/lib/ai/` — the AI agent: `provider.ts` picks Gemini or the Claude API (`providers/`), `agent.ts` runs the tool loop, `prompts.ts` and `tools.ts` define what it knows and can do, `jobs.ts` keeps requests running in the background, plus attachments, brand extraction and Figma import.
 - `src/lib/build/` — turns project sources into a previewable site: `react.ts` bundles React projects with esbuild, `tailwind.ts` compiles Tailwind, `serve.ts` serves previews, `jsx.ts` and `text-edits.ts` map preview elements back to source, `flow.ts` finds screens and links.
 - `src/lib/projects/` — project creation (starter files, templates, duplication) and design-system presets. `src/lib/data/` — the per-project database. `src/lib/export/` — React and Vue exporters for static sites.

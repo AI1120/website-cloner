@@ -5,6 +5,7 @@ import { Workspace } from "@/components/cloner/workspace";
 import { isAiConfigured } from "@/lib/ai/agent";
 import { readChat } from "@/lib/ai/chat-store";
 import { runningJob } from "@/lib/ai/jobs";
+import { browserAvailable } from "@/lib/cloner/browser";
 import { readProject } from "@/lib/cloner/storage";
 
 type Props = { params: Promise<{ id: string }> };
@@ -26,6 +27,7 @@ export default async function ProjectPage({ params }: Props) {
       initialMessages={await readChat(id)}
       initiallyRunning={runningJob(id) !== null}
       aiConfigured={isAiConfigured()}
+      browserAvailable={browserAvailable()}
     />
   );
 }

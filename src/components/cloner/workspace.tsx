@@ -9,6 +9,7 @@ import {
   ExternalLink,
   Eye,
   FileDiff,
+  GitCompareArrows,
   House,
   MessageSquareText,
   PencilLine,
@@ -30,6 +31,7 @@ import {
 } from "@/components/cloner/app-commands";
 import { ChangesDialog, type ChangesTarget } from "@/components/cloner/changes-dialog";
 import { ChatPanel, type ChatRequest } from "@/components/cloner/chat-panel";
+import { CompareDialog } from "@/components/cloner/compare-dialog";
 import { CodePane } from "@/components/cloner/code-pane";
 import {
   CommandPalette,
@@ -103,6 +105,8 @@ interface WorkspaceProps {
   initialMessages: ChatMessage[];
   initiallyRunning: boolean;
   aiConfigured: boolean;
+  /** True when the server has Chrome or Edge, which comparing with the original needs. */
+  browserAvailable: boolean;
 }
 
 export function Workspace({
@@ -110,6 +114,7 @@ export function Workspace({
   initialMessages,
   initiallyRunning,
   aiConfigured,
+  browserAvailable,
 }: WorkspaceProps) {
   const router = useRouter();
   const [project, setProject] = useState(initialProject);
@@ -117,6 +122,11 @@ export function Workspace({
   const [currentPage, setCurrentPage] = useState(initialProject.entry);
   const [version, setVersion] = useState(0);
   const [changesTarget, setChangesTarget] = useState<ChangesTarget | null>(null);
+  const [comparing, setComparing] = useState(false);
+  // Pages copied from a site can be set against the live original.
+  const comparablePage = browserAvailable
+    ? project.pages.find((page) => page.path === currentPage && page.url !== "")
+    : undefined;
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [warningsOpen, setWarningsOpen] = useState(initialProject.warnings.length > 0);
   const [selection, setSelection] = useState<SelectedElement[]>([]);
@@ -305,6 +315,17 @@ export function Workspace({
         });
       }
     }
+    if (comparablePage) {
+      list.push({
+        id: "compare",
+        group: "Project",
+        label: "Compare with the original",
+        icon: GitCompareArrows,
+        keywords: "accuracy match score screenshot diff original live site",
+        hint: comparablePage.title || comparablePage.path,
+        run: () => setComparing(true),
+      });
+    }
     list.push({
       id: "rename",
       group: "Project",
@@ -369,7 +390,7 @@ export function Workspace({
       run: () => router.push("/"),
     });
     return [...list, ...projectCommands, ...themeCommands];
-  }, [latestChange, project, projectCommands, publish, router, running, themeCommands, undo]);
+  }, [comparablePage, latestChange, project, projectCommands, publish, router, running, themeCommands, undo]);
 
   const mainView: Exclude<Panel, "chat"> = panel === "chat" ? "preview" : panel;
   const actions = (
@@ -548,6 +569,7 @@ export function Workspace({
               onRuntimeError={handleRuntimeError}
               onBuildErrors={handleBuildErrors}
               onUnsavedEdits={handleUnsavedEdits}
+              onCompare={comparablePage ? () => setComparing(true) : undefined}
             />
           </div>
           {mainView === "code" && (
@@ -565,6 +587,9 @@ export function Workspace({
         onUndo={(checkpointId) => void undo(checkpointId)}
         undoDisabled={running}
       />
+      {comparing && comparablePage && (
+        <CompareDialog projectId={project.id} page={comparablePage} onClose={() => setComparing(false)} />
+      )}
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} commands={commands} />
     </div>
   );
