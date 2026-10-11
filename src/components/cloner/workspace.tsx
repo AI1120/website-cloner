@@ -14,6 +14,7 @@ import {
   MessageSquareText,
   PencilLine,
   Rocket,
+  Settings2,
   TriangleAlert,
   Undo2,
   Workflow,
@@ -47,6 +48,7 @@ import { HistoryMenu } from "@/components/cloner/history-menu";
 import { PreviewPane } from "@/components/cloner/preview-pane";
 import { livePath, PublishControl, requestPublish } from "@/components/cloner/publish-control";
 import { Segmented, type SegmentedOption } from "@/components/cloner/segmented";
+import { ShareSettingsDialog } from "@/components/cloner/share-settings-dialog";
 import { ThemeToggle } from "@/components/cloner/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
@@ -124,6 +126,7 @@ export function Workspace({
   const [version, setVersion] = useState(0);
   const [changesTarget, setChangesTarget] = useState<ChangesTarget | null>(null);
   const [comparing, setComparing] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   // AI-made projects show a designed empty state until their first version exists.
   const neverBuilt =
     project.source !== "clone" && project.source !== "template" && project.checkpoints.length === 0;
@@ -346,6 +349,15 @@ export function Workspace({
       keywords: "share link deploy live",
       run: () => void publish(),
     });
+    list.push({
+      id: "share-settings",
+      group: "Project",
+      label: "Link settings",
+      icon: Settings2,
+      keywords: "share title description preview image og social password protect private",
+      hint: project.share?.protected ? "Password protected" : undefined,
+      run: () => setShareOpen(true),
+    });
     if (project.published) {
       const path = livePath(project);
       list.push(
@@ -408,7 +420,7 @@ export function Workspace({
       />
       <ThemeToggle />
       <ExportMenu project={project} />
-      <PublishControl project={project} onProjectChange={setProject} />
+      <PublishControl project={project} onProjectChange={setProject} onOpenSettings={() => setShareOpen(true)} />
     </>
   );
 
@@ -602,6 +614,9 @@ export function Workspace({
         onUndo={(checkpointId) => void undo(checkpointId)}
         undoDisabled={running}
       />
+      {shareOpen && (
+        <ShareSettingsDialog project={project} onClose={() => setShareOpen(false)} onProjectChange={setProject} />
+      )}
       {comparing && comparablePage && (
         <CompareDialog projectId={project.id} page={comparablePage} onClose={() => setComparing(false)} />
       )}

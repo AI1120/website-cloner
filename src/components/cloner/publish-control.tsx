@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy, ExternalLink, LoaderCircle, RefreshCw, Rocket } from "lucide-react";
+import { Check, Copy, ExternalLink, LoaderCircle, Lock, RefreshCw, Rocket, Settings2 } from "lucide-react";
 import QRCode from "qrcode";
 import { useCallback, useEffect, useState } from "react";
 
@@ -34,6 +34,8 @@ export function livePath(project: Project): string {
 interface PublishControlProps {
   project: Project;
   onProjectChange: (project: Project) => void;
+  /** Opens the link settings (title, preview image, password). */
+  onOpenSettings: () => void;
 }
 
 /** A QR code for the address, as an image URL. Null until it has been drawn. */
@@ -56,7 +58,7 @@ function useQrCode(text: string | null): string | null {
   return code && code.text === text ? code.image : null;
 }
 
-export function PublishControl({ project, onProjectChange }: PublishControlProps) {
+export function PublishControl({ project, onProjectChange, onOpenSettings }: PublishControlProps) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<"publish" | "unpublish" | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -103,6 +105,11 @@ export function PublishControl({ project, onProjectChange }: PublishControlProps
     } catch {
       setError("The link couldn't be copied. Select it and copy it by hand.");
     }
+  };
+
+  const openSettings = () => {
+    setOpen(false);
+    onOpenSettings();
   };
 
   const changedSincePublish =
@@ -164,6 +171,8 @@ export function PublishControl({ project, onProjectChange }: PublishControlProps
               </p>
             </div>
 
+            <LinkSettingsButton project={project} onOpen={openSettings} />
+
             {error && (
               <p role="alert" className="text-xs text-destructive">
                 {error}
@@ -199,6 +208,7 @@ export function PublishControl({ project, onProjectChange }: PublishControlProps
                 afterwards stay private until you update it.
               </p>
             </div>
+            <LinkSettingsButton project={project} onOpen={openSettings} />
             {error && (
               <p role="alert" className="text-xs text-destructive">
                 {error}
@@ -216,5 +226,34 @@ export function PublishControl({ project, onProjectChange }: PublishControlProps
         )}
       </PopoverContent>
     </Popover>
+  );
+}
+
+/** Opens the link settings, with a summary of what's set. */
+function LinkSettingsButton({ project, onOpen }: { project: Project; onOpen: () => void }) {
+  const share = project.share;
+  const summary = [
+    share?.title ? "custom title" : null,
+    share?.image ? "preview image" : null,
+    share?.protected ? "password" : null,
+  ].filter(Boolean);
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
+    >
+      {share?.protected ? (
+        <Lock className="size-4 shrink-0 text-brand" aria-hidden="true" />
+      ) : (
+        <Settings2 className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+      )}
+      <span className="min-w-0 flex-1">
+        <span className="block font-medium">Link settings</span>
+        <span className="block truncate text-xs text-muted-foreground">
+          {summary.length > 0 ? `Set: ${summary.join(", ")}` : "Title, preview image, password"}
+        </span>
+      </span>
+    </button>
   );
 }

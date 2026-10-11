@@ -76,11 +76,29 @@ export interface Project {
   pages: ProjectPage[];
   warnings: string[];
   published: { publishedAt: string } | null;
+  /** How the published link presents itself when shared, and whether it needs a password. */
+  share?: ShareSettings;
   checkpoints: ProjectCheckpoint[];
 }
 
 /** A project as the command palette lists it. */
 export type ProjectSummary = Pick<Project, "id" | "name" | "host" | "updatedAt">;
+
+/**
+ * Settings for the published link. Applied as pages are served, so they take
+ * effect without publishing again. The password itself is kept on the server
+ * only (`publish-secret.json`); the project just says whether there is one.
+ */
+export interface ShareSettings {
+  /** Shown as the entry page's title and in link previews; "" keeps the page's own. */
+  title: string;
+  /** For search results and link previews; "" keeps the page's own. */
+  description: string;
+  /** The preview image shown when the link is shared, if one is set. */
+  image: { contentType: string; updatedAt: string } | null;
+  /** True when visitors need a password to open the pages. */
+  protected: boolean;
+}
 
 export type CompareDevice = "desktop" | "phone";
 

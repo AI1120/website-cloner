@@ -64,7 +64,7 @@ In the header:
 
 - **History**: every change, newest first. View any change, or undo it (undoing a change also undoes the ones made after it).
 - **Export**: a ZIP of the code. Static sites can also be exported as a Vite project with React or Vue pages.
-- **Publish**: a snapshot at `/p/<project>/` with a link and QR code. The link works wherever this app is reachable; later changes stay private until you update it.
+- **Publish**: a snapshot at `/p/<project>/` with a link and QR code. The link works wherever this app is reachable; later changes stay private until you update it. **Link settings** give it a title, description and preview image for when it is shared (the image can be photographed from your page), and an optional password that visitors enter once per browser.
 
 ### See what changed
 

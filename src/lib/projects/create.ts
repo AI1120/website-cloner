@@ -432,6 +432,8 @@ export async function duplicateProject(id: string): Promise<Project | null> {
     updatedAt: now,
     pending: false,
     published: null,
+    // The link settings belong to the original's link (its password and image aren't copied).
+    share: undefined,
     checkpoints: [],
   };
   await writeProject(copy);

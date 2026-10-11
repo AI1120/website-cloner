@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Link settings** for published projects: a title, description and preview image for link previews and search results (the image can be photographed from the page in the browser, or uploaded), applied as pages are served; and an optional password, kept only as a salted hash on the server, with a branded password page that still shows the link preview.
 - Animated three.js scenes across the app, built from one shared kit: a page assembling itself while the AI builds, a blueprint waiting to be built, pages tumbling past an empty outline on not-found and error pages, and an original and its copy scanned together while cloning and comparing. They load on demand, pause off screen, follow the theme, and stand still under reduced motion.
 - A designed empty state in the preview for projects with nothing built yet: the build in progress, or the original request with **Build it now** (and **Clone {site}** when the request asks to copy a site).
 - The start screen offers **Clone it instead** when a prompt asks to copy a site by its address, and `/?clone=<address>` opens Clone Website with the address filled in.
