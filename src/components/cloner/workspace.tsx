@@ -616,6 +616,8 @@ export function Workspace({
         onClose={() => setChangesTarget(null)}
         onUndo={(checkpointId) => void undo(checkpointId)}
         undoDisabled={running}
+        page={currentPage}
+        canPicture={browserAvailable}
       />
       {shareOpen && (
         <ShareSettingsDialog project={project} onClose={() => setShareOpen(false)} onProjectChange={setProject} />

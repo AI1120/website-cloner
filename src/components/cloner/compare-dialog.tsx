@@ -1,17 +1,16 @@
 "use client";
 
-import { CircleAlert, Columns2, ExternalLink, LoaderCircle, Monitor, RotateCw, ScanEye, Smartphone, SplitSquareHorizontal } from "lucide-react";
+import { CircleAlert, ExternalLink, LoaderCircle, Monitor, RotateCw, Smartphone } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Scene3D } from "@/components/cloner/scene-3d";
 import { Segmented } from "@/components/cloner/segmented";
+import { SHOT_VIEWS, ShotViews, type ShotView } from "@/components/cloner/shot-views";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { errorMessage, readNdjson } from "@/lib/ndjson";
 import { cn } from "@/lib/utils";
 import type { CompareDevice, CompareEvent, PageComparison, ProjectPage } from "@/types/project";
-
-type View = "side" | "slider" | "diff";
 
 type State =
   | { status: "running"; message: string }
@@ -21,12 +20,6 @@ type State =
 const DEVICES = [
   { value: "desktop" as const, label: "Desktop", icon: Monitor },
   { value: "phone" as const, label: "Phone", icon: Smartphone },
-];
-
-const VIEWS = [
-  { value: "side" as const, label: "Side by side", icon: Columns2 },
-  { value: "slider" as const, label: "Slider", icon: SplitSquareHorizontal },
-  { value: "diff" as const, label: "Differences", icon: ScanEye },
 ];
 
 const WIDTH: Record<CompareDevice, number> = { desktop: 1440, phone: 390 };
@@ -55,8 +48,7 @@ export function CompareDialog({ projectId, page, onClose }: CompareDialogProps) 
   const [device, setDevice] = useState<CompareDevice>("desktop");
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<State>({ status: "running", message: "Starting" });
-  const [view, setView] = useState<View>("side");
-  const [split, setSplit] = useState(50);
+  const [view, setView] = useState<ShotView>("side");
 
   useEffect(() => {
     const abort = new AbortController();
@@ -130,7 +122,7 @@ export function CompareDialog({ projectId, page, onClose }: CompareDialogProps) 
               onChange={(next) => restart(next)}
               collapseLabels
             />
-            {result && <Segmented label="Show" value={view} options={VIEWS} onChange={setView} collapseLabels />}
+            {result && <Segmented label="Show" value={view} options={SHOT_VIEWS} onChange={setView} collapseLabels />}
             <Button variant="outline" size="sm" disabled={running} onClick={() => restart()}>
               <RotateCw data-icon="inline-start" />
               Run again
@@ -173,61 +165,14 @@ export function CompareDialog({ projectId, page, onClose }: CompareDialogProps) 
           <>
             <ScoreBar result={result} />
             <div className="min-h-0 flex-1 overflow-auto bg-muted/40 p-4">
-              {view === "side" && (
-                <div className={cn("mx-auto grid grid-cols-2 gap-4", result.device === "phone" ? "max-w-3xl" : "max-w-none")}>
-                  <Shot label="Original" src={result.original} />
-                  <Shot label="Your copy" src={result.copy} />
-                </div>
-              )}
-              {view === "slider" && (
-                <div className={cn("mx-auto", result.device === "phone" ? "max-w-sm" : "max-w-4xl")}>
-                  <label className="sticky top-0 z-10 mb-3 flex items-center gap-3 rounded-lg border bg-background/95 px-3 py-2 text-xs text-muted-foreground backdrop-blur">
-                    <span className="shrink-0 font-medium text-foreground">Original</span>
-                    <input
-                      type="range"
-                      min={0}
-                      max={100}
-                      value={split}
-                      onChange={(event) => setSplit(Number(event.target.value))}
-                      className="min-w-0 flex-1 accent-(--brand)"
-                      aria-label="How much of the original to show"
-                    />
-                    <span className="shrink-0 font-medium text-foreground">Your copy</span>
-                  </label>
-                  <div className="relative overflow-hidden rounded-lg border bg-white shadow-sm">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- a data URL made for this view */}
-                    <img src={result.copy} alt="Your copy" className="block w-full" />
-                    {/* eslint-disable-next-line @next/next/no-img-element -- a data URL made for this view */}
-                    <img
-                      src={result.original}
-                      alt="The original"
-                      className="absolute top-0 left-0 block w-full"
-                      // The visible share follows the slider.
-                      style={{ clipPath: `inset(0 ${100 - split}% 0 0)` }}
-                    />
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-y-0 w-0.5 bg-brand shadow-[0_0_0_1px_rgb(255_255_255/0.7)]"
-                      style={{ left: `${split}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-              {view === "diff" && (
-                <div className={cn("mx-auto", result.device === "phone" ? "max-w-sm" : "max-w-4xl")}>
-                  <p className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="inline-block size-3 rounded-sm bg-[rgb(225_29_72/0.7)]" aria-hidden="true" />
-                    Red marks the parts of your copy that look different from the original, or that
-                    are missing from it.
-                  </p>
-                  {/* eslint-disable-next-line @next/next/no-img-element -- a data URL made for this view */}
-                  <img
-                    src={result.diff}
-                    alt="Your copy with the differences marked"
-                    className="block w-full rounded-lg border shadow-sm"
-                  />
-                </div>
-              )}
+              <ShotViews
+                view={view}
+                left={{ label: "Original", src: result.original }}
+                right={{ label: "Your copy", src: result.copy }}
+                diff={result.diff}
+                diffNote="Red marks the parts of your copy that look different from the original, or that are missing from it."
+                narrow={result.device === "phone"}
+              />
             </div>
           </>
         )}
@@ -257,17 +202,5 @@ function ScoreBar({ result }: { result: PageComparison }) {
         may also have changed since you copied it.
       </p>
     </div>
-  );
-}
-
-function Shot({ label, src }: { label: string; src: string }) {
-  return (
-    <figure className="min-w-0">
-      <figcaption className="sticky top-0 z-10 mb-2 text-xs font-medium text-muted-foreground">
-        <span className="rounded-md bg-background/95 px-2 py-1 shadow-xs backdrop-blur">{label}</span>
-      </figcaption>
-      {/* eslint-disable-next-line @next/next/no-img-element -- a data URL made for this view */}
-      <img src={src} alt={label} className="block w-full rounded-lg border bg-white shadow-sm" />
-    </figure>
   );
 }

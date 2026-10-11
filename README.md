@@ -68,7 +68,7 @@ In the header:
 
 ### See what changed
 
-Each AI reply that edited files lists them under the reply, with **View changes** and **Undo**. **View changes** opens every file the change touched, before and after, line by line. The same view opens from **History** for any change, including your own edits in the Code view.
+Each AI reply that edited files lists them under the reply, with **View changes** and **Undo**. **View changes** opens every file the change touched, before and after, line by line; its **Visual** view photographs the page before and after the change, with a slider and the differences marked. The same view opens from **History** for any change, including your own edits in the Code view.
 
 ![The "What changed" view: the changed files on the left, a line-by-line comparison on the right](docs/assets/what-changed.png)
 

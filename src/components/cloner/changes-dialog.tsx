@@ -1,8 +1,10 @@
 "use client";
 
-import { FileMinus, FilePen, FilePlus, LoaderCircle, Undo2 } from "lucide-react";
+import { Eye, FileCode2, FileMinus, FilePen, FilePlus, LoaderCircle, Undo2 } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 
+import { Segmented } from "@/components/cloner/segmented";
+import { VisualChange } from "@/components/cloner/visual-change";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -123,10 +125,20 @@ interface ChangesDialogProps {
   onUndo: (checkpointId: string) => void;
   /** True while undoing isn't possible, e.g. while the AI is working. */
   undoDisabled: boolean;
+  /** The page in the preview, pictured before and after in the Visual view. */
+  page: string;
+  /** False without a browser on the server, which the Visual view needs. */
+  canPicture: boolean;
 }
 
+const MODES = [
+  { value: "code" as const, label: "Code", icon: FileCode2 },
+  { value: "visual" as const, label: "Visual", icon: Eye },
+];
+
 /** The files one change touched, each shown as a line-by-line comparison. */
-export function ChangesDialog({ project, target, onClose, onUndo, undoDisabled }: ChangesDialogProps) {
+export function ChangesDialog({ project, target, onClose, onUndo, undoDisabled, page, canPicture }: ChangesDialogProps) {
+  const [mode, setMode] = useState<"code" | "visual">("code");
   const projectId = project.id;
   const [loaded, setLoaded] = useState<Loaded | null>(null);
   const [error, setError] = useState<{ checkpointId: string; text: string } | null>(null);
@@ -170,6 +182,7 @@ export function ChangesDialog({ project, target, onClose, onUndo, undoDisabled }
   const laterChanges = position === -1 ? 0 : project.checkpoints.length - position - 1;
   const close = () => {
     setSelected(null);
+    setMode("code");
     setLoaded(null);
     setError(null);
     onClose();
@@ -187,8 +200,13 @@ export function ChangesDialog({ project, target, onClose, onUndo, undoDisabled }
       }}
     >
       <DialogContent className="h-[min(85dvh,760px)] max-w-5xl gap-0 p-0">
-        <DialogHeader className="border-b px-5 py-4">
-          <DialogTitle>What changed</DialogTitle>
+        <DialogHeader className="relative border-b px-5 py-4 pr-14">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <DialogTitle className="flex-1">What changed</DialogTitle>
+            {canPicture && current && (
+              <Segmented label="Show the change as" value={mode} options={MODES} onChange={setMode} />
+            )}
+          </div>
           <DialogDescription className="line-clamp-2">
             {current ? (
               <>
@@ -205,7 +223,14 @@ export function ChangesDialog({ project, target, onClose, onUndo, undoDisabled }
           </DialogDescription>
         </DialogHeader>
 
-        {failure ? (
+        {mode === "visual" && current ? (
+          <VisualChange
+            key={`${current.checkpointId}:${page}`}
+            projectId={projectId}
+            checkpointId={current.checkpointId}
+            page={page}
+          />
+        ) : failure ? (
           <p role="alert" className="flex-1 p-5 text-sm text-destructive">
             {failure}
           </p>

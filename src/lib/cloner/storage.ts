@@ -12,6 +12,12 @@ function dataRoot(): string {
   return configured ? path.resolve(configured) : path.join(process.cwd(), ".clones");
 }
 
+/**
+ * Ids of temporary copies (e.g. a project as it was before a change). Real ids
+ * come from `slugify`, which never makes a double hyphen, so they can't clash.
+ */
+export const SNAPSHOT_PREFIX = "snapshot--";
+
 export function isValidId(id: string): boolean {
   return ID_PATTERN.test(id);
 }
@@ -149,7 +155,7 @@ export async function listProjects(): Promise<Project[]> {
     return [];
   }
   const projects = await Promise.all(
-    entries.filter(isValidId).map((id) => readProject(id)),
+    entries.filter((id) => isValidId(id) && !id.startsWith(SNAPSHOT_PREFIX)).map((id) => readProject(id)),
   );
   return projects
     .filter((project): project is Project => project !== null)

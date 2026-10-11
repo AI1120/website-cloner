@@ -146,6 +146,16 @@ function describeValue(value: unknown): string {
   }
 }
 
+/** Turns fixed and sticky elements into ordinary ones, at the top of the page, before a screenshot. */
+const PIN_FLOATING = `(() => {
+  window.scrollTo(0, 0);
+  for (const element of document.querySelectorAll("body *")) {
+    const position = getComputedStyle(element).position;
+    if (position === "fixed") element.style.setProperty("position", "absolute", "important");
+    else if (position === "sticky") element.style.setProperty("position", "relative", "important");
+  }
+})()`;
+
 /** Width the screenshots are reduced to before comparing, which also evens out noise. */
 const COMPARE_SAMPLE_WIDTH = 200;
 const COMPARE_OUTPUT_WIDTH = 720;
@@ -563,6 +573,9 @@ export class PageRenderer {
       const opened = await this.open(page, url);
       if (typeof opened === "string") return opened;
       if (opened.status >= 400) return `The page answered with an error (status ${opened.status}).`;
+      // A full-page picture draws fixed and sticky elements wherever the page was
+      // scrolled to, so the same page can come out different. Pin them in place.
+      await page.evaluate(PIN_FLOATING).catch(() => undefined);
       const fullHeight = (await page.evaluate(
         "Math.max(document.documentElement.scrollHeight, document.body ? document.body.scrollHeight : 0)",
       )) as number;
