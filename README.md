@@ -55,7 +55,7 @@ Options beside the prompt box:
 | View | What it is for |
 | --- | --- |
 | **Chat** | Ask for changes in plain language. Attach files, or pick elements in the preview first so the request is about them. Requests keep running if you close the tab. After the AI changes a project it built, the page is opened in a browser, and any errors it shows are handed back to the AI to fix in the same request. |
-| **Preview** | The running project at desktop, tablet and phone widths. **Select elements** to refer to them in the chat, or **Edit text** directly in the page and apply the changes. On a copied page, **Compare with the original** screenshots the live page and your copy and scores how closely they match, with side-by-side, slider and differences views. |
+| **Preview** | The running project at desktop, tablet and phone widths. **Select elements** to refer to them in the chat, **Edit text** directly in the page, or **Edit styles** to change an element's colours, type, spacing and corners with live feedback, saved into the code as one change you can undo. On a copied page, **Compare with the original** screenshots the live page and your copy and scores how closely they match, with side-by-side, slider and differences views. |
 | **Code** | Browse, edit and save any file, in an editor with syntax colours, line numbers, folding and search (<kbd>Ctrl</kbd>+<kbd>F</kbd>); <kbd>Ctrl</kbd>+<kbd>S</kbd> saves. |
 | **Data** | A small database per project: tables, rows, CSV import and export. Ask the AI for "a form that saves submissions" and it creates the table and wires up the page. |
 | **Flow** | A map of the project's screens and the links between them. |

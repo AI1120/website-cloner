@@ -177,6 +177,26 @@ export interface SelectedElement {
   html: string;
 }
 
+/** An element picked with the visual inspector, with the styles it has now. */
+export interface InspectedElement {
+  element: SelectedElement;
+  /** Location of this exact element in the source (its own tag, not an ancestor's). */
+  ownLoc: string | null;
+  /** How many elements on the page come from the same code (e.g. a list's items). */
+  sameCount: number;
+  /** Computed values of the properties the inspector offers. */
+  computed: Record<string, string>;
+}
+
+/** A style change made in the visual inspector: CSS property to new value, or null to remove it. */
+export interface StyleEdit {
+  page: string;
+  tag: string;
+  loc: string | null;
+  path: number[];
+  styles: Record<string, string | null>;
+}
+
 /** One changed piece of text from editing in the preview. */
 export interface TextEdit {
   loc: string | null;

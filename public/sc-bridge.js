@@ -10,12 +10,36 @@
   window.__scBridge = true;
 
   const LOC = "data-sc-loc";
-  const ACCENT = "#6d5efc";
+  const ACCENT = "#b0249a";
   const MOUNT = /^\/(?:preview|p|template-preview)\/[^/]+\//;
 
   let mode = "none";
   let selected = [];
   let hovered = null;
+  /** The element open in the visual inspector, and its style attribute before any preview. */
+  let inspected = null;
+  let inspectedStyle = null;
+
+  /** What the inspector shows and can change; keep in step with INSPECTOR_PROPERTIES on the server. */
+  const INSPECTED = [
+    "color",
+    "background-color",
+    "font-size",
+    "font-weight",
+    "line-height",
+    "letter-spacing",
+    "text-align",
+    "padding-top",
+    "padding-right",
+    "padding-bottom",
+    "padding-left",
+    "margin-top",
+    "margin-right",
+    "margin-bottom",
+    "margin-left",
+    "border-radius",
+    "opacity",
+  ];
   /** element -> texts of its own text nodes when editing started */
   const edited = new Map();
 
@@ -43,7 +67,7 @@
     box.setAttribute(
       "style",
       `position:absolute;box-sizing:border-box;border:2px ${solid ? "solid" : "dashed"} ${ACCENT};` +
-        `background:${solid ? "rgba(109,94,252,0.10)" : "rgba(109,94,252,0.05)"};border-radius:3px;display:none`,
+        `background:${solid ? "rgba(176,36,154,0.10)" : "rgba(176,36,154,0.05)"};border-radius:3px;display:none`,
     );
     const label = document.createElement("span");
     label.setAttribute(
@@ -130,6 +154,50 @@
   };
 
   const isOurs = (node) => node instanceof Element && layer.contains(node);
+
+  // ---- visual inspector ----------------------------------------------------
+
+  const restoreInspected = () => {
+    if (!inspected) return;
+    if (inspectedStyle === null) inspected.removeAttribute("style");
+    else inspected.setAttribute("style", inspectedStyle);
+  };
+
+  const inspect = (element) => {
+    restoreInspected();
+    inspected = element;
+    inspectedStyle = element.getAttribute("style");
+    selected = [element];
+    syncSelectedBoxes();
+    const computed = getComputedStyle(element);
+    const values = {};
+    INSPECTED.forEach((property) => {
+      values[property] = computed.getPropertyValue(property);
+    });
+    const ownLoc = element.getAttribute(LOC);
+    post({
+      type: "sc:inspect",
+      inspected: {
+        element: describe(element),
+        ownLoc,
+        sameCount: ownLoc ? document.querySelectorAll(`[${LOC}="${CSS.escape(ownLoc)}"]`).length : 1,
+        computed: values,
+      },
+    });
+  };
+
+  /** Shows the inspector's unsaved changes on the element, on top of its own style. */
+  const previewStyles = (styles) => {
+    if (!inspected || !inspected.isConnected) return;
+    if (inspectedStyle === null) inspected.removeAttribute("style");
+    else inspected.setAttribute("style", inspectedStyle);
+    Object.keys(styles || {}).forEach((property) => {
+      if (!INSPECTED.includes(property)) return;
+      const value = styles[property];
+      if (typeof value === "string" && value) inspected.style.setProperty(property, value);
+    });
+    scheduleRedraw();
+  };
 
   const ownTextNodes = (element) =>
     Array.from(element.childNodes).filter(
@@ -249,6 +317,10 @@
       event.preventDefault();
       event.stopPropagation();
       if (target === document.body || target === document.documentElement) return;
+      if (mode === "inspect") {
+        inspect(target);
+        return;
+      }
       if (event.shiftKey) {
         const at = selected.indexOf(target);
         if (at === -1) selected.push(target);
@@ -291,10 +363,16 @@
   // ---- talking to the editor ----------------------------------------------
 
   const setMode = (next) => {
-    mode = next === "select" || next === "text" ? next : "none";
+    mode = next === "select" || next === "text" || next === "inspect" ? next : "none";
     hovered = null;
-    document.documentElement.style.cursor = mode === "select" ? "crosshair" : mode === "text" ? "text" : "";
-    if (mode !== "select" && selected.length > 0) {
+    document.documentElement.style.cursor =
+      mode === "select" || mode === "inspect" ? "crosshair" : mode === "text" ? "text" : "";
+    if (mode !== "inspect" && inspected) {
+      restoreInspected();
+      inspected = null;
+      inspectedStyle = null;
+    }
+    if (mode !== "select" && mode !== "inspect" && selected.length > 0) {
       selected = [];
       syncSelectedBoxes();
     }
@@ -311,6 +389,10 @@
       syncSelectedBoxes();
     } else if (message.type === "sc:collect-text") {
       post({ type: "sc:text-edits", requestId: message.requestId, edits: collectEdits() });
+    } else if (message.type === "sc:style-preview") {
+      previewStyles(message.styles);
+    } else if (message.type === "sc:style-reset") {
+      previewStyles({});
     }
   });
 

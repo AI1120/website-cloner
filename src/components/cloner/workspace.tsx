@@ -110,6 +110,8 @@ interface WorkspaceProps {
   aiConfigured: boolean;
   /** True when the server has Chrome or Edge, which comparing with the original needs. */
   browserAvailable: boolean;
+  /** True when the project has only its starter page, so the preview shows an empty state. */
+  initiallyEmpty: boolean;
 }
 
 export function Workspace({
@@ -118,6 +120,7 @@ export function Workspace({
   initiallyRunning,
   aiConfigured,
   browserAvailable,
+  initiallyEmpty,
 }: WorkspaceProps) {
   const router = useRouter();
   const [project, setProject] = useState(initialProject);
@@ -129,7 +132,7 @@ export function Workspace({
   const [shareOpen, setShareOpen] = useState(false);
   // AI-made projects show a designed empty state until their first version exists.
   const neverBuilt =
-    project.source !== "clone" && project.source !== "template" && project.checkpoints.length === 0;
+    initiallyEmpty && project.checkpoints.length === 0;
   const firstRequest = initialMessages.find((message) => message.role === "user")?.text ?? null;
   // Pages copied from a site can be set against the live original.
   const comparablePage = browserAvailable

@@ -354,3 +354,84 @@ export function findLinks(source: string, file: string): FileLinks {
   links.targets = [...targets];
   return links;
 }
+
+/** A CSS property name (font-size) as a React style key (fontSize); custom properties stay quoted. */
+function styleKey(property: string): string {
+  return property.startsWith("--")
+    ? JSON.stringify(property)
+    : property.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase());
+}
+
+/**
+ * Sets or removes inline style properties on the HTML element written in JSX
+ * that starts at `line:column` (as tagged by `tagJsxLocations`), through its
+ * `style={{ … }}` prop. `changes` maps CSS property names to values, or to
+ * null to remove one. Returns the new source, or null when the element isn't
+ * there.
+ */
+export function editJsxStyle(
+  source: string,
+  file: string,
+  line: number,
+  column: number,
+  changes: Record<string, string | null>,
+): string | null {
+  let sourceFile: ts.SourceFile;
+  try {
+    sourceFile = parse(file, source);
+  } catch {
+    return null;
+  }
+  const found: (ts.JsxOpeningElement | ts.JsxSelfClosingElement)[] = [];
+  walk(sourceFile, (node) => {
+    if (found.length > 0 || (!ts.isJsxOpeningElement(node) && !ts.isJsxSelfClosingElement(node))) return;
+    const at = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
+    if (at.line + 1 === line && at.character + 1 === column) found.push(node);
+  });
+  const target = found[0];
+  if (!target) return null;
+
+  const entries = Object.entries(changes);
+  const set = entries
+    .filter((entry): entry is [string, string] => entry[1] !== null)
+    .map(([property, value]) => `${styleKey(property)}: ${JSON.stringify(value)}`);
+  const render = (items: string[]) => (items.length === 0 ? "{}" : `{ ${items.join(", ")} }`);
+  const style = target.attributes.properties.find(
+    (attribute): attribute is ts.JsxAttribute =>
+      ts.isJsxAttribute(attribute) && attribute.name.getText(sourceFile) === "style",
+  );
+
+  if (!style) {
+    if (set.length === 0) return source;
+    return replaceRange(source, target.tagName.end, target.tagName.end, ` style={${render(set)}}`);
+  }
+  const expression =
+    style.initializer && ts.isJsxExpression(style.initializer) ? style.initializer.expression : undefined;
+  if (!expression) return null;
+
+  if (ts.isObjectLiteralExpression(expression)) {
+    const changed = new Set(entries.map(([property]) => styleKey(property)));
+    const kept = expression.properties
+      .filter((property) => {
+        const name =
+          ts.isPropertyAssignment(property) || ts.isShorthandPropertyAssignment(property)
+            ? property.name
+            : undefined;
+        if (!name || !(ts.isIdentifier(name) || ts.isStringLiteral(name))) return true;
+        return !changed.has(name.text) && !changed.has(JSON.stringify(name.text));
+      })
+      .map((property) => property.getText(sourceFile));
+    return replaceRange(source, expression.getStart(sourceFile), expression.end, render([...kept, ...set]));
+  }
+
+  // style={someObject}: keep it, and override after it.
+  const overrides = entries.map(
+    ([property, value]) => `${styleKey(property)}: ${value === null ? "undefined" : JSON.stringify(value)}`,
+  );
+  return replaceRange(
+    source,
+    expression.getStart(sourceFile),
+    expression.end,
+    render([`...${expression.getText(sourceFile)}`, ...overrides]),
+  );
+}

@@ -27,6 +27,23 @@ function newProjectId(label: string): string {
   return `${stem}-${Date.now().toString(36)}${randomBytes(2).toString("hex")}`;
 }
 
+/**
+ * True when an AI-made project still has only its starter page: nothing has been
+ * built in it yet. (A duplicate has no history but is built, so history alone
+ * can't tell.)
+ */
+export async function hasOnlyStarter(project: Project): Promise<boolean> {
+  if (project.source === "clone" || project.source === "template") return false;
+  const file = project.framework === "react" ? "src/App.jsx" : "index.html";
+  const marker = project.framework === "react" ? "Your app will appear here." : "Your page will appear here.";
+  try {
+    const source = await fs.readFile(path.join(siteDir(project.id), file), "utf8");
+    return source.includes(marker) && source.length < 6000;
+  } catch {
+    return false;
+  }
+}
+
 /** A readable project name from the first words of a prompt. */
 export function nameFromPrompt(prompt: string, fallback: string): string {
   const words = prompt.replace(/\s+/g, " ").trim().split(" ").slice(0, 7).join(" ");

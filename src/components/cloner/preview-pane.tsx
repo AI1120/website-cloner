@@ -9,6 +9,7 @@ import {
   Minimize2,
   Monitor,
   MousePointer2,
+  Paintbrush,
   RotateCw,
   Smartphone,
   Tablet,
@@ -18,16 +19,17 @@ import {
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { OPEN_PALETTE_EVENT } from "@/components/cloner/command-palette";
+import { InspectorPanel } from "@/components/cloner/inspector-panel";
 import { PREVIEW_SANDBOX } from "@/components/cloner/project-thumbnail";
 import { Segmented, type SegmentedOption } from "@/components/cloner/segmented";
 import { Button } from "@/components/ui/button";
 import { plural } from "@/lib/format";
 import { errorMessage } from "@/lib/ndjson";
 import { cn } from "@/lib/utils";
-import type { BuildMessage, Project, SelectedElement, TextEdit } from "@/types/project";
+import type { BuildMessage, InspectedElement, Project, SelectedElement, TextEdit } from "@/types/project";
 
 type Device = "desktop" | "tablet" | "mobile";
-type Tool = "none" | "select" | "text";
+type Tool = "none" | "select" | "text" | "inspect";
 
 const DEVICES: SegmentedOption<Device>[] = [
   { value: "desktop", label: "Desktop", icon: Monitor, iconOnly: true },
@@ -46,6 +48,7 @@ type BridgeMessage =
   | { type: "sc:ready" }
   | { type: "sc:location"; path: string }
   | { type: "sc:select"; elements: SelectedElement[] }
+  | { type: "sc:inspect"; inspected: InspectedElement }
   | { type: "sc:text-dirty"; count: number }
   | { type: "sc:text-edits"; requestId: number; edits: TextEdit[] }
   | { type: "sc:error"; message: string }
@@ -93,6 +96,8 @@ export function PreviewPane({
 }: PreviewPaneProps) {
   const [device, setDevice] = useState<Device>("desktop");
   const [tool, setTool] = useState<Tool>("none");
+  const [inspected, setInspected] = useState<{ key: number; element: InspectedElement } | null>(null);
+  const [styleSaving, setStyleSaving] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [reloads, setReloads] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -134,6 +139,7 @@ export function PreviewPane({
       setTool(next);
       post({ type: "sc:mode", mode: next });
       if (next !== "select") onSelect([]);
+      if (next !== "inspect") setInspected(null);
     },
     [onSelect, post],
   );
@@ -161,6 +167,11 @@ export function PreviewPane({
         case "sc:select":
           if (Array.isArray(message.elements)) onSelect(message.elements);
           break;
+        case "sc:inspect":
+          if (toolRef.current === "inspect" && message.inspected && typeof message.inspected === "object") {
+            setInspected((current) => ({ key: (current?.key ?? 0) + 1, element: message.inspected }));
+          }
+          break;
         case "sc:text-dirty":
           setDirtyState({
             key: frameKeyRef.current,
@@ -182,7 +193,7 @@ export function PreviewPane({
           if (Array.isArray(message.errors)) onBuildErrors(message.errors);
           break;
         case "sc:escape":
-          if (toolRef.current === "select") changeTool("none");
+          if (toolRef.current === "select" || toolRef.current === "inspect") changeTool("none");
           break;
         case "sc:palette":
           window.dispatchEvent(new Event(OPEN_PALETTE_EVENT));
@@ -268,6 +279,37 @@ export function PreviewPane({
     setReloads((count) => count + 1);
   };
 
+  const previewStyles = useCallback(
+    (styles: Record<string, string>) => post({ type: "sc:style-preview", styles }),
+    [post],
+  );
+
+  const saveStyles = async (styles: Record<string, string>) => {
+    if (!inspected) return;
+    const { element, ownLoc } = inspected.element;
+    setStyleSaving(true);
+    try {
+      const response = await fetch(`/api/projects/${project.id}/style-edits`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ page: currentPage, tag: element.tag, loc: ownLoc, path: element.path, styles }),
+      });
+      if (!response.ok) {
+        onNotice({ text: await errorMessage(response, "The style couldn't be saved."), error: true });
+        return;
+      }
+      const body = (await response.json()) as { project: Project };
+      // The frame reloads with the saved style; pick the next element to go on.
+      setInspected(null);
+      onProjectChange(body.project);
+      onNotice({ text: "Style saved. Undo it from History if you change your mind." });
+    } catch {
+      onNotice({ text: "Couldn't reach the app. Is it still running?", error: true });
+    } finally {
+      setStyleSaving(false);
+    }
+  };
+
   const toggleTool = (wanted: Exclude<Tool, "none">) => {
     if (tool === "text" && dirty > 0 && wanted !== "text") {
       if (!window.confirm("Discard the text changes you haven't applied?")) return;
@@ -326,6 +368,17 @@ export function PreviewPane({
         >
           <Type />
         </Button>
+        <Button
+          variant={tool === "inspect" ? "secondary" : "ghost"}
+          size="icon-sm"
+          aria-label="Edit styles"
+          aria-pressed={tool === "inspect"}
+          title="Edit styles: colours, type, spacing and corners"
+          disabled={busy}
+          onClick={() => toggleTool("inspect")}
+        >
+          <Paintbrush />
+        </Button>
         <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
         <Segmented label="Screen size" value={device} options={DEVICES} onChange={setDevice} />
         {onCompare && (
@@ -376,6 +429,11 @@ export function PreviewPane({
           chat.
         </p>
       )}
+      {tool === "inspect" && !inspected && (
+        <p className="shrink-0 border-b bg-brand/5 px-4 py-1.5 text-xs text-muted-foreground">
+          Click any element to change its colours, type, spacing and corners. Press Esc to stop.
+        </p>
+      )}
       {tool === "text" && (
         <div className="flex shrink-0 items-center gap-2 border-b bg-brand/5 px-4 py-1.5 text-xs">
           <span className="min-w-0 flex-1 text-muted-foreground">
@@ -398,25 +456,38 @@ export function PreviewPane({
         </div>
       )}
 
-      <div
-        className={cn(
-          "relative flex min-h-0 flex-1 justify-center overflow-auto bg-muted",
-          framed && "p-4 sm:p-6",
-        )}
-      >
-        {overlay && <div className="absolute inset-0 z-10">{overlay}</div>}
-        <iframe
-          ref={frameRef}
-          key={frameKey}
-          src={frameSrc}
-          title={`Preview of ${project.name}`}
-          sandbox={PREVIEW_SANDBOX}
+      <div className="flex min-h-0 flex-1">
+        <div
           className={cn(
-            "h-full min-h-0 border-0 bg-white",
-            DEVICE_FRAME[device],
-            framed && "rounded-xl shadow-[0_0_0_1px_rgb(0_0_0/0.08),0_20px_50px_-20px_rgb(0_0_0/0.35)]",
+            "relative flex min-h-0 min-w-0 flex-1 justify-center overflow-auto bg-muted",
+            framed && "p-4 sm:p-6",
           )}
-        />
+        >
+          {overlay && <div className="absolute inset-0 z-10">{overlay}</div>}
+          <iframe
+            ref={frameRef}
+            key={frameKey}
+            src={frameSrc}
+            title={`Preview of ${project.name}`}
+            sandbox={PREVIEW_SANDBOX}
+            className={cn(
+              "h-full min-h-0 border-0 bg-white",
+              DEVICE_FRAME[device],
+              framed && "rounded-xl shadow-[0_0_0_1px_rgb(0_0_0/0.08),0_20px_50px_-20px_rgb(0_0_0/0.35)]",
+            )}
+          />
+        </div>
+        {tool === "inspect" && inspected && (
+          <InspectorPanel
+            key={inspected.key}
+            inspected={inspected.element}
+            framework={project.framework}
+            saving={styleSaving}
+            onPreview={previewStyles}
+            onSave={(styles) => void saveStyles(styles)}
+            onClose={() => changeTool("none")}
+          />
+        )}
       </div>
     </div>
   );
